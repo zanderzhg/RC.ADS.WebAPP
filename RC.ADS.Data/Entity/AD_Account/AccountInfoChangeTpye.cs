@@ -6,6 +6,8 @@ namespace RC.ADS.Data.Entity.AD_Account
 {
     public class AccountInfoChangeTpye
     {
+        public AccountInfoChangeTpye() { Id = Guid.NewGuid().ToString("N"); }
+        public string Id { get; set; }
         public string Name { get; set; }
         public string Describe { get; set; }
     }
