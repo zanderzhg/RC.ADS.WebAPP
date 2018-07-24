@@ -1,0 +1,94 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <link rel="stylesheet" href="/static/style/weui.css"/>
+    <link rel="stylesheet" href="/static/style/weui2.css"/>
+    <link rel="stylesheet" href="/static/style/weui3.css"/>
+    {% block css %}{% endblock %}
+</head>
+
+<body ontouchstart style="background-color: #f8f8f8;">
+{% block content %}{% endblock %}
+
+<section class="weui-menu">
+        <div class="weui-menu-inner">
+            <a href="/index/" class="weui_tabbar_item">
+            <div class="weui_tabbar_icon">
+                <img src="/static/images/icon_nav_button.png" alt="">
+            </div>
+            <p class="weui_tabbar_label">首页</p>
+        </a>
+
+        </div>
+        <div class="weui-menu-inner">
+           <a href="/order/" class="weui_tabbar_item">
+            <div class="weui_tabbar_icon">
+                <img src="/static/images/icon_nav_msg.png" alt="">
+            </div>
+            <p class="weui_tabbar_label">下单</p>
+        </a>
+
+
+        </div>
+        <div class="weui-menu-inner">
+            <a href="/businessList/" class="weui_tabbar_item weui_bar_item_on">
+            <div class="weui_tabbar_icon">
+                <img src="/static/images/icon_nav_article.png" alt="">
+            </div>
+            <p class="weui_tabbar_label">业务&报价</p>
+        </a>
+
+
+        </div>
+     <div class="weui-menu-inner">
+
+
+        <a href="/me/" class="weui_tabbar_item">
+            <div class="weui_tabbar_icon">
+                <img src="/static/images/icon_nav_cell.png" alt="">
+            </div>
+            <p class="weui_tabbar_label">我</p>
+        </a>
+        </div>
+
+    </section>
+<script src="/static/js/zepto.min.js"></script>
+<script src="/static/js/iscroll.js"></script>
+<script>
+    $(function () {
+        var urlpath = window.location.pathname;
+        switch (urlpath) {
+            case '/index/':
+                index = 0;
+                break;
+            case '/order/':
+                index = 1;
+                break;
+            case '/businessList/':
+                index = 2;
+                break;
+            case '/me/':
+                index = 3;
+                break;
+            default:
+                index = 0;
+        }
+
+        $('.weui_tab').tab({
+            defaultIndex: index,
+            activeClass: 'weui_bar_item_on',
+            onToggle: function (index) {
+
+            }
+        });
+
+
+    });
+
+</script>
+{% block js %}{% endblock %}
+</body>
+</html>
