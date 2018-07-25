@@ -3,7 +3,7 @@ using NLog;
 
 namespace RC.ADS.WebAPP.Comm
 {
-    public static class WmsLog
+    public static class RCLog
     {
         private static ILogger logger = NLog.LogManager.GetCurrentClassLogger();
 

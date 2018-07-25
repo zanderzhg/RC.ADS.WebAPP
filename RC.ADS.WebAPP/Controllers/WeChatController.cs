@@ -34,10 +34,11 @@ namespace RC.ADS.WebAPP.Controllers
             return View();
         }
         #endregion
+
         #region 首页
         public IActionResult Index()
         {
-            WmsLog.Info(this, "test");
+            RCLog.Info(this, "test");
             return View();
         }
         #endregion
