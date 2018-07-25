@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using RC.ADS.WebAPP.Comm;
 
 namespace RC.ADS.WebAPP.Controllers
 {
@@ -11,6 +12,7 @@ namespace RC.ADS.WebAPP.Controllers
         #region 首页
         public IActionResult Index()
         {
+            WmsLog.Info(this, "test");
             return View();
         }
         #endregion
@@ -18,6 +20,7 @@ namespace RC.ADS.WebAPP.Controllers
         #region 业务范围
         public IActionResult Business()
         {
+            
             return View();
         }
         #region 子功能
