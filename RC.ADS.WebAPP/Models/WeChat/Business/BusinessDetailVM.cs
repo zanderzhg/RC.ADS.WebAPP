@@ -7,6 +7,7 @@ namespace RC.ADS.WebAPP.Models.WeChat
 {
     public class BusinessDetailVM
     {
+        public string Id { get; set; }
         public string ArticleName { get; set; }
         public string ArticleContent { get; set; }
         public string ArticleIco { get; set; }
