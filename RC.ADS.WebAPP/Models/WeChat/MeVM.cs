@@ -7,5 +7,14 @@ namespace RC.ADS.WebAPP.Models.WeChat
 {
     public class MeVM
     {
+        public string ManberName { get; set; }
+        /// <summary>
+        /// 积分
+        /// </summary>
+        public int IntegralSum { get; set; }
+        /// <summary>
+        /// 余额
+        /// </summary>
+        public decimal Balance { get; set; }
     }
 }

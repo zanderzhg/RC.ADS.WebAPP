@@ -5,7 +5,8 @@ using System.Threading.Tasks;
 
 namespace RC.ADS.WebAPP.Models.WeChat
 {
-    public class BusinessDetailVM
+    public class BusinessVM
     {
+        public List<BusinessDetailVM> BusinessList { get; set; }
     }
 }
