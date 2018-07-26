@@ -14,13 +14,9 @@ namespace RC.ADS.Data
         {
              
         }
-        public DbSet<Account> Accounts { get; set; }
         public DbSet<AccountInfo> AccountInfos { get; set; }
-        
         public DbSet<Article> Articles { get; set; }
         public DbSet<ArticleType> ArticleTypes { get; set; }
-        
-        public DbSet<Integral> Integrals { get; set; }
         public DbSet<IntegralInfo> IntegralInfos { get; set; }
         public DbSet<Menber> Menbers { get; set; }
         public DbSet<Order> Orders { get; set; }

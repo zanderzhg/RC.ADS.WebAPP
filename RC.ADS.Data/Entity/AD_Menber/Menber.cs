@@ -1,4 +1,6 @@
-﻿using System;
+﻿using RC.ADS.Data.Entity.AD_Account;
+using RC.ADS.Data.Entity.AD_Integral;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -15,5 +17,9 @@ namespace RC.ADS.Data.Entity.AD_Menber
         /// 推荐人
         /// </summary>
         public Menber Referrer { get; set; }
+        public decimal AccountSum { get; set; }
+        public ICollection<AccountInfo> AccountInfoList { get; set; }
+        public int IntegralSum { get; set; }
+        public ICollection<IntegralInfo> IntegralInfoList { get; set; }
     }
 }
