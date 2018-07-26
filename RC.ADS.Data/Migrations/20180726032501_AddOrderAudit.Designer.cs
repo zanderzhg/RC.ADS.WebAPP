@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RC.ADS.Data;
 
 namespace RC.ADS.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20180726032501_AddOrderAudit")]
+    partial class AddOrderAudit
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -184,7 +186,7 @@ namespace RC.ADS.Data.Migrations
 
                     b.HasIndex("AuditEntityId");
 
-                    b.ToTable("OrderAudits");
+                    b.ToTable("OrderAudit");
                 });
 
             modelBuilder.Entity("RC.ADS.Data.Entity.AD_Account.Account", b =>

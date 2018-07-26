@@ -11,5 +11,9 @@ namespace RC.ADS.Data.Entity.AD_Menber
         public string ManberName { get; set; }
         public string PhoneNumber { get; set; }
         public string Password { get; set; }
+        /// <summary>
+        /// 推荐人
+        /// </summary>
+        public Menber Referrer { get; set; }
     }
 }
