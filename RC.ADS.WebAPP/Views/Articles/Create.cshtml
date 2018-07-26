@@ -24,7 +24,13 @@
             </div>
             <div class="form-group">
                 <label asp-for="ArticleIco" class="control-label"></label>
-                <input asp-for="ArticleIco" class="form-control" />
+                <input asp-for="ArticleIco" type="file" id="picAjax" style="display:none" class="form-control" />
+
+                 
+
+                <img id="selImg" style="width:100px; height:100px;"  src="" alt="用作图片预览" />
+                <input type="button" id="selct" value="选择图片" />
+                @*<input type="button" id="submitPic" value="上传" />*@
                 <span asp-validation-for="ArticleIco" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -55,6 +61,41 @@
         $(function () {
             CKEDITOR.replace('ArticleContent');
               
+ 
+            var picString = "";
+
+            $("#picAjax").change(function (e) {
+
+                var file = e.delegateTarget.files[0];
+                //在此可以对选择的文件进行判断:文件类型 文件大小等
+                //.....
+
+                var reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = function (ret) {
+                    picString = reader.result
+                    //预览图片
+                    $("#selImg").attr({ "src": picString });
+                }
+            });
+            $("#selct").click(function () {
+                $("#picAjax").click();
+            });
+            $("#submitPic").click(function () {
+
+                $.ajax("Uploadfile", {
+                    type: "post",
+                    datatype: "json",
+                    data: picString,
+                    error: function () { },
+                    success: function (result) {
+
+                        if (result) {
+                            alert(result.msg);
+                        }
+                    }
+                });
+            });
         });
     </script>
 }
