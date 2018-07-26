@@ -32,6 +32,11 @@ namespace RC.ADS.WebAPP.Controllers
             Response.Body.Dispose();
             return File(ms.ToArray(), @"image/png");
         }
+        public IActionResult Loginaaa(string returnUrl = "")
+        {
+            
+            return View( );
+        }
         #region 登陆
         [HttpGet]
         public IActionResult Login(string returnUrl = "")
@@ -40,7 +45,7 @@ namespace RC.ADS.WebAPP.Controllers
             return View(model);
         }
         [HttpPost]
-        public async Task<IActionResult> Login(LoginVM model)
+        public  IActionResult  Login(LoginVM model)
         {
             if (ModelState.IsValid)
             {
