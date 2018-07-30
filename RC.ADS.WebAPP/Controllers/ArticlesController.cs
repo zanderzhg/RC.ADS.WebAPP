@@ -2,21 +2,28 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Internal;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using RC.ADS.Data;
 using RC.ADS.Data.Entity.AD_Article;
+using RC.ADS.WebAPP.Comm;
 
 namespace RC.ADS.WebAPP.Controllers
 {
     public class ArticlesController : Controller
     {
         private readonly DataContext _context;
+        private IHostingEnvironment _env;
+        
 
-        public ArticlesController(DataContext context)
+        public ArticlesController(DataContext context,IHostingEnvironment env)
         {
             _context = context;
+            _env = env;
         }
 
         // GET: Articles
@@ -42,7 +49,7 @@ namespace RC.ADS.WebAPP.Controllers
 
             return View(article);
         }
-
+        [HttpGet]
         // GET: Articles/Create
         public IActionResult Create()
         {
@@ -54,10 +61,20 @@ namespace RC.ADS.WebAPP.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,ArticleName,ArticleContent,ArticleIco,ArticleImage,ArticleIndex")] Article article)
+        public async Task<IActionResult> Create(Article article)
         {
+
             if (ModelState.IsValid)
             {
+               
+
+                var articleIco_File = Request.Form.Files["ArticleIco"] ;
+                 article.ArticleIco= FileHelper.UploadImage(articleIco_File, _env);
+
+                var articleImage_File = Request.Form.Files["ArticleImage"];
+                article.ArticleImage = FileHelper.UploadImage(articleImage_File, _env);
+
+
                 _context.Add(article);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -97,7 +114,35 @@ namespace RC.ADS.WebAPP.Controllers
             {
                 try
                 {
-                    _context.Update(article);
+                    var old_article = await _context.Articles.FindAsync(id);
+                    old_article.ArticleContent = article.ArticleContent;
+                    old_article.ArticleIndex = article.ArticleIndex;
+                   // old_article.ArticleTypeEntity =await _context.ArticleTypes.FindAsync(article.ArticleTypeEntity.Id);
+
+                    var articleIco_File = Request.Form.Files["ArticleIco"];
+                    if (articleIco_File!=null)
+                    {
+                        article.ArticleIco = FileHelper.UploadImage(articleIco_File, _env);
+                    }
+                    else
+                    {
+                        article.ArticleIco= old_article.ArticleIco;
+                    }
+                   
+
+                    var articleImage_File = Request.Form.Files["ArticleImage"];
+                    if (articleImage_File != null)
+                    {
+                        article.ArticleImage = FileHelper.UploadImage(articleImage_File, _env);
+                    }
+                    else
+                    {
+                        article.ArticleImage = old_article.ArticleImage;
+                    }
+
+
+
+                    _context.Update(old_article);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
