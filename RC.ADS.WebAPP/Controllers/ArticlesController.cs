@@ -53,6 +53,20 @@ namespace RC.ADS.WebAPP.Controllers
         // GET: Articles/Create
         public IActionResult Create()
         {
+            //var data = from p in db.PersonalDetails
+            //           join f in db.Files
+            //           on p.AutoId equals f.PersonalDetailsId
+            //           select new
+            //           {
+            //               PersonName = p.FirstName,
+            //               MyFileName = f.FileName
+            //           };
+
+            //SelectList list = new SelectList(data, "MyFileName", "PersonName");
+            //ViewBag.Roles = list;
+            var selectListEnum = _context.ArticleTypes.Select(x => new { Value = x.Id, Text = x.Name });
+            SelectList list = new SelectList(selectListEnum, "Value", "Text");
+            ViewBag.SelectListEnum = list;
             return View();
         }
 
