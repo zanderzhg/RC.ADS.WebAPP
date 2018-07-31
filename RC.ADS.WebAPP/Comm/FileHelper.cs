@@ -33,8 +33,8 @@ namespace RC.ADS.WebAPP.Comm
                 {
                     using (FileStream fs = new FileStream(fullpath, FileMode.Create))
                     {
-                        var hash = System.Security.Cryptography.HashAlgorithm.Create();
-                        byte[] hashByte_1 = hash.ComputeHash(fs);
+                        //var hash = System.Security.Cryptography.HashAlgorithm.Create();
+                        //byte[] hashByte_1 = hash.ComputeHash(fs);
                         file.CopyTo(fs);
                     }
 

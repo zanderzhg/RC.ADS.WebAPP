@@ -80,14 +80,16 @@ namespace RC.ADS.WebAPP.Controllers
 
             if (ModelState.IsValid)
             {
-               
 
+               var ArticleTypeId= Request.Form["ArticleTypeId"];
+                //TODO 添加文章类别ID
                 var articleIco_File = Request.Form.Files["ArticleIco"] ;
                  article.ArticleIco= FileHelper.UploadImage(articleIco_File, _env);
 
                 var articleImage_File = Request.Form.Files["ArticleImage"];
                 article.ArticleImage = FileHelper.UploadImage(articleImage_File, _env);
 
+                article.ArticleTypeEntity = _context.ArticleTypes.FirstOrDefault(x=>x.Id== ArticleTypeId);
 
                 _context.Add(article);
                 await _context.SaveChangesAsync();
@@ -104,11 +106,15 @@ namespace RC.ADS.WebAPP.Controllers
                 return NotFound();
             }
 
-            var article = await _context.Articles.FindAsync(id);
+            var article = await _context.Articles.FindAsync(id).Include(x => x.ArticleTypeEntity);
             if (article == null)
             {
                 return NotFound();
             }
+            var selectListEnum = _context.ArticleTypes.Select(x => new { Value = x.Id, Text = x.Name });
+            var value = article.ArticleTypeEntity.Id;
+            SelectList list = new SelectList(selectListEnum, "Value", "Text", value);
+            ViewBag.SelectListEnum = list;
             return View(article);
         }
 
