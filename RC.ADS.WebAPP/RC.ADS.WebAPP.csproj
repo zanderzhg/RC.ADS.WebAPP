@@ -25,7 +25,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Models\Articles\" />
     <Folder Include="wwwroot\images\weui\" />
   </ItemGroup>
 
