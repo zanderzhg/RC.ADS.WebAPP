@@ -69,6 +69,7 @@ namespace RC.ADS.WebAPP.Controllers
             ViewBag.SelectListEnum = list;
             return View();
         }
+      
 
         // POST: Articles/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
@@ -106,13 +107,13 @@ namespace RC.ADS.WebAPP.Controllers
                 return NotFound();
             }
 
-            var article = await _context.Articles.FindAsync(id).Include(x => x.ArticleTypeEntity);
+            var article = await _context.Articles.FindAsync(id);
             if (article == null)
             {
                 return NotFound();
             }
             var selectListEnum = _context.ArticleTypes.Select(x => new { Value = x.Id, Text = x.Name });
-            var value = article.ArticleTypeEntity.Id;
+            var value = article.ArticleTypeId;
             SelectList list = new SelectList(selectListEnum, "Value", "Text", value);
             ViewBag.SelectListEnum = list;
             return View(article);
