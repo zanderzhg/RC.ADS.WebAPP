@@ -50,9 +50,20 @@
                 @Html.DisplayFor(modelItem => item.IntegralSum)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-primary dropdown-toggle btn-sm"
+                            data-toggle="dropdown">
+                        操作 <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" role="menu">
+                       
+                        <li><a asp-action="Edit" asp-route-id="@item.Id">编辑</a> </li>
+                        <li><a asp-action="Details" asp-route-id="@item.Id">查看</a> </li>
+                        <li><a asp-action="Delete" asp-route-id="@item.Id">删除</a></li>
+                       
+                    </ul>
+                </div>
+                
             </td>
         </tr>
 }
