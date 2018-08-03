@@ -1,4 +1,4 @@
-﻿@model RC.ADS.Data.Entity.AD_Order.OrderAudit
+﻿@model RC.ADS.Data.Entity.AD_Order.OrderStatusChange
 
 @{
     ViewData["Title"] = "Details";
@@ -8,14 +8,20 @@
 <h2>Details</h2>
 
 <div>
-    <h4>OrderAudit</h4>
+    <h4>OrderStatusChange</h4>
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.OrderStatus)
+            @Html.DisplayNameFor(model => model.OrderEntity)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.OrderStatus)
+            @Html.DisplayFor(model => model.OrderEntity.Id)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Status)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Status)
         </dd>
         <dt>
             @Html.DisplayNameFor(model => model.Creatime)

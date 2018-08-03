@@ -6,26 +6,26 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using RC.ADS.Data;
-using RC.ADS.Data.Entity.AD_Account;
+using RC.ADS.Data.Entity.AD_Order;
 
 namespace RC.ADS.WebAPP.Controllers
 {
-    public class AccountInfoesController : Controller
+    public class OrderStatusController : Controller
     {
         private readonly DataContext _context;
 
-        public AccountInfoesController(DataContext context)
+        public OrderStatusController(DataContext context)
         {
             _context = context;
         }
 
-        // GET: AccountInfoes
+        // GET: OrderStatus
         public async Task<IActionResult> Index()
         {
-            return View(await _context.AccountInfos.ToListAsync());
+            return View(await _context.OrderStatus.ToListAsync());
         }
 
-        // GET: AccountInfoes/Details/5
+        // GET: OrderStatus/Details/5
         public async Task<IActionResult> Details(string id)
         {
             if (id == null)
@@ -33,42 +33,39 @@ namespace RC.ADS.WebAPP.Controllers
                 return NotFound();
             }
 
-            var accountInfo = await _context.AccountInfos
+            var orderStatus = await _context.OrderStatus
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (accountInfo == null)
+            if (orderStatus == null)
             {
                 return NotFound();
             }
 
-            return View(accountInfo);
+            return View(orderStatus);
         }
 
-        // GET: AccountInfoes/Create
+        // GET: OrderStatus/Create
         public IActionResult Create()
         {
-              var selectListEnum = _context.ArticleTypes.Select(x => new { Value = x.Id, Text = x.Name });
-            SelectList list = new SelectList(selectListEnum, "Value", "Text");
-            ViewBag.SelectListEnum = list;
             return View();
         }
 
-        // POST: AccountInfoes/Create
+        // POST: OrderStatus/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Money,AccountInfoChangeTpye,Describe")] AccountInfo accountInfo)
+        public async Task<IActionResult> Create([Bind("Id,Name,ChineseName,Describe")] OrderStatus orderStatus)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(accountInfo);
+                _context.Add(orderStatus);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(accountInfo);
+            return View(orderStatus);
         }
 
-        // GET: AccountInfoes/Edit/5
+        // GET: OrderStatus/Edit/5
         public async Task<IActionResult> Edit(string id)
         {
             if (id == null)
@@ -76,22 +73,22 @@ namespace RC.ADS.WebAPP.Controllers
                 return NotFound();
             }
 
-            var accountInfo = await _context.AccountInfos.FindAsync(id);
-            if (accountInfo == null)
+            var orderStatus = await _context.OrderStatus.FindAsync(id);
+            if (orderStatus == null)
             {
                 return NotFound();
             }
-            return View(accountInfo);
+            return View(orderStatus);
         }
 
-        // POST: AccountInfoes/Edit/5
+        // POST: OrderStatus/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("Id,Money,AccountInfoChangeTpye,Describe")] AccountInfo accountInfo)
+        public async Task<IActionResult> Edit(string id, [Bind("Id,Name,ChineseName,Describe")] OrderStatus orderStatus)
         {
-            if (id != accountInfo.Id)
+            if (id != orderStatus.Id)
             {
                 return NotFound();
             }
@@ -100,12 +97,12 @@ namespace RC.ADS.WebAPP.Controllers
             {
                 try
                 {
-                    _context.Update(accountInfo);
+                    _context.Update(orderStatus);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!AccountInfoExists(accountInfo.Id))
+                    if (!OrderStatusExists(orderStatus.Id))
                     {
                         return NotFound();
                     }
@@ -116,10 +113,10 @@ namespace RC.ADS.WebAPP.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(accountInfo);
+            return View(orderStatus);
         }
 
-        // GET: AccountInfoes/Delete/5
+        // GET: OrderStatus/Delete/5
         public async Task<IActionResult> Delete(string id)
         {
             if (id == null)
@@ -127,30 +124,30 @@ namespace RC.ADS.WebAPP.Controllers
                 return NotFound();
             }
 
-            var accountInfo = await _context.AccountInfos
+            var orderStatus = await _context.OrderStatus
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (accountInfo == null)
+            if (orderStatus == null)
             {
                 return NotFound();
             }
 
-            return View(accountInfo);
+            return View(orderStatus);
         }
 
-        // POST: AccountInfoes/Delete/5
+        // POST: OrderStatus/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
-            var accountInfo = await _context.AccountInfos.FindAsync(id);
-            _context.AccountInfos.Remove(accountInfo);
+            var orderStatus = await _context.OrderStatus.FindAsync(id);
+            _context.OrderStatus.Remove(orderStatus);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool AccountInfoExists(string id)
+        private bool OrderStatusExists(string id)
         {
-            return _context.AccountInfos.Any(e => e.Id == id);
+            return _context.OrderStatus.Any(e => e.Id == id);
         }
     }
 }

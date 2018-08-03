@@ -6,26 +6,27 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using RC.ADS.Data;
-using RC.ADS.Data.Entity.AD_Account;
+using RC.ADS.Data.Entity.AD_Order;
 
 namespace RC.ADS.WebAPP.Controllers
 {
-    public class AccountInfoesController : Controller
+    public class OrderStatusChangesController : Controller
     {
         private readonly DataContext _context;
 
-        public AccountInfoesController(DataContext context)
+        public OrderStatusChangesController(DataContext context)
         {
             _context = context;
         }
 
-        // GET: AccountInfoes
+        // GET: OrderStatusChanges
         public async Task<IActionResult> Index()
         {
-            return View(await _context.AccountInfos.ToListAsync());
+            var dataContext = _context.OrderStatusChanges.Include(o => o.OrderEntity);
+            return View(await dataContext.ToListAsync());
         }
 
-        // GET: AccountInfoes/Details/5
+        // GET: OrderStatusChanges/Details/5
         public async Task<IActionResult> Details(string id)
         {
             if (id == null)
@@ -33,42 +34,42 @@ namespace RC.ADS.WebAPP.Controllers
                 return NotFound();
             }
 
-            var accountInfo = await _context.AccountInfos
+            var orderStatusChange = await _context.OrderStatusChanges
+                .Include(o => o.OrderEntity)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (accountInfo == null)
+            if (orderStatusChange == null)
             {
                 return NotFound();
             }
 
-            return View(accountInfo);
+            return View(orderStatusChange);
         }
 
-        // GET: AccountInfoes/Create
+        // GET: OrderStatusChanges/Create
         public IActionResult Create()
         {
-              var selectListEnum = _context.ArticleTypes.Select(x => new { Value = x.Id, Text = x.Name });
-            SelectList list = new SelectList(selectListEnum, "Value", "Text");
-            ViewBag.SelectListEnum = list;
+            ViewData["OrderId"] = new SelectList(_context.Orders, "Id", "Id");
             return View();
         }
 
-        // POST: AccountInfoes/Create
+        // POST: OrderStatusChanges/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Money,AccountInfoChangeTpye,Describe")] AccountInfo accountInfo)
+        public async Task<IActionResult> Create([Bind("Id,OrderId,Status,Creatime")] OrderStatusChange orderStatusChange)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(accountInfo);
+                _context.Add(orderStatusChange);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(accountInfo);
+            ViewData["OrderId"] = new SelectList(_context.Orders, "Id", "Id", orderStatusChange.OrderId);
+            return View(orderStatusChange);
         }
 
-        // GET: AccountInfoes/Edit/5
+        // GET: OrderStatusChanges/Edit/5
         public async Task<IActionResult> Edit(string id)
         {
             if (id == null)
@@ -76,22 +77,23 @@ namespace RC.ADS.WebAPP.Controllers
                 return NotFound();
             }
 
-            var accountInfo = await _context.AccountInfos.FindAsync(id);
-            if (accountInfo == null)
+            var orderStatusChange = await _context.OrderStatusChanges.FindAsync(id);
+            if (orderStatusChange == null)
             {
                 return NotFound();
             }
-            return View(accountInfo);
+            ViewData["OrderId"] = new SelectList(_context.Orders, "Id", "Id", orderStatusChange.OrderId);
+            return View(orderStatusChange);
         }
 
-        // POST: AccountInfoes/Edit/5
+        // POST: OrderStatusChanges/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("Id,Money,AccountInfoChangeTpye,Describe")] AccountInfo accountInfo)
+        public async Task<IActionResult> Edit(string id, [Bind("Id,OrderId,Status,Creatime")] OrderStatusChange orderStatusChange)
         {
-            if (id != accountInfo.Id)
+            if (id != orderStatusChange.Id)
             {
                 return NotFound();
             }
@@ -100,12 +102,12 @@ namespace RC.ADS.WebAPP.Controllers
             {
                 try
                 {
-                    _context.Update(accountInfo);
+                    _context.Update(orderStatusChange);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!AccountInfoExists(accountInfo.Id))
+                    if (!OrderStatusChangeExists(orderStatusChange.Id))
                     {
                         return NotFound();
                     }
@@ -116,10 +118,11 @@ namespace RC.ADS.WebAPP.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(accountInfo);
+            ViewData["OrderId"] = new SelectList(_context.Orders, "Id", "Id", orderStatusChange.OrderId);
+            return View(orderStatusChange);
         }
 
-        // GET: AccountInfoes/Delete/5
+        // GET: OrderStatusChanges/Delete/5
         public async Task<IActionResult> Delete(string id)
         {
             if (id == null)
@@ -127,30 +130,31 @@ namespace RC.ADS.WebAPP.Controllers
                 return NotFound();
             }
 
-            var accountInfo = await _context.AccountInfos
+            var orderStatusChange = await _context.OrderStatusChanges
+                .Include(o => o.OrderEntity)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (accountInfo == null)
+            if (orderStatusChange == null)
             {
                 return NotFound();
             }
 
-            return View(accountInfo);
+            return View(orderStatusChange);
         }
 
-        // POST: AccountInfoes/Delete/5
+        // POST: OrderStatusChanges/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
-            var accountInfo = await _context.AccountInfos.FindAsync(id);
-            _context.AccountInfos.Remove(accountInfo);
+            var orderStatusChange = await _context.OrderStatusChanges.FindAsync(id);
+            _context.OrderStatusChanges.Remove(orderStatusChange);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool AccountInfoExists(string id)
+        private bool OrderStatusChangeExists(string id)
         {
-            return _context.AccountInfos.Any(e => e.Id == id);
+            return _context.OrderStatusChanges.Any(e => e.Id == id);
         }
     }
 }

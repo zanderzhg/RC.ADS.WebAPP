@@ -1,4 +1,4 @@
-﻿@model IEnumerable<RC.ADS.Data.Entity.AD_Order.OrderAudit>
+﻿@model IEnumerable<RC.ADS.Data.Entity.AD_Order.OrderStatusChange>
 
 @{
     ViewData["Title"] = "Index";
@@ -14,7 +14,10 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.OrderStatus)
+                @Html.DisplayNameFor(model => model.OrderEntity)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Status)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Creatime)
@@ -26,7 +29,10 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.OrderStatus)
+                @Html.DisplayFor(modelItem => item.OrderEntity.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Status)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Creatime)

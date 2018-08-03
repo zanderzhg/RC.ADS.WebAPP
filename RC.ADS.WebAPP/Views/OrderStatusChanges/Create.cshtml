@@ -1,4 +1,4 @@
-﻿@model RC.ADS.Data.Entity.AD_Order.OrderAudit
+﻿@model RC.ADS.Data.Entity.AD_Order.OrderStatusChange
 
 @{
     ViewData["Title"] = "Create";
@@ -7,16 +7,20 @@
 
 <h2>Create</h2>
 
-<h4>OrderAudit</h4>
+<h4>OrderStatusChange</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="OrderStatus" class="control-label"></label>
-                <select asp-for="OrderStatus" class="form-control"></select>
-                <span asp-validation-for="OrderStatus" class="text-danger"></span>
+                <label asp-for="OrderId" class="control-label"></label>
+                <select asp-for="OrderId" class ="form-control" asp-items="ViewBag.OrderId"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="Status" class="control-label"></label>
+                <select asp-for="Status" class="form-control"></select>
+                <span asp-validation-for="Status" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Creatime" class="control-label"></label>

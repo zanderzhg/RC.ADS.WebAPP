@@ -6,26 +6,26 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using RC.ADS.Data;
-using RC.ADS.Data.Entity.AD_Order;
+using RC.ADS.Data.Entity.AD_Account;
 
 namespace RC.ADS.WebAPP.Controllers
 {
-    public class OrderAuditsController : Controller
+    public class AccountInfoChangeTypesController : Controller
     {
         private readonly DataContext _context;
 
-        public OrderAuditsController(DataContext context)
+        public AccountInfoChangeTypesController(DataContext context)
         {
             _context = context;
         }
 
-        // GET: OrderAudits
+        // GET: AccountInfoChangeTypes
         public async Task<IActionResult> Index()
         {
-            return View(await _context.OrderAudits.ToListAsync());
+            return View(await _context.AccountInfoChangeTpyes.ToListAsync());
         }
 
-        // GET: OrderAudits/Details/5
+        // GET: AccountInfoChangeTypes/Details/5
         public async Task<IActionResult> Details(string id)
         {
             if (id == null)
@@ -33,39 +33,39 @@ namespace RC.ADS.WebAPP.Controllers
                 return NotFound();
             }
 
-            var orderAudit = await _context.OrderAudits
+            var accountInfoChangeType = await _context.AccountInfoChangeTpyes
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (orderAudit == null)
+            if (accountInfoChangeType == null)
             {
                 return NotFound();
             }
 
-            return View(orderAudit);
+            return View(accountInfoChangeType);
         }
 
-        // GET: OrderAudits/Create
+        // GET: AccountInfoChangeTypes/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: OrderAudits/Create
+        // POST: AccountInfoChangeTypes/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,OrderStatus,Creatime")] OrderAudit orderAudit)
+        public async Task<IActionResult> Create([Bind("Id,Name,Describe")] AccountInfoChangeType accountInfoChangeType)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(orderAudit);
+                _context.Add(accountInfoChangeType);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(orderAudit);
+            return View(accountInfoChangeType);
         }
 
-        // GET: OrderAudits/Edit/5
+        // GET: AccountInfoChangeTypes/Edit/5
         public async Task<IActionResult> Edit(string id)
         {
             if (id == null)
@@ -73,22 +73,22 @@ namespace RC.ADS.WebAPP.Controllers
                 return NotFound();
             }
 
-            var orderAudit = await _context.OrderAudits.FindAsync(id);
-            if (orderAudit == null)
+            var accountInfoChangeType = await _context.AccountInfoChangeTpyes.FindAsync(id);
+            if (accountInfoChangeType == null)
             {
                 return NotFound();
             }
-            return View(orderAudit);
+            return View(accountInfoChangeType);
         }
 
-        // POST: OrderAudits/Edit/5
+        // POST: AccountInfoChangeTypes/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("Id,OrderStatus,Creatime")] OrderAudit orderAudit)
+        public async Task<IActionResult> Edit(string id, [Bind("Id,Name,Describe")] AccountInfoChangeType accountInfoChangeType)
         {
-            if (id != orderAudit.Id)
+            if (id != accountInfoChangeType.Id)
             {
                 return NotFound();
             }
@@ -97,12 +97,12 @@ namespace RC.ADS.WebAPP.Controllers
             {
                 try
                 {
-                    _context.Update(orderAudit);
+                    _context.Update(accountInfoChangeType);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!OrderAuditExists(orderAudit.Id))
+                    if (!AccountInfoChangeTypeExists(accountInfoChangeType.Id))
                     {
                         return NotFound();
                     }
@@ -113,10 +113,10 @@ namespace RC.ADS.WebAPP.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(orderAudit);
+            return View(accountInfoChangeType);
         }
 
-        // GET: OrderAudits/Delete/5
+        // GET: AccountInfoChangeTypes/Delete/5
         public async Task<IActionResult> Delete(string id)
         {
             if (id == null)
@@ -124,30 +124,30 @@ namespace RC.ADS.WebAPP.Controllers
                 return NotFound();
             }
 
-            var orderAudit = await _context.OrderAudits
+            var accountInfoChangeType = await _context.AccountInfoChangeTpyes
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (orderAudit == null)
+            if (accountInfoChangeType == null)
             {
                 return NotFound();
             }
 
-            return View(orderAudit);
+            return View(accountInfoChangeType);
         }
 
-        // POST: OrderAudits/Delete/5
+        // POST: AccountInfoChangeTypes/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
-            var orderAudit = await _context.OrderAudits.FindAsync(id);
-            _context.OrderAudits.Remove(orderAudit);
+            var accountInfoChangeType = await _context.AccountInfoChangeTpyes.FindAsync(id);
+            _context.AccountInfoChangeTpyes.Remove(accountInfoChangeType);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool OrderAuditExists(string id)
+        private bool AccountInfoChangeTypeExists(string id)
         {
-            return _context.OrderAudits.Any(e => e.Id == id);
+            return _context.AccountInfoChangeTpyes.Any(e => e.Id == id);
         }
     }
 }

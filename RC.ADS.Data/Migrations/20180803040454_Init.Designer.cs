@@ -10,8 +10,8 @@ using RC.ADS.Data;
 namespace RC.ADS.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20180726064524_updateAllModel")]
-    partial class updateAllModel
+    [Migration("20180803040454_Init")]
+    partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -41,6 +41,20 @@ namespace RC.ADS.Data.Migrations
                     b.ToTable("AccountInfos");
                 });
 
+            modelBuilder.Entity("RC.ADS.Data.Entity.AD_Account.AccountInfoChangeTpye", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Describe");
+
+                    b.Property<string>("Name");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("AccountInfoChangeTpyes");
+                });
+
             modelBuilder.Entity("RC.ADS.Data.Entity.AD_Article.Article", b =>
                 {
                     b.Property<string>("Id")
@@ -56,11 +70,11 @@ namespace RC.ADS.Data.Migrations
 
                     b.Property<string>("ArticleName");
 
-                    b.Property<string>("ArticleTypeEntityId");
+                    b.Property<string>("ArticleTypeId");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ArticleTypeEntityId");
+                    b.HasIndex("ArticleTypeId");
 
                     b.ToTable("Articles");
                 });
@@ -97,6 +111,20 @@ namespace RC.ADS.Data.Migrations
                     b.HasIndex("OwnerId");
 
                     b.ToTable("IntegralInfos");
+                });
+
+            modelBuilder.Entity("RC.ADS.Data.Entity.AD_Integral.IntegralInfoChangeType", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Describe");
+
+                    b.Property<string>("Name");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("IntegralInfoChangeType");
                 });
 
             modelBuilder.Entity("RC.ADS.Data.Entity.AD_Menber.Menber", b =>
@@ -143,22 +171,38 @@ namespace RC.ADS.Data.Migrations
                     b.ToTable("Orders");
                 });
 
-            modelBuilder.Entity("RC.ADS.Data.Entity.AD_Order.OrderAudit", b =>
+            modelBuilder.Entity("RC.ADS.Data.Entity.AD_Order.OrderStatus", b =>
                 {
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("AuditEntityId");
+                    b.Property<string>("ChineseName");
 
-                    b.Property<DateTime>("Creatime");
+                    b.Property<string>("Describe");
 
-                    b.Property<int>("OrderStatus");
+                    b.Property<string>("Name");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AuditEntityId");
+                    b.ToTable("OrderStatus");
+                });
 
-                    b.ToTable("OrderAudits");
+            modelBuilder.Entity("RC.ADS.Data.Entity.AD_Order.OrderStatusChange", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<DateTime>("Creatime");
+
+                    b.Property<string>("OrderId");
+
+                    b.Property<int>("Status");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OrderId");
+
+                    b.ToTable("OrderStatusChanges");
                 });
 
             modelBuilder.Entity("RC.ADS.Data.Entity.AD_Account.AccountInfo", b =>
@@ -172,7 +216,7 @@ namespace RC.ADS.Data.Migrations
                 {
                     b.HasOne("RC.ADS.Data.Entity.AD_Article.ArticleType", "ArticleTypeEntity")
                         .WithMany()
-                        .HasForeignKey("ArticleTypeEntityId");
+                        .HasForeignKey("ArticleTypeId");
                 });
 
             modelBuilder.Entity("RC.ADS.Data.Entity.AD_Integral.IntegralInfo", b =>
@@ -196,11 +240,11 @@ namespace RC.ADS.Data.Migrations
                         .HasForeignKey("OwnerId");
                 });
 
-            modelBuilder.Entity("RC.ADS.Data.Entity.AD_Order.OrderAudit", b =>
+            modelBuilder.Entity("RC.ADS.Data.Entity.AD_Order.OrderStatusChange", b =>
                 {
-                    b.HasOne("RC.ADS.Data.Entity.AD_Order.Order", "AuditEntity")
+                    b.HasOne("RC.ADS.Data.Entity.AD_Order.Order", "OrderEntity")
                         .WithMany()
-                        .HasForeignKey("AuditEntityId");
+                        .HasForeignKey("OrderId");
                 });
 #pragma warning restore 612, 618
         }

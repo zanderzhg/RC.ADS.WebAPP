@@ -20,9 +20,13 @@ namespace RC.ADS.Data
         public DbSet<IntegralInfo> IntegralInfos { get; set; }
         public DbSet<Menber> Menbers { get; set; }
         public DbSet<Order> Orders { get; set; }
-        public DbSet<OrderAudit> OrderAudits { get; set; }
+        public DbSet<OrderStatusChange> OrderStatusChanges { get; set; }
+        public DbSet<AccountInfoChangeType> AccountInfoChangeTpyes { get; set; }
+        public DbSet<IntegralInfoChangeType> IntegralInfoChangeType { get; set; }
+        public DbSet<OrderStatus> OrderStatus { get; set; }
+       
 
-        
+
 
     }
 }

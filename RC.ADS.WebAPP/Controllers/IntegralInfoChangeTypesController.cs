@@ -6,26 +6,26 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using RC.ADS.Data;
-using RC.ADS.Data.Entity.AD_Account;
+using RC.ADS.Data.Entity.AD_Integral;
 
 namespace RC.ADS.WebAPP.Controllers
 {
-    public class AccountInfoesController : Controller
+    public class IntegralInfoChangeTypesController : Controller
     {
         private readonly DataContext _context;
 
-        public AccountInfoesController(DataContext context)
+        public IntegralInfoChangeTypesController(DataContext context)
         {
             _context = context;
         }
 
-        // GET: AccountInfoes
+        // GET: IntegralInfoChangeTypes
         public async Task<IActionResult> Index()
         {
-            return View(await _context.AccountInfos.ToListAsync());
+            return View(await _context.IntegralInfoChangeType.ToListAsync());
         }
 
-        // GET: AccountInfoes/Details/5
+        // GET: IntegralInfoChangeTypes/Details/5
         public async Task<IActionResult> Details(string id)
         {
             if (id == null)
@@ -33,42 +33,39 @@ namespace RC.ADS.WebAPP.Controllers
                 return NotFound();
             }
 
-            var accountInfo = await _context.AccountInfos
+            var integralInfoChangeType = await _context.IntegralInfoChangeType
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (accountInfo == null)
+            if (integralInfoChangeType == null)
             {
                 return NotFound();
             }
 
-            return View(accountInfo);
+            return View(integralInfoChangeType);
         }
 
-        // GET: AccountInfoes/Create
+        // GET: IntegralInfoChangeTypes/Create
         public IActionResult Create()
         {
-              var selectListEnum = _context.ArticleTypes.Select(x => new { Value = x.Id, Text = x.Name });
-            SelectList list = new SelectList(selectListEnum, "Value", "Text");
-            ViewBag.SelectListEnum = list;
             return View();
         }
 
-        // POST: AccountInfoes/Create
+        // POST: IntegralInfoChangeTypes/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Money,AccountInfoChangeTpye,Describe")] AccountInfo accountInfo)
+        public async Task<IActionResult> Create([Bind("Id,Name,Describe")] IntegralInfoChangeType integralInfoChangeType)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(accountInfo);
+                _context.Add(integralInfoChangeType);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(accountInfo);
+            return View(integralInfoChangeType);
         }
 
-        // GET: AccountInfoes/Edit/5
+        // GET: IntegralInfoChangeTypes/Edit/5
         public async Task<IActionResult> Edit(string id)
         {
             if (id == null)
@@ -76,22 +73,22 @@ namespace RC.ADS.WebAPP.Controllers
                 return NotFound();
             }
 
-            var accountInfo = await _context.AccountInfos.FindAsync(id);
-            if (accountInfo == null)
+            var integralInfoChangeType = await _context.IntegralInfoChangeType.FindAsync(id);
+            if (integralInfoChangeType == null)
             {
                 return NotFound();
             }
-            return View(accountInfo);
+            return View(integralInfoChangeType);
         }
 
-        // POST: AccountInfoes/Edit/5
+        // POST: IntegralInfoChangeTypes/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("Id,Money,AccountInfoChangeTpye,Describe")] AccountInfo accountInfo)
+        public async Task<IActionResult> Edit(string id, [Bind("Id,Name,Describe")] IntegralInfoChangeType integralInfoChangeType)
         {
-            if (id != accountInfo.Id)
+            if (id != integralInfoChangeType.Id)
             {
                 return NotFound();
             }
@@ -100,12 +97,12 @@ namespace RC.ADS.WebAPP.Controllers
             {
                 try
                 {
-                    _context.Update(accountInfo);
+                    _context.Update(integralInfoChangeType);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!AccountInfoExists(accountInfo.Id))
+                    if (!IntegralInfoChangeTypeExists(integralInfoChangeType.Id))
                     {
                         return NotFound();
                     }
@@ -116,10 +113,10 @@ namespace RC.ADS.WebAPP.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(accountInfo);
+            return View(integralInfoChangeType);
         }
 
-        // GET: AccountInfoes/Delete/5
+        // GET: IntegralInfoChangeTypes/Delete/5
         public async Task<IActionResult> Delete(string id)
         {
             if (id == null)
@@ -127,30 +124,30 @@ namespace RC.ADS.WebAPP.Controllers
                 return NotFound();
             }
 
-            var accountInfo = await _context.AccountInfos
+            var integralInfoChangeType = await _context.IntegralInfoChangeType
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (accountInfo == null)
+            if (integralInfoChangeType == null)
             {
                 return NotFound();
             }
 
-            return View(accountInfo);
+            return View(integralInfoChangeType);
         }
 
-        // POST: AccountInfoes/Delete/5
+        // POST: IntegralInfoChangeTypes/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
-            var accountInfo = await _context.AccountInfos.FindAsync(id);
-            _context.AccountInfos.Remove(accountInfo);
+            var integralInfoChangeType = await _context.IntegralInfoChangeType.FindAsync(id);
+            _context.IntegralInfoChangeType.Remove(integralInfoChangeType);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool AccountInfoExists(string id)
+        private bool IntegralInfoChangeTypeExists(string id)
         {
-            return _context.AccountInfos.Any(e => e.Id == id);
+            return _context.IntegralInfoChangeType.Any(e => e.Id == id);
         }
     }
 }
