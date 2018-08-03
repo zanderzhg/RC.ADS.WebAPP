@@ -56,11 +56,14 @@
                         操作 <span class="caret"></span>
                     </button>
                     <ul class="dropdown-menu" role="menu">
-                       
+
                         <li><a asp-action="Edit" asp-route-id="@item.Id">编辑</a> </li>
                         <li><a asp-action="Details" asp-route-id="@item.Id">查看</a> </li>
                         <li><a asp-action="Delete" asp-route-id="@item.Id">删除</a></li>
-                       
+                        <li><a asp-controller="Orders" asp-action="Create" asp-route-id="@item.Id">添加订单</a></li>
+                        <li><a  asp-controller="Orders" asp-action="index" asp-route-id="@item.Id">查看订单</a></li>
+                        <li><a asp-action="Delete" asp-route-id="@item.Id">充值</a></li>
+                        <li><a asp-action="Delete" asp-route-id="@item.Id">添加积分</a></li>
                     </ul>
                 </div>
                 
