@@ -168,18 +168,8 @@ namespace RC.ADS.WebAPP.Controllers
         {
             //TODO
             string articleId = "";
-            if (articleId == null)
-            {
-                return NotFound();
-            }
-
             var article = await _context.Articles
-                .FirstOrDefaultAsync(m => m.Id == articleId);
-            if (article == null)
-            {
-                return NotFound();
-            }
-
+                .FirstOrDefaultAsync(m => m.Id == articleId);         
             return View(article);
              
         }
