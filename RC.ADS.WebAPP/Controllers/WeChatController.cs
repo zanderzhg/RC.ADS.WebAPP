@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using RC.ADS.Data;
 using RC.ADS.Data.Entity.AD_Menber;
 using RC.ADS.WebAPP.Comm;
@@ -135,27 +136,52 @@ namespace RC.ADS.WebAPP.Controllers
         #endregion
 
         #region 业务范围
-        public IActionResult Business()
+        public async Task<IActionResult> Business()
         {
-            BusinessVM vm = new BusinessVM();
-
-            return View(vm);
+            //TODO 设置id
+            string articleTypeId = "";
+            return View(await _context.Articles.Where(x=>x.ArticleTypeId== articleTypeId).ToListAsync());
         }
         #region 子功能
-        public IActionResult BusinessDetail(string businessId)
+        public async Task<IActionResult> BusinessDetail(string businessId)
         {
-            BusinessDetailVM vm = new BusinessDetailVM();
-            return View(vm);
+            if (businessId == null)
+            {
+                return NotFound();
+            }
+
+            var article = await _context.Articles
+                .FirstOrDefaultAsync(m => m.Id == businessId);
+            if (article == null)
+            {
+                return NotFound();
+            }
+
+            return View(article);
         }
         #endregion
 
         #endregion
 
         #region 下单
-        public IActionResult PlaceOrder()
+        public async Task<IActionResult> PlaceOrder()
         {
-            PlaceOrderVM vm = new PlaceOrderVM();
-            return View(vm);
+            //TODO
+            string articleId = "";
+            if (articleId == null)
+            {
+                return NotFound();
+            }
+
+            var article = await _context.Articles
+                .FirstOrDefaultAsync(m => m.Id == articleId);
+            if (article == null)
+            {
+                return NotFound();
+            }
+
+            return View(article);
+             
         }
         #endregion
 
@@ -166,10 +192,17 @@ namespace RC.ADS.WebAPP.Controllers
             return View(vm);
         }
         #region 子功能
-        //public IActionResult BusinessDetail(string businessId)
-        //{
-        //    return View();
-        //}
+        public IActionResult ShowCode()
+        { 
+            return View();
+        }
+        public IActionResult ShowCode1()
+        {
+            System.IO.MemoryStream ms = BarCodeHelper.CreateCodeEwm("www.baidu.com");
+            //HttpContext.Session.SetString("ImageValidateCode", code);
+            Response.Body.Dispose();
+            return File(ms.ToArray(), @"image/png");
+        }
         #endregion
         #endregion
     }
