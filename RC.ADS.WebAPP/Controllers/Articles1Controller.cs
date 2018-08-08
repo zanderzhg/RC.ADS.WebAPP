@@ -2,37 +2,31 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Internal;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using RC.ADS.Data;
 using RC.ADS.Data.Entity.AD_Article;
-using RC.ADS.WebAPP.Comm;
 
 namespace RC.ADS.WebAPP.Controllers
 {
-    public class ArticlesController : Controller
+    public class Articles1Controller : Controller
     {
         private readonly DataContext _context;
-        private IHostingEnvironment _env;
-        
 
-        public ArticlesController(DataContext context,IHostingEnvironment env)
+        public Articles1Controller(DataContext context)
         {
             _context = context;
-            _env = env;
         }
 
-        // GET: Articles
+        // GET: Articles1
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Articles.ToListAsync());
+            var dataContext = _context.Articles.Include(a => a.ArticleTypeEntity);
+            return View(await dataContext.ToListAsync());
         }
 
-        // GET: Articles/Details/5
+        // GET: Articles1/Details/5
         public async Task<IActionResult> Details(string id)
         {
             if (id == null)
@@ -41,6 +35,7 @@ namespace RC.ADS.WebAPP.Controllers
             }
 
             var article = await _context.Articles
+                .Include(a => a.ArticleTypeEntity)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (article == null)
             {
@@ -49,47 +44,32 @@ namespace RC.ADS.WebAPP.Controllers
 
             return View(article);
         }
-        [HttpGet]
-        // GET: Articles/Create
+
+        // GET: Articles1/Create
         public IActionResult Create()
         {
-            Article article = new Article();
-            var selectListEnum = _context.ArticleTypes.Select(x => new { Value = x.Id, Text = x.Name });
-            SelectList list = new SelectList(selectListEnum, "Value", "Text");
-            ViewBag.SelectListEnum = list;
-            return View(article);
+            ViewData["ArticleTypeId"] = new SelectList(_context.ArticleTypes, "Id", "Id");
+            return View();
         }
-      
 
-        // POST: Articles/Create
+        // POST: Articles1/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public  IActionResult  Create([Bind("Id,ArticleName,ArticleContent,ArticleIco,ArticleImage,ArticleIndex,ArticleTypeId")]Article article)
+        public async Task<IActionResult> Create([Bind("Id,ArticleName,ArticleContent,ArticleIco,ArticleImage,ArticleIndex,ArticleTypeId")] Article article)
         {
-
             if (ModelState.IsValid)
             {
-                var ArticleContent = Request.Form["ArticleContent"];
-                var ArticleTypeId= Request.Form["ArticleTypeId"];
-                //TODO 添加文章类别ID
-                var articleIco_File = Request.Form.Files["ArticleIco"] ;
-                 article.ArticleIco= FileHelper.UploadImage(articleIco_File, _env);
-
-                var articleImage_File = Request.Form.Files["ArticleImage"];
-                article.ArticleImage = FileHelper.UploadImage(articleImage_File, _env);
-
-                article.ArticleTypeEntity = _context.ArticleTypes.FirstOrDefault(x=>x.Id== ArticleTypeId);
-
                 _context.Add(article);
-                 _context.SaveChangesAsync();
+                await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["ArticleTypeId"] = new SelectList(_context.ArticleTypes, "Id", "Id", article.ArticleTypeId);
             return View(article);
         }
 
-        // GET: Articles/Edit/5
+        // GET: Articles1/Edit/5
         public async Task<IActionResult> Edit(string id)
         {
             if (id == null)
@@ -102,19 +82,16 @@ namespace RC.ADS.WebAPP.Controllers
             {
                 return NotFound();
             }
-            var selectListEnum = _context.ArticleTypes.Select(x => new { Value = x.Id, Text = x.Name });
-            var value = article.ArticleTypeId;
-            SelectList list = new SelectList(selectListEnum, "Value", "Text", value);
-            ViewBag.SelectListEnum = list;
+            ViewData["ArticleTypeId"] = new SelectList(_context.ArticleTypes, "Id", "Id", article.ArticleTypeId);
             return View(article);
         }
 
-        // POST: Articles/Edit/5
+        // POST: Articles1/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id,   Article article)
+        public async Task<IActionResult> Edit(string id, [Bind("Id,ArticleName,ArticleContent,ArticleIco,ArticleImage,ArticleIndex,ArticleTypeId")] Article article)
         {
             if (id != article.Id)
             {
@@ -125,35 +102,7 @@ namespace RC.ADS.WebAPP.Controllers
             {
                 try
                 {
-                    var old_article = await _context.Articles.FindAsync(id);
-                    old_article.ArticleContent = article.ArticleContent;
-                    old_article.ArticleIndex = article.ArticleIndex;
-                   // old_article.ArticleTypeEntity =await _context.ArticleTypes.FindAsync(article.ArticleTypeEntity.Id);
-
-                    var articleIco_File = Request.Form.Files["ArticleIco"];
-                    if (articleIco_File!=null)
-                    {
-                        article.ArticleIco = FileHelper.UploadImage(articleIco_File, _env);
-                    }
-                    else
-                    {
-                        article.ArticleIco= old_article.ArticleIco;
-                    }
-                   
-
-                    var articleImage_File = Request.Form.Files["ArticleImage"];
-                    if (articleImage_File != null)
-                    {
-                        article.ArticleImage = FileHelper.UploadImage(articleImage_File, _env);
-                    }
-                    else
-                    {
-                        article.ArticleImage = old_article.ArticleImage;
-                    }
-
-
-
-                    _context.Update(old_article);
+                    _context.Update(article);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -169,10 +118,11 @@ namespace RC.ADS.WebAPP.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["ArticleTypeId"] = new SelectList(_context.ArticleTypes, "Id", "Id", article.ArticleTypeId);
             return View(article);
         }
 
-        // GET: Articles/Delete/5
+        // GET: Articles1/Delete/5
         public async Task<IActionResult> Delete(string id)
         {
             if (id == null)
@@ -181,6 +131,7 @@ namespace RC.ADS.WebAPP.Controllers
             }
 
             var article = await _context.Articles
+                .Include(a => a.ArticleTypeEntity)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (article == null)
             {
@@ -190,7 +141,7 @@ namespace RC.ADS.WebAPP.Controllers
             return View(article);
         }
 
-        // POST: Articles/Delete/5
+        // POST: Articles1/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string id)

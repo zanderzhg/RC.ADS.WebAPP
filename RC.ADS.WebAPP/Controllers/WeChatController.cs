@@ -154,6 +154,10 @@ namespace RC.ADS.WebAPP.Controllers
         {
             RCLog.Info(this, "test");
             IndexVM vm = new IndexVM();
+            vm.About = _context.Articles.FirstOrDefault(x => x.ArticleTypeId == "45395e0707cb47bca2f537085910bcbd");
+            vm.Achievement = _context.Articles.FirstOrDefault(x => x.ArticleTypeId == "4d5f55f74fd84c4e932f5f14e402974d");
+            vm.Notice = _context.Articles.FirstOrDefault(x => x.ArticleTypeId == "a875b58bf4c441a1a254037e161a72bb");
+            vm.Slideshows = _context.Articles.Where(x => x.ArticleTypeId == "c3c01a5114be496d822fad2fd1bdfb26").ToList();
             return View(vm);
         }
         #endregion
