@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
@@ -27,7 +28,7 @@ namespace RC.ADS.WebAPP
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
-        {
+        { 
             services.AddDbContext<DataContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DbConnection")));
             services.Configure<CookiePolicyOptions>(options =>
             {
@@ -54,7 +55,7 @@ namespace RC.ADS.WebAPP
             {
                 app.UseExceptionHandler("/Home/Error");
             }
-
+          
             app.UseStaticFiles();
             app.UseCookiePolicy();
             app.UseSession();

@@ -64,8 +64,8 @@ namespace RC.ADS.WebAPP.Controllers
         // POST: Articles/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
         public  IActionResult  Create([Bind("Id,ArticleName,ArticleContent,ArticleIco,ArticleImage,ArticleIndex,ArticleTypeId")]Article article)
         {
 
@@ -87,6 +87,14 @@ namespace RC.ADS.WebAPP.Controllers
                 return RedirectToAction(nameof(Index));
             }
             return View(article);
+        }
+        public IActionResult Create1(string text)
+        {
+
+            
+                var ArticleContent = Request.Form["ArticleContent"];
+                
+            return Json("");
         }
 
         // GET: Articles/Edit/5
