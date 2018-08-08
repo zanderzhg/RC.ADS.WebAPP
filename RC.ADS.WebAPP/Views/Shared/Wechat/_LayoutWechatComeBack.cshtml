@@ -1,0 +1,29 @@
+﻿<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <link rel="stylesheet" href="~/css/weui/weui.css" />
+    <link rel="stylesheet" href="~/css/weui/weui2.css" />
+    <link rel="stylesheet" href="~/css/weui/weui3.css" />
+    <!-- View specific styles -->
+    @RenderSection("styles", required: false)
+</head>
+<body ontouchstart style="background-color: #f8f8f8;">
+    <div class="weui-header bg-blue">
+        <div class="weui-header-left"> <a id="back" class="icon icon-109 f-white">返回</a>  </div>
+        <h1 class="weui-header-title">@ViewData["Title"]</h1>
+         
+    </div>
+    @RenderBody()
+    
+    <script src="~/js/weui/zepto.min.js"></script>
+    <script>
+        $("#back").click(function () { history.back();});
+        
+    </script>
+     
+    @RenderSection("scripts", required: false)
+</body>
+</html>

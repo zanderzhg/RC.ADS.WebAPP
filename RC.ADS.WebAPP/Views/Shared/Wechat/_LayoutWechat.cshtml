@@ -11,8 +11,13 @@
     @RenderSection("styles", required: false)
 </head>
 <body ontouchstart style="background-color: #f8f8f8;">
+    <div class="weui-header bg-blue" >
+        
+        <h1 class="weui-header-title">工厂联盟</h1>
+
+    </div>
     @RenderBody()
-    <div style="height:100px"/>
+    <div style="height:100px" />
     <section class="weui-menu">
         <div class="weui-menu-inner">
             <a href="/wechat/index/" class="weui_tabbar_item">
@@ -53,36 +58,36 @@
     <script src="~/js/weui/zepto.min.js"></script>
     <script src="~/js/weui/iscroll.js"></script>
     <script>
-$(function () {
-    var urlpath = window.location.pathname;
-    console.log(urlpath);
-        switch (urlpath) {
-            case '/wechat/index/':
-                index = 0;
-                break;
-            case '/wechat/placeorder/':
-                index = 1;
-                break;
-            case '/wechat/business/':
-                index = 2;
-                break;
-            case '/wechat/me/':
-                index = 3;
-                break;
-            default:
-                index = 0;
-        }
-
-    $('.weui-menu').tab({
-            defaultIndex: index,
-            activeClass: 'weui_bar_item_on',
-            onToggle: function (index) {
-
+        $(function () {
+            var urlpath = window.location.pathname;
+            console.log(urlpath);
+            switch (urlpath) {
+                case '/wechat/index/':
+                    index = 0;
+                    break;
+                case '/wechat/placeorder/':
+                    index = 1;
+                    break;
+                case '/wechat/business/':
+                    index = 2;
+                    break;
+                case '/wechat/me/':
+                    index = 3;
+                    break;
+                default:
+                    index = 0;
             }
-        });
+
+            $('.weui-menu').tab({
+                defaultIndex: index,
+                activeClass: 'weui_bar_item_on',
+                onToggle: function (index) {
+
+                }
+            });
 
 
-    });</script>
+        });</script>
     @RenderSection("scripts", required: false)
 </body>
 </html>

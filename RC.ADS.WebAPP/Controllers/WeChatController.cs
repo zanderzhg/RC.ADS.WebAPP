@@ -33,10 +33,33 @@ namespace RC.ADS.WebAPP.Controllers
             Response.Body.Dispose();
             return File(ms.ToArray(), @"image/png");
         }
-        public IActionResult Loginaaa(string returnUrl = "")
+        public IActionResult SendPhoneValidateCode()
         {
-            
-            return View( );
+            var phone = Request.Form["mobile"].ToString().Trim();
+            var Vcode = Request.Form["Vcode"].ToString().Trim();
+
+            var ImageValidateCode= HttpContext.Session.GetString("ImageValidateCode");
+            if (Vcode.ToUpper()== ImageValidateCode.ToUpper())
+            {
+                Random rd = new Random();
+                var PhoneValidateCode = rd.Next(1000, 9999).ToString();
+                var result = SMSHelper.SendVerificationCode(PhoneValidateCode, phone);
+                if (result)
+                {
+                    HttpContext.Session.SetString("PhoneValidateCode", PhoneValidateCode);
+                    return Json(new { statu = "OK", Msg = "验证码已经发送!" });
+                }
+                else
+                {
+                    return Json(new { statu = "Error", Msg = "验证码发送失败!" });
+                }
+            }
+            else
+            {
+                return Json(new { statu = "Error", Msg = "图片验证码不对!" });
+            }
+           
+           
         }
         #region 登陆
         [HttpGet]
@@ -46,7 +69,7 @@ namespace RC.ADS.WebAPP.Controllers
             return View(model);
         }
         [HttpPost]
-        public  IActionResult  Login(LoginVM model)
+        public IActionResult Login(LoginVM model)
         {
             if (ModelState.IsValid)
             {
@@ -67,7 +90,7 @@ namespace RC.ADS.WebAPP.Controllers
             }
             ModelState.AddModelError("", "Invalid login attempt");
             return View(model);
-        } 
+        }
         #endregion
         #region 注册
         [HttpGet]
@@ -82,12 +105,12 @@ namespace RC.ADS.WebAPP.Controllers
             if (ModelState.IsValid)
             {
                 ///TODO 验证数据
-                if (model.Password!=model.ConfirmPassword)
+                if (model.Password != model.ConfirmPassword)
                 {
                     ModelState.AddModelError("", "两次输入密码不对");
                     return View(model);
                 }
-                if (model.ImageValidateCode != HttpContext.Session.GetString("ImageValidateCode"))
+                if (model.ImageValidateCode.ToUpper() != HttpContext.Session.GetString("ImageValidateCode").ToUpper())
                 {
                     ModelState.AddModelError("", "验证码不对");
                     return View(model);
@@ -121,7 +144,7 @@ namespace RC.ADS.WebAPP.Controllers
             }
             ModelState.AddModelError("", "Invalid login attempt");
             return View(model);
-        } 
+        }
         #endregion
 
         #endregion
@@ -140,7 +163,7 @@ namespace RC.ADS.WebAPP.Controllers
         {
             //TODO 设置id
             string articleTypeId = "";
-            return View(await _context.Articles.Where(x=>x.ArticleTypeId== articleTypeId).ToListAsync());
+            return View(await _context.Articles.Where(x => x.ArticleTypeId == articleTypeId).ToListAsync());
         }
         #region 子功能
         public async Task<IActionResult> BusinessDetail(string businessId)
@@ -169,24 +192,32 @@ namespace RC.ADS.WebAPP.Controllers
             //TODO
             string articleId = "";
             var article = await _context.Articles
-                .FirstOrDefaultAsync(m => m.Id == articleId);         
+                .FirstOrDefaultAsync(m => m.Id == articleId);
             return View(article);
-             
+
         }
         #endregion
 
         #region 个人中心
         public IActionResult Me()
         {
-            MeVM vm = new MeVM();
-            return View(vm);
+            var CurrentMemberId = HttpContext.Session.GetString("LoginMenberId");
+            if (string.IsNullOrEmpty(CurrentMemberId))
+            {
+                return RedirectToAction("Login", "WeChat");
+            }
+            else
+            {
+                MeVM vm = new MeVM();
+                return View(vm);
+            }
         }
         #region 子功能
-        public IActionResult ShowCode()
-        { 
+        public IActionResult PromoCode()
+        {
             return View();
         }
-        public IActionResult ShowCode1()
+        public IActionResult ShowCode()
         {
             System.IO.MemoryStream ms = BarCodeHelper.CreateCodeEwm("www.baidu.com");
             //HttpContext.Session.SetString("ImageValidateCode", code);
