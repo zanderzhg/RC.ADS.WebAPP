@@ -203,7 +203,7 @@ namespace RC.ADS.WebAPP.Controllers
         #endregion
 
         #region 个人中心
-        public IActionResult Me()
+        public async Task<IActionResult> Me()
         {
             var CurrentMemberId = HttpContext.Session.GetString("LoginMenberId");
             if (string.IsNullOrEmpty(CurrentMemberId))
@@ -213,6 +213,11 @@ namespace RC.ADS.WebAPP.Controllers
             else
             {
                 MeVM vm = new MeVM();
+                var member =await  _context.Menbers.FirstOrDefaultAsync(x=>x.Id==CurrentMemberId);
+                vm.Balance = member.AccountSum;
+                vm.IntegralSum = member.IntegralSum;
+                vm.ManberName = member.ManberName;
+                vm.OrderSum =await _context.Orders.Where(x => x.OwnerId == member.Id).CountAsync();
                 return View(vm);
             }
         }

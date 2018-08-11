@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RC.ADS.Data;
 
 namespace RC.ADS.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20180811055404_update-Order")]
+    partial class updateOrder
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -202,15 +204,11 @@ namespace RC.ADS.Data.Migrations
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<DateTime>("CreateTime");
-
-                    b.Property<string>("Description");
+                    b.Property<DateTime>("Creatime");
 
                     b.Property<string>("OrderId");
 
                     b.Property<string>("OrderStatusId");
-
-                    b.Property<decimal>("Price");
 
                     b.HasKey("Id");
 
@@ -274,7 +272,7 @@ namespace RC.ADS.Data.Migrations
                         .WithMany()
                         .HasForeignKey("OrderId");
 
-                    b.HasOne("RC.ADS.Data.Entity.AD_Order.OrderStatus", "orderStatu")
+                    b.HasOne("RC.ADS.Data.Entity.AD_Order.OrderStatus", "Status")
                         .WithMany()
                         .HasForeignKey("OrderStatusId");
                 });

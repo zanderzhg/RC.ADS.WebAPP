@@ -18,12 +18,23 @@ namespace RC.ADS.WebAPP.Controllers
         {
             _context = context;
         }
-
         // GET: Orders
-        public async Task<IActionResult> Index()
+        public IActionResult Index(string owerId)
         {
-            return View(await _context.Orders.ToListAsync());
+            if (owerId == null)
+            {
+                //owerId = this.TempData["owerId"].ToString();
+            }
+            ViewBag.OwerName = _context.Menbers.FirstOrDefault(x => x.Id == owerId).ManberName;
+            ViewBag.OwerId = owerId;
+            return View(_context.Orders.Where(x => x.OwnerId == owerId).ToList());
         }
+        public IActionResult ShowOrderStatus(string orderId)
+        {
+            ViewBag.OrderName = _context.Orders.FirstOrDefault(x=>x.Id==orderId).OrderName;
+            return View(_context.OrderStatusChanges.Where(x => x.OrderId == orderId).ToList());
+        }
+      
 
         // GET: Orders/Details/5
         public async Task<IActionResult> Details(string id)
@@ -44,9 +55,14 @@ namespace RC.ADS.WebAPP.Controllers
         }
 
         // GET: Orders/Create
-        public IActionResult Create()
+        public IActionResult Create(string owerId)
         {
-            return View();
+            Order vm = new Order() { OwnerId = owerId };
+            var selectListEnum = _context.OrderStatus.Select(x => new { Value = x.Id, Text = x.ChineseName });
+            SelectList list = new SelectList(selectListEnum, "Value", "Text");
+            ViewBag.SelectListEnum = list;
+
+            return View(vm);
         }
 
         // POST: Orders/Create
@@ -54,13 +70,15 @@ namespace RC.ADS.WebAPP.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Price,orderStatu,Description")] Order order)
+        public IActionResult Create(Order order)
         {
             if (ModelState.IsValid)
             {
+                order.CreateTime = DateTime.Now;
+                order.LastUpdateTime = DateTime.Now;
                 _context.Add(order);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                _context.SaveChanges();
+                return RedirectToAction(nameof(Index), new { owerId = order.OwnerId });
             }
             return View(order);
         }
@@ -74,10 +92,15 @@ namespace RC.ADS.WebAPP.Controllers
             }
 
             var order = await _context.Orders.FindAsync(id);
+          
+
             if (order == null)
             {
                 return NotFound();
             }
+            var selectListEnum = _context.OrderStatus.Select(x => new { Value = x.Id, Text = x.ChineseName });
+            SelectList list = new SelectList(selectListEnum, "Value", "Text", order.OrderStatusId);
+            ViewBag.SelectListEnum = list;
             return View(order);
         }
 
@@ -86,7 +109,7 @@ namespace RC.ADS.WebAPP.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("Id,Price,orderStatu,Description")] Order order)
+        public async Task<IActionResult> Edit(string id, Order order)
         {
             if (id != order.Id)
             {
@@ -97,6 +120,16 @@ namespace RC.ADS.WebAPP.Controllers
             {
                 try
                 {
+                    order.LastUpdateTime = DateTime.Now;
+                    OrderStatusChange orderStatusChange = new OrderStatusChange()
+                    {
+                        OrderId = order.Id,
+                        OrderStatusId = order.OrderStatusId,
+                        Price = order.Price,
+                        Description = order.Description,
+                        CreateTime = order.LastUpdateTime,
+                    };
+                    _context.OrderStatusChanges.Add(orderStatusChange);
                     _context.Update(order);
                     await _context.SaveChangesAsync();
                 }
@@ -111,11 +144,12 @@ namespace RC.ADS.WebAPP.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Index), new { owerId = order.OwnerId });
             }
             return View(order);
         }
 
+ 
         // GET: Orders/Delete/5
         public async Task<IActionResult> Delete(string id)
         {

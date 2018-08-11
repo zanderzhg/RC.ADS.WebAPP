@@ -20,9 +20,17 @@ namespace RC.ADS.WebAPP.Controllers
         }
 
         // GET: IntegralInfoes
-        public async Task<IActionResult> Index()
+      
+        public async Task<IActionResult> Index(string owerId)
         {
-            return View(await _context.IntegralInfos.ToListAsync());
+            if (owerId == null)
+            {
+                //owerId = this.TempData["owerId"].ToString();
+            }
+            ViewBag.OwerName = _context.Menbers.FirstOrDefault(x => x.Id == owerId).ManberName;
+            ViewBag.OwerId = owerId;
+            return View(await _context.IntegralInfos.Where(x => x.OwnerId == owerId).ToListAsync());
+
         }
 
         // GET: IntegralInfoes/Details/5
@@ -42,11 +50,17 @@ namespace RC.ADS.WebAPP.Controllers
 
             return View(integralInfo);
         }
-
+   
+ 
         // GET: IntegralInfoes/Create
-        public IActionResult Create()
+        public IActionResult Create(string owerId)
         {
-            return View();
+            ViewBag.OwerName = _context.Menbers.FirstOrDefault(x => x.Id == owerId).ManberName;
+            IntegralInfo integralInfo = new IntegralInfo() { OwnerId = owerId };
+            var selectListEnum = _context.IntegralInfoChangeType.Select(x => new { Value = x.Id, Text = x.Name });
+            SelectList list = new SelectList(selectListEnum, "Value", "Text");
+            ViewBag.SelectListEnum = list;
+            return View(integralInfo);
         }
 
         // POST: IntegralInfoes/Create
@@ -54,13 +68,16 @@ namespace RC.ADS.WebAPP.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Score,IntegralInfoChangeType,Describe")] IntegralInfo integralInfo)
+        public async Task<IActionResult> Create(IntegralInfo integralInfo)
         {
             if (ModelState.IsValid)
             {
+                var menber = _context.Menbers.FirstOrDefault(x => x.Id == integralInfo.OwnerId);
+                menber.IntegralSum += integralInfo.Score;
                 _context.Add(integralInfo);
+                _context.Menbers.Update(menber);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Index),"Menbers");
             }
             return View(integralInfo);
         }

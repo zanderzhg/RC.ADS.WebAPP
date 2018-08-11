@@ -1,11 +1,11 @@
 ﻿@model IEnumerable<RC.ADS.Data.Entity.AD_Menber.Menber>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "会有列表";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Index</h2>
+<h2>ViewData["Title"]</h2>
 
 <p>
     <a asp-action="Create">Create New</a>
@@ -60,10 +60,12 @@
                         <li><a asp-action="Edit" asp-route-id="@item.Id">编辑</a> </li>
                         <li><a asp-action="Details" asp-route-id="@item.Id">查看</a> </li>
                         <li><a asp-action="Delete" asp-route-id="@item.Id">删除</a></li>
-                        <li><a asp-controller="Orders" asp-action="Create" asp-route-id="@item.Id">添加订单</a></li>
-                        <li><a asp-controller="Orders" asp-action="index" asp-route-id="@item.Id">查看订单</a></li>
-                        <li><a asp-action="Delete" asp-route-id="@item.Id">充值</a></li>
-                        <li><a asp-action="Delete" asp-route-id="@item.Id">添加积分</a></li>
+                        <li><a asp-controller="Orders" asp-action="Create" asp-route-owerId="@item.Id">添加订单</a></li>
+                        <li><a asp-controller="Orders" asp-action="index" asp-route-owerId="@item.Id">查看该用户订单列表</a></li>
+                        <li><a asp-controller="AccountInfoes" asp-action="Create" asp-route-owerId="@item.Id">充值</a></li>
+                        <li><a asp-controller="AccountInfoes" asp-action="Index" asp-route-owerId="@item.Id">查看充值记录</a></li>
+                        <li><a asp-controller="IntegralInfoes" asp-action="Create" asp-route-owerId="@item.Id">添加积分</a></li>
+                        <li><a asp-controller="IntegralInfoes" asp-action="Index" asp-route-owerId="@item.Id">查看积分记录</a></li>
                     </ul>
                 </div>
                 

@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using RC.ADS.Data;
 using RC.ADS.Data.Entity.AD_Account;
+using RC.ADS.Data.Entity.AD_Menber;
 
 namespace RC.ADS.WebAPP.Controllers
 {
@@ -20,9 +21,16 @@ namespace RC.ADS.WebAPP.Controllers
         }
 
         // GET: AccountInfoes
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string owerId)
         {
-            return View(await _context.AccountInfos.ToListAsync());
+            if (owerId == null)
+            {
+                //owerId = this.TempData["owerId"].ToString();
+            }
+            ViewBag.OwerName = _context.Menbers.FirstOrDefault(x => x.Id == owerId).ManberName;
+            ViewBag.OwerId = owerId;
+            return View(await _context.AccountInfos.Where(x => x.OwnerId == owerId).ToListAsync());
+         
         }
 
         // GET: AccountInfoes/Details/5
@@ -42,14 +50,18 @@ namespace RC.ADS.WebAPP.Controllers
 
             return View(accountInfo);
         }
+    
 
+        
         // GET: AccountInfoes/Create
-        public IActionResult Create()
+        public IActionResult Create(string owerId)
         {
-              var selectListEnum = _context.ArticleTypes.Select(x => new { Value = x.Id, Text = x.Name });
+            ViewBag.OwerName = _context.Menbers.FirstOrDefault(x => x.Id == owerId).ManberName;
+            AccountInfo accountInfo = new AccountInfo() { OwnerId = owerId };
+            var selectListEnum = _context.AccountInfoChangeTpyes.Select(x => new { Value = x.Id, Text = x.Name });
             SelectList list = new SelectList(selectListEnum, "Value", "Text");
             ViewBag.SelectListEnum = list;
-            return View();
+            return View(accountInfo);
         }
 
         // POST: AccountInfoes/Create
@@ -57,13 +69,16 @@ namespace RC.ADS.WebAPP.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Money,AccountInfoChangeTpye,Describe")] AccountInfo accountInfo)
+        public async Task<IActionResult> Create( AccountInfo accountInfo)
         {
             if (ModelState.IsValid)
             {
+                var menber = _context.Menbers.FirstOrDefault(x => x.Id == accountInfo.OwnerId);
+                menber.AccountSum += accountInfo.Money;
                 _context.Add(accountInfo);
+                _context.Menbers.Update(menber);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Index), "Menbers");
             }
             return View(accountInfo);
         }
@@ -81,6 +96,9 @@ namespace RC.ADS.WebAPP.Controllers
             {
                 return NotFound();
             }
+            var selectListEnum = _context.AccountInfoChangeTpyes.Select(x => new { Value = x.Id, Text = x.Name });
+            SelectList list = new SelectList(selectListEnum, "Value", "Text", accountInfo.AccountInfoChangeTpyeId);
+            ViewBag.SelectListEnum = list;
             return View(accountInfo);
         }
 

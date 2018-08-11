@@ -16,5 +16,9 @@ namespace RC.ADS.WebAPP.Models.WeChat
         /// 余额
         /// </summary>
         public decimal Balance { get; set; }
+        /// <summary>
+        /// 订单总数
+        /// </summary>
+        public int OrderSum { get; set; }
     }
 }

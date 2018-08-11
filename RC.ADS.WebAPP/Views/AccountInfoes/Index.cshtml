@@ -1,11 +1,11 @@
 ﻿@model IEnumerable<RC.ADS.Data.Entity.AD_Account.AccountInfo>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] =$"{@ViewBag.OwerName}--充值记录";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Index</h2>
+<h2>ViewData["Title"]</h2>
 
 <p>
     <a asp-action="Create">Create New</a>

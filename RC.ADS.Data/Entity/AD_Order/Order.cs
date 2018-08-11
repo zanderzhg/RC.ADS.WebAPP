@@ -10,6 +10,7 @@ namespace RC.ADS.Data.Entity.AD_Order
     {
         public Order() { Id = Guid.NewGuid().ToString("N"); }
         public string Id { get; set; }
+        public string OrderName { get; set; }
         public string OwnerId { get; set; }
         [ForeignKey("OwnerId")]
         public Menber  Owner { get; set; }
@@ -18,5 +19,10 @@ namespace RC.ADS.Data.Entity.AD_Order
         [ForeignKey("OrderStatusId")]
         public OrderStatus orderStatu { get; set; }
         public string Description { get; set; }
+        public DateTime CreateTime { get; set; }
+        /// <summary>
+        /// 最后更新时间
+        /// </summary>
+        public DateTime LastUpdateTime { get; set; }
     }
 }
