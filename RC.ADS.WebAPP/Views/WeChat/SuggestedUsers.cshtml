@@ -1,0 +1,26 @@
+﻿@model IEnumerable<RC.ADS.Data.Entity.AD_Menber.Menber>
+
+@{
+    ViewData["Title"] = "我推广的用户";
+    Layout = "~/Views/Shared/Wechat/_LayoutWechatComeBack.cshtml";
+}
+ 
+<table class="weui-table weui-border-tb weui-table-2n">
+    <thead>
+        <tr><th>会员名</th><th>注册时间</th></tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ManberName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.RegisterTime)
+                </td>
+
+            </tr>
+        }
+    </tbody>
+</table>

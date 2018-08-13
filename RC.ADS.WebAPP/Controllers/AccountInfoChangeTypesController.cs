@@ -54,7 +54,7 @@ namespace RC.ADS.WebAPP.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Describe")] AccountInfoChangeType accountInfoChangeType)
+        public async Task<IActionResult> Create( AccountInfoChangeType accountInfoChangeType)
         {
             if (ModelState.IsValid)
             {
@@ -86,7 +86,7 @@ namespace RC.ADS.WebAPP.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("Id,Name,Describe")] AccountInfoChangeType accountInfoChangeType)
+        public async Task<IActionResult> Edit(string id,  AccountInfoChangeType accountInfoChangeType)
         {
             if (id != accountInfoChangeType.Id)
             {

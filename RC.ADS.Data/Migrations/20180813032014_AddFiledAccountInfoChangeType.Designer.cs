@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RC.ADS.Data;
 
 namespace RC.ADS.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20180813032014_AddFiledAccountInfoChangeType")]
+    partial class AddFiledAccountInfoChangeType
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -25,12 +27,6 @@ namespace RC.ADS.Data.Migrations
                         .ValueGeneratedOnAdd();
 
                     b.Property<string>("AccountInfoChangeTpyeId");
-
-                    b.Property<decimal>("AfterMoney");
-
-                    b.Property<decimal>("BeforeMoney");
-
-                    b.Property<DateTime>("CreateTime");
 
                     b.Property<string>("Describe");
 
@@ -106,12 +102,6 @@ namespace RC.ADS.Data.Migrations
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int>("AfterScore");
-
-                    b.Property<int>("BeforeScore");
-
-                    b.Property<DateTime>("CreateTime");
-
                     b.Property<string>("Describe");
 
                     b.Property<string>("IntegralInfoChangeTypeId");
@@ -138,8 +128,6 @@ namespace RC.ADS.Data.Migrations
 
                     b.Property<string>("Name");
 
-                    b.Property<int>("PlusOrMinus");
-
                     b.HasKey("Id");
 
                     b.ToTable("IntegralInfoChangeType");
@@ -161,8 +149,6 @@ namespace RC.ADS.Data.Migrations
                     b.Property<string>("PhoneNumber");
 
                     b.Property<string>("ReferrerId");
-
-                    b.Property<DateTime>("RegisterTime");
 
                     b.HasKey("Id");
 
@@ -246,7 +232,7 @@ namespace RC.ADS.Data.Migrations
                         .HasForeignKey("AccountInfoChangeTpyeId");
 
                     b.HasOne("RC.ADS.Data.Entity.AD_Menber.Menber", "Owner")
-                        .WithMany()
+                        .WithMany("AccountInfoList")
                         .HasForeignKey("OwnerId");
                 });
 
@@ -264,7 +250,7 @@ namespace RC.ADS.Data.Migrations
                         .HasForeignKey("IntegralInfoChangeTypeId");
 
                     b.HasOne("RC.ADS.Data.Entity.AD_Menber.Menber", "Owner")
-                        .WithMany()
+                        .WithMany("IntegralInfoList")
                         .HasForeignKey("OwnerId");
                 });
 

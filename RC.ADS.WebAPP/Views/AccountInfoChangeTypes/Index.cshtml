@@ -17,6 +17,9 @@
                 @Html.DisplayNameFor(model => model.Name)
             </th>
             <th>
+                @Html.DisplayNameFor(model => model.PlusOrMinus)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.Describe)
             </th>
             <th></th>
@@ -27,6 +30,9 @@
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PlusOrMinus)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Describe)

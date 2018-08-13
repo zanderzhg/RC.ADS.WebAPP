@@ -38,8 +38,8 @@ namespace RC.ADS.WebAPP.Controllers
             var phone = Request.Form["mobile"].ToString().Trim();
             var Vcode = Request.Form["Vcode"].ToString().Trim();
 
-            var ImageValidateCode= HttpContext.Session.GetString("ImageValidateCode");
-            if (Vcode.ToUpper()== ImageValidateCode.ToUpper())
+            var ImageValidateCode = HttpContext.Session.GetString("ImageValidateCode");
+            if (Vcode.ToUpper() == ImageValidateCode.ToUpper())
             {
                 Random rd = new Random();
                 var PhoneValidateCode = rd.Next(1000, 9999).ToString();
@@ -58,8 +58,8 @@ namespace RC.ADS.WebAPP.Controllers
             {
                 return Json(new { statu = "Error", Msg = "图片验证码不对!" });
             }
-           
-           
+
+
         }
         #region 登陆
         [HttpGet]
@@ -149,7 +149,7 @@ namespace RC.ADS.WebAPP.Controllers
 
         #endregion
 
-        #region 首页
+        #region 首页 完成
         public IActionResult Index()
         {
             RCLog.Info(this, "test");
@@ -162,42 +162,30 @@ namespace RC.ADS.WebAPP.Controllers
         }
         #endregion
 
-        #region 业务范围
+        #region 业务范围 完成
         public async Task<IActionResult> Business()
         {
-            //TODO 设置id
-            string articleTypeId = "";
-            return View(await _context.Articles.Where(x => x.ArticleTypeId == articleTypeId).ToListAsync());
+            return View(await _context.Articles.Where(x => x.ArticleTypeId == ArticleTypeHelper.ArticleType_BusinessId).ToListAsync());
         }
         #region 子功能
         public async Task<IActionResult> BusinessDetail(string businessId)
         {
-            if (businessId == null)
-            {
-                return NotFound();
-            }
 
-            var article = await _context.Articles
-                .FirstOrDefaultAsync(m => m.Id == businessId);
+            var article = await _context.Articles.FirstOrDefaultAsync(m => m.Id == businessId);
             if (article == null)
             {
                 return NotFound();
             }
-
             return View(article);
         }
         #endregion
 
         #endregion
 
-        #region 下单
+        #region 下单 完成
         public async Task<IActionResult> PlaceOrder()
         {
-            //TODO
-            string articleId = "";
-            var article = await _context.Articles
-                .FirstOrDefaultAsync(m => m.Id == articleId);
-            return View(article);
+            return View(await _context.Articles.FirstOrDefaultAsync(m => m.Id == ArticleTypeHelper.ArticleType_PlaceOrderId));
 
         }
         #endregion
@@ -213,15 +201,52 @@ namespace RC.ADS.WebAPP.Controllers
             else
             {
                 MeVM vm = new MeVM();
-                var member =await  _context.Menbers.FirstOrDefaultAsync(x=>x.Id==CurrentMemberId);
+                var member = await _context.Menbers.FirstOrDefaultAsync(x => x.Id == CurrentMemberId);
                 vm.Balance = member.AccountSum;
                 vm.IntegralSum = member.IntegralSum;
                 vm.ManberName = member.ManberName;
-                vm.OrderSum =await _context.Orders.Where(x => x.OwnerId == member.Id).CountAsync();
+                vm.OrderSum = await _context.Orders.Where(x => x.OwnerId == member.Id).CountAsync();
                 return View(vm);
             }
         }
         #region 子功能
+        #region 余额  
+        public IActionResult AccountInfoList()
+        {
+            return View();
+        }
+
+        #endregion
+        #region 积分  
+        public IActionResult IntegralInfoList()
+        {
+            return View();
+        }
+
+        #endregion
+        #region 订单  
+        public IActionResult OrderInfoList()
+        {
+            var vm = from O in _context.Orders
+                     join T in _context.OrderStatus on O.OrderStatusId equals T.Id
+                     select new OrderInfoDto
+                     {
+                         Id = O.Id,
+
+                         OrderName = O.OrderName,
+                         Price = O.Price,
+                         OrderStatuName = T.ChineseName,
+
+                         Description = O.Description,
+                         CreateTime = O.CreateTime,
+                         LastUpdateTime = O.LastUpdateTime
+                     };
+            return View(vm);
+        }
+
+        #endregion
+
+        #region 我的推广码 完成
         public IActionResult PromoCode()
         {
             return View();
@@ -233,6 +258,71 @@ namespace RC.ADS.WebAPP.Controllers
             Response.Body.Dispose();
             return File(ms.ToArray(), @"image/png");
         }
+        #endregion
+        #region 我推广的用户 完成
+        public async Task<IActionResult> SuggestedUsers()
+        {
+            var CurrentMemberId = HttpContext.Session.GetString("LoginMenberId");
+            if (string.IsNullOrEmpty(CurrentMemberId))
+            {
+                return RedirectToAction("Login", "WeChat");
+            }
+            else
+            {
+                return View(await _context.Menbers.Where(x => x.ReferrerId == CurrentMemberId).ToListAsync());
+            }
+        }
+
+        #endregion
+        #region 修改密码 完成
+        [HttpGet]
+        public IActionResult ModifPassword()
+        {
+            ModifPasswordDto dto = new ModifPasswordDto();
+            return View(dto);
+        }
+        [HttpPost]
+        public async Task<IActionResult> ModifPassword(ModifPasswordDto dto)
+        {
+            var CurrentMemberId = HttpContext.Session.GetString("LoginMenberId");
+            if (string.IsNullOrEmpty(CurrentMemberId))
+            {
+                return RedirectToAction("Login", "WeChat");
+            }
+            else
+            {
+                var member = await _context.Menbers.FirstOrDefaultAsync(x => x.Id == CurrentMemberId);
+                if (member.Password == dto.OldPassword)
+                {
+                    if (dto.NewPassword == dto.ConfirmPassword)
+                    {
+                        member.Password = dto.NewPassword;
+                        _context.Update(member);
+                        await _context.SaveChangesAsync();
+                        return RedirectToAction("Me", "WeChat");
+                    }
+                    else
+                    {
+                        dto.Msg = "新密码与确认新密码不一致！";
+                    }
+                }
+                else
+                {
+                    dto.Msg = "旧密码不对！";
+                }
+            }
+            return View(dto);
+        }
+        #endregion
+        #region 安全退出 完成
+        public async Task<IActionResult> LoginOut()
+        {
+            HttpContext.Session.Remove("LoginMenberId");
+            return RedirectToAction("index", "WeChat");
+        }
+        #endregion
+
+
         #endregion
         #endregion
     }

@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RC.ADS.Data;
 
 namespace RC.ADS.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20180813080111_AddFiledMember")]
+    partial class AddFiledMember
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -25,12 +27,6 @@ namespace RC.ADS.Data.Migrations
                         .ValueGeneratedOnAdd();
 
                     b.Property<string>("AccountInfoChangeTpyeId");
-
-                    b.Property<decimal>("AfterMoney");
-
-                    b.Property<decimal>("BeforeMoney");
-
-                    b.Property<DateTime>("CreateTime");
 
                     b.Property<string>("Describe");
 
@@ -105,12 +101,6 @@ namespace RC.ADS.Data.Migrations
                 {
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd();
-
-                    b.Property<int>("AfterScore");
-
-                    b.Property<int>("BeforeScore");
-
-                    b.Property<DateTime>("CreateTime");
 
                     b.Property<string>("Describe");
 

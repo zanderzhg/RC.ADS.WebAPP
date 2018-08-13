@@ -19,19 +19,19 @@
 
     </div>
     <div class="weui_grids">
-        <a class="weui_grid js_grid" href="javascript:;">
+        <a class="weui_grid js_grid"  asp-controller="wechat" asp-action="AccountInfoList">
 
             <p class="weui_grid_label">
                 余额：@Model.Balance
             </p>
         </a>
-        <a class="weui_grid js_grid" href="javascript:;">
+        <a class="weui_grid js_grid" asp-controller="wechat" asp-action="IntegralInfoList">
 
             <p class="weui_grid_label">
                 积分：@Model.IntegralSum
             </p>
         </a>
-        <a class="weui_grid js_grid" href="javascript:;">
+        <a class="weui_grid js_grid" asp-controller="wechat" asp-action="OrderInfoList">
 
             <p class="weui_grid_label">
                 订单：@Model.OrderSum
@@ -61,19 +61,19 @@
                  alt="" style="width:20px;margin-right:5px;display:block">
         </div>
         <div class="weui_cell_bd weui_cell_primary">
-            <p>我要推广</p>
+            <p>我的推广码</p>
         </div>
         <div class="weui_cell_ft">
             <span class="icon icon-25"></span>
         </div>
     </a>
-    <a class="weui_cell" href="javascript:;">
+    <a asp-controller="wechat" asp-action="SuggestedUsers" class="weui_cell">
         <div class="weui_cell_hd">
             <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAC4AAAAuCAMAAABgZ9sFAAAAVFBMVEXx8fHMzMzr6+vn5+fv7+/t7e3d3d2+vr7W1tbHx8eysrKdnZ3p6enk5OTR0dG7u7u3t7ejo6PY2Njh4eHf39/T09PExMSvr6+goKCqqqqnp6e4uLgcLY/OAAAAnklEQVRIx+3RSRLDIAxE0QYhAbGZPNu5/z0zrXHiqiz5W72FqhqtVuuXAl3iOV7iPV/iSsAqZa9BS7YOmMXnNNX4TWGxRMn3R6SxRNgy0bzXOW8EBO8SAClsPdB3psqlvG+Lw7ONXg/pTld52BjgSSkA3PV2OOemjIDcZQWgVvONw60q7sIpR38EnHPSMDQ4MjDjLPozhAkGrVbr/z0ANjAF4AcbXmYAAAAASUVORK5CYII="
                  alt="" style="width:20px;margin-right:5px;display:block">
         </div>
         <div class="weui_cell_bd weui_cell_primary">
-            <p>我的推广成果</p>
+            <p>我推广的用户</p>
         </div>
         <div class="weui_cell_ft">
             <span class="icon icon-25"></span>
@@ -83,7 +83,7 @@
 </div>
 <div class="weui_cells weui_cells_access">
 
-    <a class="weui_cell" href="javascript:;">
+    <a asp-controller="wechat" asp-action="modifPassWord" class="weui_cell">
         <div class="weui_cell_hd">
             <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAC4AAAAuCAMAAABgZ9sFAAAAVFBMVEXx8fHMzMzr6+vn5+fv7+/t7e3d3d2+vr7W1tbHx8eysrKdnZ3p6enk5OTR0dG7u7u3t7ejo6PY2Njh4eHf39/T09PExMSvr6+goKCqqqqnp6e4uLgcLY/OAAAAnklEQVRIx+3RSRLDIAxE0QYhAbGZPNu5/z0zrXHiqiz5W72FqhqtVuuXAl3iOV7iPV/iSsAqZa9BS7YOmMXnNNX4TWGxRMn3R6SxRNgy0bzXOW8EBO8SAClsPdB3psqlvG+Lw7ONXg/pTld52BjgSSkA3PV2OOemjIDcZQWgVvONw60q7sIpR38EnHPSMDQ4MjDjLPozhAkGrVbr/z0ANjAF4AcbXmYAAAAASUVORK5CYII="
                  alt="" style="width:20px;margin-right:5px;display:block">
@@ -96,7 +96,7 @@
 
 </div>
 <div class="weui_panel weui_panel_access">
-    <a href="javascript:;" class="weui_btn weui_btn_warn">退出</a>
+    <a asp-controller="wechat" asp-action="LoginOut" class="weui_btn weui_btn_warn">退出</a>
 </div>
 
 

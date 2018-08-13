@@ -1,8 +1,8 @@
 ﻿@model RC.ADS.Data.Entity.AD_Account.AccountInfoChangeType
-
+@using RC.ADS.Data.Enum;
 @{
     ViewData["Title"] = "Create";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+ Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <h2>Create</h2>
@@ -17,6 +17,11 @@
                 <label asp-for="Name" class="control-label"></label>
                 <input asp-for="Name" class="form-control" />
                 <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PlusOrMinus" class="control-label"></label>
+                <input asp-for="PlusOrMinus" class="form-control" /> 
+                <span asp-validation-for="PlusOrMinus" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Describe" class="control-label"></label>
@@ -34,6 +39,3 @@
     <a asp-action="Index">Back to List</a>
 </div>
 
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}

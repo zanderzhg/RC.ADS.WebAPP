@@ -14,12 +14,23 @@ namespace RC.ADS.Data.Entity.AD_Integral
         [ForeignKey("OwnerId")]
         public Menber Owner { get; set; }
         /// <summary>
-        /// 分数
+        /// 结算前积分
+        /// </summary>
+        public int BeforeScore { get; set; }
+        /// <summary>
+        /// 结算积分
         /// </summary>
         public int Score { get; set; }
+        /// <summary>
+        /// 结算后积分
+        /// </summary>
+        public int AfterScore { get; set; }
+      
+      
         public string IntegralInfoChangeTypeId { get; set; }
         [ForeignKey("IntegralInfoChangeTypeId")]
         public IntegralInfoChangeType IntegralInfoChangeType { get; set; }
         public string Describe { get; set; }
+        public DateTime CreateTime { get; set; }
     }
 }
