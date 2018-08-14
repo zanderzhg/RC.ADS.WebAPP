@@ -14,18 +14,24 @@
 </head>
 
 <body ontouchstart style="background-color: #f8f8f8;">
+    <div class="weui-header bg-blue">
+        <div class="weui-header-left"> <a asp-controller="wechat" asp-action="index" class="icon icon-109 f-white">主页</a>  </div>
+        <h1 class="weui-header-title">注册</h1>
+
+    </div>
     <div class="tcenter" style="overflow:hidden; ">
-        <img class=" img-radius" style="margin:10px auto 0;width:50px;height:50px;" src="favicon.png">
+        <div class="f-green icon icon-84" style="font-size:100px;line-height:normal"></div>
+        @*<img class=" img-radius" style="margin:10px auto 0;width:50px;height:50px;" src="favicon.png">*@
     </div>
     <form id="form" action="/reg/" method="post">
-        <input asp-for="ReferrerId" class="weui_input" style="display:none"/>
+        <input asp-for="ReferrerId" class="weui_input" style="display:none" />
         <div class="weui_cells weui_cells_form">
             <div class="weui_cell">
                 <div class="weui_cell_hd"><label class="weui_label">手机号</label></div>
                 <div class="weui_cell_bd weui_cell_primary">
                     <input asp-for="Username" class="weui_input" type="tel" placeholder="输入你现在的手机号" />
                     @*<input class="weui_input" required="" type="tel" maxlength="11" placeholder="输入你现在的手机号"
-                pattern="[0-9]{11}" notmatchtips="请输入正确的手机号" emptytips="请输入手机号" name="mobile" id="mobile">*@
+                        pattern="[0-9]{11}" notmatchtips="请输入正确的手机号" emptytips="请输入手机号" name="mobile" id="mobile">*@
                 </div>
                 <div class="weui_cell_ft">
                     <i class="weui_icon_warn"></i>

@@ -16,11 +16,15 @@
 </head>
 
 <body ontouchstart style="background-color: #f8f8f8;">
+    <div class="weui-header bg-blue">
+        <div class="weui-header-left"> <a asp-controller="wechat" asp-action="index"   class="icon icon-109 f-white">主页</a>  </div>
+        <h1 class="weui-header-title">登陆</h1>
 
+    </div>
     <div class="tcenter" style="overflow:hidden; ">
         <div class="f-green icon icon-84" style="font-size:100px;line-height:normal"></div>
         @*<span class="icon icon-84"></span>
-        <img class="img-radius" style="margin:10px auto 0;width:50px;height:50px;" src="~/favicon.ico">*@
+            <img class="img-radius" style="margin:10px auto 0;width:50px;height:50px;" src="~/favicon.ico">*@
     </div>
     <form id="form" method="post" asp-controller="wechat" asp-action="Login">
         <input class="weui_input" style="display:none" value="@Model.ReturnUrl">
@@ -48,7 +52,7 @@
         </div>
         <div class="weui_btn_area">
             <button class="weui_btn weui_btn_primary" type="submit" id="formSubmitBtn">登陆</button>
-            <a class="weui_btn weui_btn_default" asp-controller="wechat" asp-action="Register"   >注册</a>
+            <a class="weui_btn weui_btn_default" asp-controller="wechat" asp-action="Register">注册</a>
         </div>
     </form>
     <script src="~/js/weui/zepto.min.js"></script>
