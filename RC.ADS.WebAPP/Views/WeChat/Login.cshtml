@@ -18,7 +18,9 @@
 <body ontouchstart style="background-color: #f8f8f8;">
 
     <div class="tcenter" style="overflow:hidden; ">
-        <img class="img-radius" style="margin:10px auto 0;width:50px;height:50px;" src="~/favicon.ico">
+        <div class="f-green icon icon-84" style="font-size:100px;line-height:normal"></div>
+        @*<span class="icon icon-84"></span>
+        <img class="img-radius" style="margin:10px auto 0;width:50px;height:50px;" src="~/favicon.ico">*@
     </div>
     <form id="form" method="post" asp-controller="wechat" asp-action="Login">
         <input class="weui_input" style="display:none" value="@Model.ReturnUrl">
