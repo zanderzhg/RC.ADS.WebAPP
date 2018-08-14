@@ -1,0 +1,21 @@
+﻿@model IEnumerable<RC.ADS.WebAPP.Models.WeChat.AccountInfoDto>
+
+@{
+    ViewData["Title"] = "账户明细";
+    Layout = "~/Views/Shared/Wechat/_LayoutWechatComeBack.cshtml";
+}
+<div class="weui_cells_title">账户明细列表</div>
+<div class="weui_cells">
+    @foreach (var item in Model)
+    {
+        var NewMoney = item.Money * item.PlusOrMinus;
+
+        <div class="weui_cell">
+            <div class="weui_cell_bd weui_cell_primary">
+                <p>@item.AccountInfoChangeTpyeName</p>
+            </div>
+            <div class="weui_cell_ft weui_media_desc" style="color:red">@NewMoney</div>
+        </div>
+
+    }
+</div>

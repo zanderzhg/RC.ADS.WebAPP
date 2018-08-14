@@ -210,7 +210,7 @@ namespace RC.ADS.WebAPP.Controllers
             }
         }
         #region 子功能
-        #region 余额  
+        #region 余额 完成
         public IActionResult AccountInfoList()
         {
             var CurrentMemberId = HttpContext.Session.GetString("LoginMenberId");
@@ -232,6 +232,7 @@ namespace RC.ADS.WebAPP.Controllers
                              AfterMoney = A.AfterMoney,
                              BeforeMoney = A.BeforeMoney,
                              Money = A.Money,
+                             PlusOrMinus = T.PlusOrMinus,
                              Describe = A.Describe
                          };
                 return View(vm);
@@ -240,7 +241,7 @@ namespace RC.ADS.WebAPP.Controllers
         }
 
         #endregion
-        #region 积分  
+        #region 积分 完成
         public IActionResult IntegralInfoList()
         {
             var CurrentMemberId = HttpContext.Session.GetString("LoginMenberId");
@@ -256,12 +257,14 @@ namespace RC.ADS.WebAPP.Controllers
                          where I.OwnerId == CurrentMemberId
                          select new IntegralInfoDto
                          {
+
                              Id = I.Id,
                              IntegralInfoChangeTypeName = T.Name,
-                             CreateTime =I.CreateTime,
+                             CreateTime = I.CreateTime,
                              AfterScore = I.AfterScore,
                              BeforeScore = I.BeforeScore,
-                             Score =I.Score,
+                             Score = I.Score,
+                             PlusOrMinus = T.PlusOrMinus,
                              Describe = I.Describe
                          };
                 return View(vm);
@@ -281,7 +284,7 @@ namespace RC.ADS.WebAPP.Controllers
             {
                 var vm = from O in _context.Orders
                          join T in _context.OrderStatus on O.OrderStatusId equals T.Id
-                         where O.OwnerId== CurrentMemberId
+                         where O.OwnerId == CurrentMemberId
                          select new OrderInfoDto
                          {
                              Id = O.Id,
@@ -298,6 +301,34 @@ namespace RC.ADS.WebAPP.Controllers
             }
         }
 
+        #endregion
+
+        #region 充值 TODO
+        /// <summary>
+        /// 充值选择 
+        /// </summary>
+        /// <returns></returns>
+        public IActionResult RechargeChoice()
+        {
+            return View();
+        }
+        /// <summary>
+        /// 充值
+        /// </summary>
+        /// <returns></returns>
+        public IActionResult Recharge()
+        {
+            var CurrentMemberId = HttpContext.Session.GetString("LoginMenberId");
+            if (string.IsNullOrEmpty(CurrentMemberId))
+            {
+                return RedirectToAction("Login", "WeChat");
+            }
+            else
+            {
+                //TODO 调用支付接口
+                return View();
+            }
+        }
         #endregion
 
         #region 我的推广码 完成
@@ -369,7 +400,7 @@ namespace RC.ADS.WebAPP.Controllers
         }
         #endregion
         #region 安全退出 完成
-        public async Task<IActionResult> LoginOut()
+        public IActionResult LoginOut()
         {
             HttpContext.Session.Remove("LoginMenberId");
             return RedirectToAction("index", "WeChat");

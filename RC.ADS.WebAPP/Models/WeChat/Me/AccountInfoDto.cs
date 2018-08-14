@@ -24,5 +24,6 @@ namespace RC.ADS.WebAPP.Models.WeChat
         public string AccountInfoChangeTpyeName { get; set; }
         public string Describe { get; set; }
         public DateTime CreateTime { get; set; }
+        public int PlusOrMinus { get; set; }
     }
 }
