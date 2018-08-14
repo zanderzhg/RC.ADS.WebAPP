@@ -4,7 +4,7 @@
     Layout = "~/Views/Shared/Wechat/_LayoutWechat.cshtml";
 }
 
-
+<!--轮播图开始-->
 <div class="slide" id="slide1">
     <ul>
         @foreach (var item in Model.Slideshows)
@@ -16,127 +16,55 @@
                 <div class="slide-desc">@item.ArticleName</div>
             </li>
         }
-        @*<li>
-            <a href="#">
-                <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAANSURBVBhXYzh8+PB/AAffA0nNPuCLAAAAAElFTkSuQmCC"
-                     data-src="http://7xr193.com1.z0.glb.clouddn.com/1.jpg" alt="">
-            </a>
-            <div class="slide-desc">零哥章魚 完成传奇世界H5-王者归来任务 获得30金币</div>
-        </li>
-        <li>
-            <a href="#">
-                <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAANSURBVBhXYzh8+PB/AAffA0nNPuCLAAAAAElFTkSuQmCC"
-                     data-src="http://7xr193.com1.z0.glb.clouddn.com/2.jpg" alt="">
-            </a>
-            <div class="slide-desc">23333零哥章魚 完成传奇世界H5-王者归来任务 获得30金币</div>
-        </li>
-        <li>
-            <a href="#">
-                <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAANSURBVBhXYzh8+PB/AAffA0nNPuCLAAAAAElFTkSuQmCC"
-                     data-src="http://7xr193.com1.z0.glb.clouddn.com/3.jpg" alt="">
-            </a>
-            <div class="slide-desc">33333零哥章魚 完成传奇世界H5-王者归来任务 获得30金币</div>
-        </li>*@
     </ul>
     <div class="dot">
-        <span></span>
-        <span></span>
-        <span></span>
+        @foreach (var item in Model.Slideshows)
+        {
+            <span></span>
+
+        }
     </div>
 </div>
+<!--轮播图结束-->
+<!--导航开始-->
 <div class="weui_panel weui_panel_access">
     <div class="weui_grids">
-        <a href="javascript:;" class="weui_grid js_grid">
+        <a asp-controller="wechat" asp-action="CustomerService" class="weui_grid js_grid">
             <div class="weui_grid_icon">
                 <img src="@Model.About.ArticleImage" alt="">
             </div>
             <p class="weui_grid_label">
-                简介
+                客服
             </p>
         </a>
 
-        <a href="javascript:;" class="weui_grid js_grid">
+        <a asp-controller="wechat" asp-action="NoticeList" class="weui_grid js_grid">
             <div class="weui_grid_icon">
-                <img src="@Model.Achievement.ArticleImage" alt="">
-            </div>
-            <p class="weui_grid_label">
-                成果
-            </p>
-        </a>
-        <a href="javascript:;" class="weui_grid js_grid">
-            <div class="weui_grid_icon">
-                <img src="@Model.Notice.ArticleImage" alt="">
+                <img src="" alt="">
             </div>
             <p class="weui_grid_label">
                 公告
             </p>
         </a>
-    </div>
-</div>
-
-<div class="weui_panel weui_panel_access">
-    <div class="weui_panel_hd">联盟简介</div>
-    <div class="weui_panel_bd">
-        <div class="weui-weixin-page">
-            <div class="weui-weixin-img">
-                <!--图片开始-->
-                <img src="@Model.About.ArticleImage" class="weixin">
-            </div><!--图片结束-->
-
-            <div class="weui-weixin-content">
-                <!--内容-->
-                @Model.About.ArticleContent
-                <!--内容结束-->
-
+        <a asp-controller="wechat" asp-action="SpecialOffersList" class="weui_grid js_grid">
+            <div class="weui_grid_icon">
+                <img src="@Model.Notice.ArticleImage" alt="">
             </div>
-        </div>
-
-
-        <a href="javascript:void(0);" class="weui_panel_ft">查看全文</a>
+            <p class="weui_grid_label">
+                优惠
+            </p>
+        </a>
     </div>
 </div>
+<!--导航结束-->
+<!--关于我们开始-->
+<div class="weui_cells_title">联盟简介</div>
 <div class="weui_panel weui_panel_access">
-    <div class="weui_panel_hd">成果</div>
     <div class="weui_panel_bd">
-        <div class="weui-weixin-page">
-            <div class="weui-weixin-img">
-                <!--图片开始-->
-                <img src="@Model.Achievement.ArticleImage" class="weixin">
-            </div><!--图片结束-->
-
-            <div class="weui-weixin-content">
-                <!--内容-->
-                @Model.Achievement.ArticleContent
-                <!--内容结束-->
-
-            </div>
-        </div>
-
-
-        <a href="javascript:void(0);" class="weui_panel_ft">查看全文</a>
+        @Html.Raw(Model.About.ArticleContent)
     </div>
 </div>
-<div class="weui_panel weui_panel_access">
-    <div class="weui_panel_hd">公告</div>
-    <div class="weui_panel_bd">
-        <div class="weui-weixin-page">
-            <div class="weui-weixin-img">
-                <!--图片开始-->
-                <img src="@Model.Notice.ArticleImage" class="weixin">
-            </div><!--图片结束-->
-
-            <div class="weui-weixin-content">
-                <!--内容-->
-                @Model.Notice.ArticleContent
-                <!--内容结束-->
-
-            </div>
-        </div>
-
-
-        <a href="javascript:void(0);" class="weui_panel_ft">查看全文</a>
-    </div>
-</div>
+<!--关于我们结束-->
 
 
 

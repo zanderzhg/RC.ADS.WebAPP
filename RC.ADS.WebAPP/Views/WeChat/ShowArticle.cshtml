@@ -1,0 +1,8 @@
+﻿@model RC.ADS.Data.Entity.AD_Article.Article
+
+@{
+    ViewData["Title"] = Model.ArticleName;
+    Layout = "~/Views/Shared/Wechat/_LayoutWechatComeBack.cshtml";
+}
+@Html.Raw(Model.ArticleContent)
+ 

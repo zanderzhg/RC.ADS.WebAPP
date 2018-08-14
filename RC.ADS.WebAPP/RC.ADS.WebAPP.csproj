@@ -13,10 +13,11 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.OAuth" Version="2.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.Session" Version="2.1.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.1.1" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.1" />
-    <PackageReference Include="NLog.Web.AspNetCore" Version="4.5.4" />
+    <PackageReference Include="NLog.Web.AspNetCore" Version="4.6.0" />
     <PackageReference Include="qcloud.qcloudsms_csharp" Version="0.1.5" />
     <PackageReference Include="ZKWeb.System.Drawing" Version="4.0.1" />
     <PackageReference Include="ZXing.Net.Bindings.ZKWeb.System.Drawing" Version="0.16.4" />
@@ -28,6 +29,7 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\images\weui\" />
+    <Folder Include="WeChatOAuth\" />
   </ItemGroup>
 
   <ItemGroup>

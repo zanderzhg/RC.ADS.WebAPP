@@ -68,6 +68,7 @@ namespace RC.ADS.WebAPP
                     name: "default",
                     template: "{controller=WeChat}/{action=Index}/{id?}");
             });
+            
         }
     }
 }

@@ -21,9 +21,21 @@ namespace RC.ADS.WebAPP.Comm
         /// </summary>
         public static string ArticleType_PlaceOrderId = "";
         /// <summary>
-        /// 
+        /// 公告
         /// </summary>
-        public static string MyProperty { get; set; }
-        
+        public static string ArticleType_NoticeId = "a875b58bf4c441a1a254037e161a72bb";
+        /// <summary>
+        /// 优惠
+        /// </summary>
+        public static string ArticleType_SpecialOffersId = "";
+        /// <summary>
+        /// 客服
+        /// </summary>
+        public static string ArticleType_CustomerServiceId = "";
+        /// <summary>
+        /// 轮播图
+        /// </summary>
+        public static string ArticleType_SlideshowsId = "c3c01a5114be496d822fad2fd1bdfb26"; 
+
     }
 }

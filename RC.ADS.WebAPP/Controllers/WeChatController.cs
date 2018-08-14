@@ -148,18 +148,63 @@ namespace RC.ADS.WebAPP.Controllers
         #endregion
 
         #endregion
+        #region 文章展示 完成
+        public async Task<IActionResult> ShowArticle(string id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var article = await _context.Articles
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (article == null)
+            {
+                return NotFound();
+            }
+            return View(article);
+        }
+        #endregion
 
         #region 首页 完成
         public IActionResult Index()
         {
             RCLog.Info(this, "test");
             IndexVM vm = new IndexVM();
-            vm.About = _context.Articles.FirstOrDefault(x => x.ArticleTypeId == "45395e0707cb47bca2f537085910bcbd");
-            vm.Achievement = _context.Articles.FirstOrDefault(x => x.ArticleTypeId == "4d5f55f74fd84c4e932f5f14e402974d");
-            vm.Notice = _context.Articles.FirstOrDefault(x => x.ArticleTypeId == "a875b58bf4c441a1a254037e161a72bb");
-            vm.Slideshows = _context.Articles.Where(x => x.ArticleTypeId == "c3c01a5114be496d822fad2fd1bdfb26").ToList();
+            vm.About = _context.Articles.FirstOrDefault(x => x.ArticleTypeId == ArticleTypeHelper.ArticleType_AboutUsId);
+            vm.Notice = _context.Articles.FirstOrDefault(x => x.ArticleTypeId == ArticleTypeHelper.ArticleType_NoticeId);
+            vm.Slideshows = _context.Articles.Where(x => x.ArticleTypeId == ArticleTypeHelper.ArticleType_SlideshowsId).ToList();
             return View(vm);
         }
+        #region 子功能
+
+        #region 客服
+        public IActionResult CustomerService()
+        {
+            RCLog.Info(this, "test");
+            var vm = _context.Articles.FirstOrDefault(x => x.ArticleTypeId == ArticleTypeHelper.ArticleType_AboutUsId);
+            return View(nameof(ShowArticle), vm);
+        }
+        #endregion
+        #region 公告列表
+        public IActionResult NoticeList()
+        {
+            RCLog.Info(this, "test");
+            var vm = _context.Articles.Where(x => x.ArticleTypeId == ArticleTypeHelper.ArticleType_NoticeId);
+
+            return View(vm);
+        }
+        #endregion
+        #region 优惠列表
+        public IActionResult SpecialOffersList()
+        {
+            RCLog.Info(this, "test");
+            var vm = _context.Articles.Where(x => x.ArticleTypeId == ArticleTypeHelper.ArticleType_SpecialOffersId);
+            return View(vm);
+        }
+        #endregion
+
+        #endregion
         #endregion
 
         #region 业务范围 完成
