@@ -21,7 +21,7 @@ namespace RC.ADS.WebAPP.Models.WeChat
         /// </summary>
         public decimal AfterMoney { get; set; }
 
-        public string AccountInfoChangeTpye { get; set; }
+        public string AccountInfoChangeTpyeName { get; set; }
         public string Describe { get; set; }
         public DateTime CreateTime { get; set; }
     }

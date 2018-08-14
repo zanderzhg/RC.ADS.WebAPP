@@ -213,35 +213,89 @@ namespace RC.ADS.WebAPP.Controllers
         #region 余额  
         public IActionResult AccountInfoList()
         {
-            return View();
+            var CurrentMemberId = HttpContext.Session.GetString("LoginMenberId");
+            if (string.IsNullOrEmpty(CurrentMemberId))
+            {
+                return RedirectToAction("Login", "WeChat");
+            }
+            else
+            {
+
+                var vm = from A in _context.AccountInfos
+                         join T in _context.AccountInfoChangeTpyes on A.AccountInfoChangeTpyeId equals T.Id
+                         where A.OwnerId == CurrentMemberId
+                         select new AccountInfoDto
+                         {
+                             Id = A.Id,
+                             AccountInfoChangeTpyeName = T.Name,
+                             CreateTime = A.CreateTime,
+                             AfterMoney = A.AfterMoney,
+                             BeforeMoney = A.BeforeMoney,
+                             Money = A.Money,
+                             Describe = A.Describe
+                         };
+                return View(vm);
+            }
+
         }
 
         #endregion
         #region 积分  
         public IActionResult IntegralInfoList()
         {
-            return View();
+            var CurrentMemberId = HttpContext.Session.GetString("LoginMenberId");
+            if (string.IsNullOrEmpty(CurrentMemberId))
+            {
+                return RedirectToAction("Login", "WeChat");
+            }
+            else
+            {
+
+                var vm = from I in _context.IntegralInfos
+                         join T in _context.IntegralInfoChangeType on I.IntegralInfoChangeTypeId equals T.Id
+                         where I.OwnerId == CurrentMemberId
+                         select new IntegralInfoDto
+                         {
+                             Id = I.Id,
+                             IntegralInfoChangeTypeName = T.Name,
+                             CreateTime =I.CreateTime,
+                             AfterScore = I.AfterScore,
+                             BeforeScore = I.BeforeScore,
+                             Score =I.Score,
+                             Describe = I.Describe
+                         };
+                return View(vm);
+            }
         }
 
         #endregion
-        #region 订单  
+        #region 订单 完成
         public IActionResult OrderInfoList()
         {
-            var vm = from O in _context.Orders
-                     join T in _context.OrderStatus on O.OrderStatusId equals T.Id
-                     select new OrderInfoDto
-                     {
-                         Id = O.Id,
+            var CurrentMemberId = HttpContext.Session.GetString("LoginMenberId");
+            if (string.IsNullOrEmpty(CurrentMemberId))
+            {
+                return RedirectToAction("Login", "WeChat");
+            }
+            else
+            {
+                var vm = from O in _context.Orders
+                         join T in _context.OrderStatus on O.OrderStatusId equals T.Id
+                         where O.OwnerId== CurrentMemberId
+                         select new OrderInfoDto
+                         {
+                             Id = O.Id,
 
-                         OrderName = O.OrderName,
-                         Price = O.Price,
-                         OrderStatuName = T.ChineseName,
+                             OrderName = O.OrderName,
+                             Price = O.Price,
+                             OrderStatuName = T.ChineseName,
 
-                         Description = O.Description,
-                         CreateTime = O.CreateTime,
-                         LastUpdateTime = O.LastUpdateTime
-                     };
-            return View(vm);
+                             Description = O.Description,
+                             CreateTime = O.CreateTime,
+                             LastUpdateTime = O.LastUpdateTime
+                         };
+                return View(vm);
+            }
         }
 
         #endregion
