@@ -5,7 +5,7 @@
 }
 
 
-<div class="weui_cells weui_panel_access">
+<div class="weui_cells weui_panel_access" style="margin-top:0em;">
     <div class="weui_panel_bd">
         <a href="javascript:void(0);" class="weui_media_box weui_media_appmsg">
             <div class="weui_media_hd">
@@ -40,56 +40,41 @@
 
     </div>
 </div>
-<div class="weui_cells weui_cells_access">
+<div class="weui_cells weui_cells_access" style="color:#999;font-size:15px;">
 
-        <a class="weui_cell" href="javascript:;">
-            <div class="weui_cell_hd">
-                <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAC4AAAAuCAMAAABgZ9sFAAAAVFBMVEXx8fHMzMzr6+vn5+fv7+/t7e3d3d2+vr7W1tbHx8eysrKdnZ3p6enk5OTR0dG7u7u3t7ejo6PY2Njh4eHf39/T09PExMSvr6+goKCqqqqnp6e4uLgcLY/OAAAAnklEQVRIx+3RSRLDIAxE0QYhAbGZPNu5/z0zrXHiqiz5W72FqhqtVuuXAl3iOV7iPV/iSsAqZa9BS7YOmMXnNNX4TWGxRMn3R6SxRNgy0bzXOW8EBO8SAClsPdB3psqlvG+Lw7ONXg/pTld52BjgSSkA3PV2OOemjIDcZQWgVvONw60q7sIpR38EnHPSMDQ4MjDjLPozhAkGrVbr/z0ANjAF4AcbXmYAAAAASUVORK5CYII="
-                     alt="" style="width:20px;margin-right:5px;display:block">
-            </div>
+        <a asp-controller="wechat" asp-action="RechargeChoice" class="weui_cell" >
+          
             <div class="weui_cell_bd weui_cell_primary">
-                <p>充值</p>
+                
+                <p><span class="icon icon-43"> </span>充值</p>
             </div>
             
         </a>
 
     </div>
-<div class="weui_cells weui_cells_access">
+<div class="weui_cells weui_cells_access" style="color:#999;font-size:15px;">
     <a asp-controller="wechat" asp-action="promocode" class="weui_cell" >
-        <div class="weui_cell_hd">
-            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAC4AAAAuCAMAAABgZ9sFAAAAVFBMVEXx8fHMzMzr6+vn5+fv7+/t7e3d3d2+vr7W1tbHx8eysrKdnZ3p6enk5OTR0dG7u7u3t7ejo6PY2Njh4eHf39/T09PExMSvr6+goKCqqqqnp6e4uLgcLY/OAAAAnklEQVRIx+3RSRLDIAxE0QYhAbGZPNu5/z0zrXHiqiz5W72FqhqtVuuXAl3iOV7iPV/iSsAqZa9BS7YOmMXnNNX4TWGxRMn3R6SxRNgy0bzXOW8EBO8SAClsPdB3psqlvG+Lw7ONXg/pTld52BjgSSkA3PV2OOemjIDcZQWgVvONw60q7sIpR38EnHPSMDQ4MjDjLPozhAkGrVbr/z0ANjAF4AcbXmYAAAAASUVORK5CYII="
-                 alt="" style="width:20px;margin-right:5px;display:block">
-        </div>
+        
         <div class="weui_cell_bd weui_cell_primary">
-            <p>我的推广码</p>
+            <p><span class="icon icon-25"> </span>我的推广码</p>
         </div>
-        <div class="weui_cell_ft">
-            <span class="icon icon-25"></span>
-        </div>
+        
     </a>
     <a asp-controller="wechat" asp-action="SuggestedUsers" class="weui_cell">
-        <div class="weui_cell_hd">
-            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAC4AAAAuCAMAAABgZ9sFAAAAVFBMVEXx8fHMzMzr6+vn5+fv7+/t7e3d3d2+vr7W1tbHx8eysrKdnZ3p6enk5OTR0dG7u7u3t7ejo6PY2Njh4eHf39/T09PExMSvr6+goKCqqqqnp6e4uLgcLY/OAAAAnklEQVRIx+3RSRLDIAxE0QYhAbGZPNu5/z0zrXHiqiz5W72FqhqtVuuXAl3iOV7iPV/iSsAqZa9BS7YOmMXnNNX4TWGxRMn3R6SxRNgy0bzXOW8EBO8SAClsPdB3psqlvG+Lw7ONXg/pTld52BjgSSkA3PV2OOemjIDcZQWgVvONw60q7sIpR38EnHPSMDQ4MjDjLPozhAkGrVbr/z0ANjAF4AcbXmYAAAAASUVORK5CYII="
-                 alt="" style="width:20px;margin-right:5px;display:block">
-        </div>
+ 
         <div class="weui_cell_bd weui_cell_primary">
-            <p>我推广的用户</p>
+            <p><span class="icon icon-99"> </span>我推广的用户</p>
+            
         </div>
-        <div class="weui_cell_ft">
-            <span class="icon icon-25"></span>
-        </div>
+        
     </a>
     
 </div>
-<div class="weui_cells weui_cells_access">
+<div class="weui_cells weui_cells_access" style="color:#999;font-size:15px;">
 
     <a asp-controller="wechat" asp-action="modifPassWord" class="weui_cell">
-        <div class="weui_cell_hd">
-            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAC4AAAAuCAMAAABgZ9sFAAAAVFBMVEXx8fHMzMzr6+vn5+fv7+/t7e3d3d2+vr7W1tbHx8eysrKdnZ3p6enk5OTR0dG7u7u3t7ejo6PY2Njh4eHf39/T09PExMSvr6+goKCqqqqnp6e4uLgcLY/OAAAAnklEQVRIx+3RSRLDIAxE0QYhAbGZPNu5/z0zrXHiqiz5W72FqhqtVuuXAl3iOV7iPV/iSsAqZa9BS7YOmMXnNNX4TWGxRMn3R6SxRNgy0bzXOW8EBO8SAClsPdB3psqlvG+Lw7ONXg/pTld52BjgSSkA3PV2OOemjIDcZQWgVvONw60q7sIpR38EnHPSMDQ4MjDjLPozhAkGrVbr/z0ANjAF4AcbXmYAAAAASUVORK5CYII="
-                 alt="" style="width:20px;margin-right:5px;display:block">
-        </div>
         <div class="weui_cell_bd weui_cell_primary">
-            <p>修改密码</p>
+            <p><span class="icon icon-31"> </span>修改密码</p>
         </div>
 
     </a>

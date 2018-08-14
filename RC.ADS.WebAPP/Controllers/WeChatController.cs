@@ -229,8 +229,10 @@ namespace RC.ADS.WebAPP.Controllers
 
         #region 下单 完成
         public async Task<IActionResult> PlaceOrder()
-        {
-            return View(await _context.Articles.FirstOrDefaultAsync(m => m.Id == ArticleTypeHelper.ArticleType_PlaceOrderId));
+        {;
+            var vm = await _context.Articles.FirstOrDefaultAsync(m => m.Id == ArticleTypeHelper.ArticleType_PlaceOrderId);
+
+            return View("ShowArticl",vm);
 
         }
         #endregion
