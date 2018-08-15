@@ -1,14 +1,13 @@
 ﻿@model RC.ADS.Data.Entity.AD_Article.Article
 
 @{
-    ViewData["Title"] = "Delete";
+    ViewData["Title"] = "文章删除";
 }
 
-<h2>Delete</h2>
+<h2>@ViewData["Title"]</h2>
 
-<h3>Are you sure you want to delete this?</h3>
+<h3>确认删除该文章吗?</h3>
 <div>
-    <h4>Article</h4>
     <hr />
     <dl class="dl-horizontal">
         <dt>
@@ -45,7 +44,7 @@
     
     <form asp-action="Delete">
         <input type="hidden" asp-for="Id" />
-        <input type="submit" value="Delete" class="btn btn-default" /> |
-        <a asp-action="Index">Back to List</a>
+        <input type="submit" value="删除" class="btn btn-default" /> |
+        <a asp-action="Index">返回列表页</a>
     </form>
 </div>

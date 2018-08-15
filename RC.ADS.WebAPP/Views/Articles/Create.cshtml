@@ -1,12 +1,10 @@
 ﻿@model RC.ADS.Data.Entity.AD_Article.Article
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "文章添加";
 }
 
-<h2>Create</h2>
-
-<h4>Article</h4>
+<h2>@ViewData["Title"]</h2>
 <hr />
 <div class="row">
     <div class="col-md-12">
@@ -28,15 +26,14 @@
             </div>
             <div class="form-group">
                 <label asp-for="ArticleIco" class="control-label"></label>
-                <input asp-for="ArticleIco" type="file" id="ArticleIco" name="ArticleIco" style="display:none" class="form-control" />
+                <input asp-for="ArticleIco" type="file" id="ArticleIco" name="ArticleIco" style="display:none" />
                 <img id="showArticleIco" style="width:100px; height:100px;"  src="" alt="用作图片预览" />
                 <input type="button" id="selctArticleIco" value="选择图片" />
-                @*<input type="button" id="submitPic" value="上传" />*@
                 <span asp-validation-for="ArticleIco" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="ArticleImage" class="control-label"></label>
-                <input asp-for="ArticleImage" type="file" name="ArticleImage" id="ArticleImage" style="display:none" class="form-control" />
+                <input asp-for="ArticleImage" type="file" name="ArticleImage" id="ArticleImage" style="display:none"/>
                 <img id="showArticleImage" style="width:100px; height:100px;"  src="" alt="用作图片预览" />
                 <input type="button" id="selctArticleImage" value="选择图片" />
                 <span asp-validation-for="ArticleImage" class="text-danger"></span>
@@ -47,7 +44,7 @@
                 <span asp-validation-for="ArticleIndex" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" id="submit" value="Create" class="btn btn-default" />
+                <input type="submit" id="submit" value="添加" class="btn btn-default" />
             </div>
         </form>
     </div>
@@ -104,25 +101,6 @@
             });
             $("#selctArticleImage").click(function () {
                 $("#ArticleImage").click();
-            });
-
-
-
-
-            $("#submitPic").click(function () {
-
-                $.ajax("Uploadfile", {
-                    type: "post",
-                    datatype: "json",
-                    data: picString,
-                    error: function () { },
-                    success: function (result) {
-
-                        if (result) {
-                            alert(result.msg);
-                        }
-                    }
-                });
             });
         });
     </script>

@@ -1,12 +1,11 @@
 ﻿@model RC.ADS.Data.Entity.AD_Article.Article
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "文章编辑";
 }
 
-<h2>Create</h2>
+<h2>@ViewData["Title"]</h2>
 
-<h4>Article</h4>
 <hr />
 <div class="row">
     <div class="col-md-12">
@@ -30,13 +29,13 @@
             </div>
             <div class="form-group">
                 <label asp-for="ArticleIco" class="control-label"></label>
-                <input asp-for="ArticleIco" type="file" id="ArticleIco" name="ArticleIco" style="display:none" class="form-control" />
+                <input asp-for="ArticleIco" type="file" id="ArticleIco" name="ArticleIco" style="display:none"/>
                 <img id="showArticleIco" src="@Url.Content(Model.ArticleIco)" style="width:100px; height:100px;" />
                 <input type="button" id="selctArticleIco" value="选择图片" />
             </div>
             <div class="form-group">
                 <label asp-for="ArticleImage" class="control-label"></label>
-                <input asp-for="ArticleImage" type="file" name="ArticleImage" id="ArticleImage" style="display:none" class="form-control" />
+                <input asp-for="ArticleImage" type="file" name="ArticleImage" id="ArticleImage" style="display:none"/>
                 <img id="showArticleImage" style="width:100px; height:100px;" src="@Model.ArticleImage" alt="用作图片预览" />
                 <input type="button" id="selctArticleImage" value="选择图片" />
             </div>
@@ -53,7 +52,7 @@
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">返回列表页</a>
 </div>
 
 @section Scripts {
@@ -100,25 +99,6 @@
             });
             $("#selctArticleImage").click(function () {
                 $("#ArticleImage").click();
-            });
-
-
-
-
-            $("#submitPic").click(function () {
-
-                $.ajax("Uploadfile", {
-                    type: "post",
-                    datatype: "json",
-                    data: picString,
-                    error: function () { },
-                    success: function (result) {
-
-                        if (result) {
-                            alert(result.msg);
-                        }
-                    }
-                });
             });
         });
     </script>
