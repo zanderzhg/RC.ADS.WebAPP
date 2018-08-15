@@ -11,7 +11,7 @@ namespace RC.ADS.WebAPP.Comm
         /// <summary>
         /// 业务文章
         /// </summary>
-        public static string ArticleType_BusinessId = "";
+        public static string ArticleType_BusinessId = "b57eef1f86854f6784bf0c9ff4c93fe4";
         /// <summary>
         /// 关于我们
         /// </summary>
@@ -19,7 +19,7 @@ namespace RC.ADS.WebAPP.Comm
         /// <summary>
         /// 下单文章
         /// </summary>
-        public static string ArticleType_PlaceOrderId = "";
+        public static string ArticleType_PlaceOrderId = "4d5f55f74fd84c4e932f5f14e402974d";
         /// <summary>
         /// 公告
         /// </summary>
@@ -27,11 +27,11 @@ namespace RC.ADS.WebAPP.Comm
         /// <summary>
         /// 优惠
         /// </summary>
-        public static string ArticleType_SpecialOffersId = "";
+        public static string ArticleType_SpecialOffersId = "77c06128578a4b6c8e58769d4b2be297";
         /// <summary>
         /// 客服
         /// </summary>
-        public static string ArticleType_CustomerServiceId = "";
+        public static string ArticleType_CustomerServiceId = "4bd55d179d094ecbab2d3da343c0e5e9";
         /// <summary>
         /// 轮播图
         /// </summary>

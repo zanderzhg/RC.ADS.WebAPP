@@ -33,7 +33,7 @@
         </div>
     </div>
 
-    <div class="weui_grids grids-small">
+    <div class="weui_cells weui_grids grids-small">
         @foreach (var item in Model)
         {
             <a asp-controller="wechat" asp-action="ShowArticle" asp-route-id="@item.Id" class="grid">
@@ -44,6 +44,24 @@
                     @item.ArticleName
                 </p>
             </a>
+            <a asp-controller="wechat" asp-action="ShowArticle" asp-route-id="@item.Id" class="grid">
+                <div class="weui_grid_icon">
+                    <img src="@item.ArticleIco" alt="">
+                </div>
+                <p class="weui_grid_label">
+                    @item.ArticleName
+                </p>
+            </a>
+            <a asp-controller="wechat" asp-action="ShowArticle" asp-route-id="@item.Id" class="grid">
+                <div class="weui_grid_icon">
+                    <img src="@item.ArticleIco" alt="">
+                </div>
+                <p class="weui_grid_label">
+                    @item.ArticleName
+                </p>
+            </a>
+
+         
         }
     </div>
 </div>

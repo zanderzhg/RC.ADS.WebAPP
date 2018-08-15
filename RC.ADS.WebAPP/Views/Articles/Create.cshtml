@@ -23,8 +23,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="ArticleContent" class="control-label"></label>
-
-                <text name="ArticleContent" id="ArticleContent" class="form-control"></text>
+                @Html.TextAreaFor(model => model.ArticleContent, new { @class = "ckeditor" })
                 <span asp-validation-for="ArticleContent" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -68,20 +67,6 @@
 
 
         $(function () {
-
-            CKEDITOR.replace('ArticleContent');
-           
-            $("#submit").click(function () {
-                let ArticleContent = $("#ArticleContent").val();
-                $.ajax({
-                    url: "create1",
-                    type: "POST",
-                    data: { "ArticleContent": ArticleContent},
-                    success: function () {
-                        
-                    }
-                });
-            });
 
             let ArticleIcoStr = "";
             $("#ArticleIco").change(function (e) {

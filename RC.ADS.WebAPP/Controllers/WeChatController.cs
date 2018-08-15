@@ -210,7 +210,8 @@ namespace RC.ADS.WebAPP.Controllers
         #region 业务范围 完成
         public async Task<IActionResult> Business()
         {
-            return View(await _context.Articles.Where(x => x.ArticleTypeId == ArticleTypeHelper.ArticleType_BusinessId).ToListAsync());
+            var vm = await _context.Articles.Where(x => x.ArticleTypeId == ArticleTypeHelper.ArticleType_BusinessId).ToListAsync();
+            return View(vm);
         }
         #region 子功能
         public async Task<IActionResult> BusinessDetail(string businessId)

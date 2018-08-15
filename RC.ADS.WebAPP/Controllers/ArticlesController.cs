@@ -59,42 +59,34 @@ namespace RC.ADS.WebAPP.Controllers
             ViewBag.SelectListEnum = list;
             return View(article);
         }
-      
+
 
         // POST: Articles/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         //[HttpPost]
         //[ValidateAntiForgeryToken]
-        public  IActionResult  Create([Bind("Id,ArticleName,ArticleContent,ArticleIco,ArticleImage,ArticleIndex,ArticleTypeId")]Article article)
+        public IActionResult Create([Bind("Id,ArticleName,ArticleContent,ArticleIco,ArticleImage,ArticleIndex,ArticleTypeId")]Article article)
         {
 
             if (ModelState.IsValid)
             {
                 var ArticleContent = Request.Form["ArticleContent"];
-                var ArticleTypeId= Request.Form["ArticleTypeId"];
+                var ArticleTypeId = Request.Form["ArticleTypeId"];
                 //TODO 添加文章类别ID
-                var articleIco_File = Request.Form.Files["ArticleIco"] ;
-                 article.ArticleIco= FileHelper.UploadImage(articleIco_File, _env);
+                var articleIco_File = Request.Form.Files["ArticleIco"];
+                article.ArticleIco = FileHelper.UploadImage(articleIco_File, _env);
 
                 var articleImage_File = Request.Form.Files["ArticleImage"];
                 article.ArticleImage = FileHelper.UploadImage(articleImage_File, _env);
 
-                article.ArticleTypeEntity = _context.ArticleTypes.FirstOrDefault(x=>x.Id== ArticleTypeId);
+                article.ArticleTypeEntity = _context.ArticleTypes.FirstOrDefault(x => x.Id == ArticleTypeId);
 
                 _context.Add(article);
-                 _context.SaveChangesAsync();
+                _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             return View(article);
-        }
-        public IActionResult Create1(string text)
-        {
-
-            
-                var ArticleContent = Request.Form["ArticleContent"];
-                
-            return Json("");
         }
 
         // GET: Articles/Edit/5
@@ -141,26 +133,17 @@ namespace RC.ADS.WebAPP.Controllers
                     var articleIco_File = Request.Form.Files["ArticleIco"];
                     if (articleIco_File!=null)
                     {
-                        article.ArticleIco = FileHelper.UploadImage(articleIco_File, _env);
+                        old_article.ArticleIco = FileHelper.UploadImage(articleIco_File, _env);
                     }
-                    else
-                    {
-                        article.ArticleIco= old_article.ArticleIco;
-                    }
+                    
                    
 
                     var articleImage_File = Request.Form.Files["ArticleImage"];
                     if (articleImage_File != null)
                     {
-                        article.ArticleImage = FileHelper.UploadImage(articleImage_File, _env);
+                        old_article.ArticleImage = FileHelper.UploadImage(articleImage_File, _env);
                     }
-                    else
-                    {
-                        article.ArticleImage = old_article.ArticleImage;
-                    }
-
-
-
+        
                     _context.Update(old_article);
                     await _context.SaveChangesAsync();
                 }
