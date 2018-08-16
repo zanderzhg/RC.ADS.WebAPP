@@ -41,6 +41,12 @@ namespace RC.ADS.WebAPP.Comm
                         
             return result;
         }
+        /// <summary>
+        /// 发送验证码
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="phoneNumber"></param>
+        /// <returns></returns>
         public bool SendVerificationCode2(string[] context, string phoneNumber)
         {
             var template = GetSMSAppTemplate(SMSTemplateType.verification);
