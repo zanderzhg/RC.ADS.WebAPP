@@ -18,10 +18,7 @@ namespace RC.ADS.WebAPP.Comm
         public SMSHelper(DataContext context) {
             _context = context;
         }     
-        // 短信应用SDK AppID
-        static int appid = 1400117019;
-        // 短信应用SDK AppKey
-        static string appkey = "55587a059f9065fd937fe1393d961cbd";
+      
         public SMSAppTemplate GetSMSAppTemplate(SMSTemplateType smsType)
         {
             DateTime dt = DateTime.Now;
@@ -87,6 +84,11 @@ namespace RC.ADS.WebAPP.Comm
             }
             return false;
         }
+
+        // 短信应用SDK AppID
+        static int appid = 1400117019;
+        // 短信应用SDK AppKey
+        static string appkey = "55587a059f9065fd937fe1393d961cbd";
         /// <summary>
         /// 发送验证码
         /// </summary>
