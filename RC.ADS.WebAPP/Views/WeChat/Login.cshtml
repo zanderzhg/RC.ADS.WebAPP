@@ -17,17 +17,14 @@
 
 <body ontouchstart style="background-color: #f8f8f8;">
     <div class="weui-header bg-blue">
-        <div class="weui-header-left"> <a asp-controller="wechat" asp-action="index"   class="icon icon-109 f-white">主页</a>  </div>
+        <div class="weui-header-left"> <a asp-controller="wechat" asp-action="index" class="icon icon-109 f-white">主页</a>  </div>
         <h1 class="weui-header-title">登陆</h1>
-
     </div>
     <div class="tcenter" style="overflow:hidden; ">
         <div class="f-green icon icon-84" style="font-size:100px;line-height:normal"></div>
-        @*<span class="icon icon-84"></span>
-            <img class="img-radius" style="margin:10px auto 0;width:50px;height:50px;" src="~/favicon.ico">*@
     </div>
     <form id="form" method="post" asp-controller="wechat" asp-action="Login">
-        <input class="weui_input" style="display:none" value="@Model.ReturnUrl">
+        <input class="weui_input" style="display:none" value="@Model.ReferrerId">
         <div class="weui_cells weui_cells_form">
             <div class="weui_cell">
                 <div class="weui_cell_hd"><label class="weui_label">手机号</label></div>
@@ -39,23 +36,36 @@
                     <i class="weui_icon_warn"></i>
                 </div>
             </div>
-
-            <div class="weui_cell">
-                <div class="weui_cell_hd"><label class="weui_label">密码</label></div>
+            <div class="weui_cell weui_vcode">
+                <div class="weui_cell_hd"><label class="weui_label">验证码</label></div>
                 <div class="weui_cell_bd weui_cell_primary">
-                    <input class="weui_input" required="" type="password" name="Password" value="@Model.Password" maxlength="11" placeholder="请输入密码">
+                    <input asp-for="ImageValidateCode" id="Vcode" class="weui_input" placeholder="请输入验证码" />
                 </div>
                 <div class="weui_cell_ft">
-                    <i class="weui_icon_warn"></i>
+                    <img src="~/wechat/ValidateCode/" alt="看不清,换一张" id="yzm">
+                </div>
+            </div>
+            <div class="weui_cell weui_vcode">
+                <div class="weui_cell_hd"><label class="weui_label">手机登陆码</label></div>
+                <div class="weui_cell_bd weui_cell_primary">
+                    <input asp-for="PhoneValidateCode" class="weui_input" type="number" placeholder="请输入手机验证码" tips="请输入手机验证码">
+                </div>
+                <div class="weui_cell_ft">
+
+                    <a class="weui-vcode-btn" style="font-size:x-small" id="getCode">获取手机登陆码</a>
+                    <!--当点击获取时，60秒后重新发送-->
+                    <a class="weui-vcode-btn" style="font-size:x-small" id="timeCode">60秒后获取</a>
+
                 </div>
             </div>
         </div>
         <div class="weui_btn_area">
             <button class="weui_btn weui_btn_primary" type="submit" id="formSubmitBtn">登陆</button>
-            <a class="weui_btn weui_btn_default" asp-controller="wechat" asp-action="Register">注册</a>
+            @*<a class="weui_btn weui_btn_default" asp-controller="wechat" asp-action="Register">注册</a>*@
         </div>
     </form>
     <script src="~/js/weui/zepto.min.js"></script>
+    <script src="~/js/wechat/Login.js"></script>
 </body>
 
 </html>

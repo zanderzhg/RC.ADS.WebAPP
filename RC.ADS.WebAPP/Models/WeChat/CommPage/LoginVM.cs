@@ -8,10 +8,8 @@ namespace RC.ADS.WebAPP.Models.WeChat
     public class LoginVM
     {
         public string Username { get; set; }
-
-         
-        public string Password { get; set; }
- 
+        public string ImageValidateCode { get; set; }
+        public string PhoneValidateCode { get; set; }
         public string ReferrerId { get; set; }
     }
 }

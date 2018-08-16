@@ -65,11 +65,23 @@ namespace RC.ADS.WebAPP.Controllers
             {
                 return Json(new { statu = "Error", Msg = "图片验证码不对!" });
             }
-
-
         }
         #region 登陆
-        [HttpGet]
+        [HttpPost]
+        public IActionResult CheckLogin()
+        {
+            bool istrue = true;
+            if (istrue)
+            {
+                return RedirectToAction(nameof(Me));
+            }
+            else
+            {
+                return RedirectToAction(nameof(Login));
+            }
+        }
+
+       [HttpGet]
         public IActionResult Login(string referrerId = "")
         {
             var model = new LoginVM { ReferrerId = referrerId };
@@ -80,74 +92,29 @@ namespace RC.ADS.WebAPP.Controllers
         {
             if (ModelState.IsValid)
             {
-                var result = _context.Menbers.FirstOrDefault(x => x.ManberName == model.Username && x.Password == model.Password);
-
-                if (result != null)
-                {
-                    HttpContext.Session.SetString("LoginMenberId", result.Id);
-                    if (!string.IsNullOrEmpty(model.ReferrerId) && Url.IsLocalUrl(model.ReferrerId))
-                    {
-                        return Redirect(model.ReferrerId);
-                    }
-                    else
-                    {
-                        return RedirectToAction("Me", "WeChat");
-                    }
-                }
-            }
-            ModelState.AddModelError("", "Invalid login attempt");
-            return View(model);
-        }
-        #endregion
-        #region 注册
-        [HttpGet]
-        public IActionResult Register(string referrerId = "")
-        {
-            RegisterVM vm = new RegisterVM { ReferrerId = referrerId };
-            return View(vm);
-        }
-        [HttpPost]
-        public IActionResult Register(RegisterVM model)
-        {
-            if (ModelState.IsValid)
-            {
-                ///TODO 验证数据
-                if (model.Password != model.ConfirmPassword)
-                {
-                    ModelState.AddModelError("", "两次输入密码不对");
-                    return View(model);
-                }
-                if (model.ImageValidateCode.ToUpper() != HttpContext.Session.GetString("ImageValidateCode").ToUpper())
-                {
-                    ModelState.AddModelError("", "验证码不对");
-                    return View(model);
-                }
                 if (model.PhoneValidateCode != HttpContext.Session.GetString("PhoneValidateCode"))
                 {
-                    ModelState.AddModelError("", "注册码不对");
+                    ModelState.AddModelError("", "登陆码不对");
                     return View(model);
                 }
-
                 var result = _context.Menbers.FirstOrDefault(x => x.ManberName == model.Username);
-                if (result != null)
-                {
-                    ModelState.AddModelError("", "该号码已经被注册了");
-                    return View(model);
-                }
-                else
+                if (result == null)
                 {
                     Menber entity = new Menber
                     {
                         ManberName = model.Username,
                         PhoneNumber = model.Username,
-                        Referrer = _context.Menbers.FirstOrDefault(x => x.Id == model.ReferrerId),
-                        Password = model.Password
+                        ReferrerId = model.ReferrerId
                     };
                     _context.Menbers.Add(entity);
                     _context.SaveChanges();
                     HttpContext.Session.SetString("LoginMenberId", entity.Id);
-                    return RedirectToAction("Me", "WeChat");
                 }
+                else
+                {
+                    HttpContext.Session.SetString("LoginMenberId", result.Id);
+                }
+                return RedirectToAction("Me", "WeChat");
             }
             ModelState.AddModelError("", "Invalid login attempt");
             return View(model);
