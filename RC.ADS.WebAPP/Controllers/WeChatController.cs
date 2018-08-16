@@ -70,9 +70,9 @@ namespace RC.ADS.WebAPP.Controllers
         }
         #region 登陆
         [HttpGet]
-        public IActionResult Login(string returnUrl = "")
+        public IActionResult Login(string referrerId = "")
         {
-            var model = new LoginVM { ReturnUrl = returnUrl };
+            var model = new LoginVM { ReferrerId = referrerId };
             return View(model);
         }
         [HttpPost]
@@ -85,9 +85,9 @@ namespace RC.ADS.WebAPP.Controllers
                 if (result != null)
                 {
                     HttpContext.Session.SetString("LoginMenberId", result.Id);
-                    if (!string.IsNullOrEmpty(model.ReturnUrl) && Url.IsLocalUrl(model.ReturnUrl))
+                    if (!string.IsNullOrEmpty(model.ReferrerId) && Url.IsLocalUrl(model.ReferrerId))
                     {
-                        return Redirect(model.ReturnUrl);
+                        return Redirect(model.ReferrerId);
                     }
                     else
                     {
@@ -393,8 +393,10 @@ namespace RC.ADS.WebAPP.Controllers
         }
         public IActionResult ShowCode()
         {
+            var CurrentMemberId = HttpContext.Session.GetString("LoginMenberId");
+            string urlstr = $"www.circle-rect.com/wechat/login/?ReferrerId={CurrentMemberId}";
             System.IO.MemoryStream ms = BarCodeHelper.CreateCodeEwm("www.baidu.com");
-            //HttpContext.Session.SetString("ImageValidateCode", code);
+             
             Response.Body.Dispose();
             return File(ms.ToArray(), @"image/png");
         }

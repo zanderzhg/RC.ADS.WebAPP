@@ -12,6 +12,6 @@ namespace RC.ADS.WebAPP.Models.WeChat
          
         public string Password { get; set; }
  
-        public string ReturnUrl { get; set; }
+        public string ReferrerId { get; set; }
     }
 }

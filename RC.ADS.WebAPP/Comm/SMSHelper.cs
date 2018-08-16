@@ -98,7 +98,6 @@ namespace RC.ADS.WebAPP.Comm
             int templateId = 170466;
             try
             {
-                
                 SmsSingleSender ssender = new SmsSingleSender(appid, appkey);
                 var result = ssender.sendWithParam("86", phoneNumber,
                     templateId, new[] { VerificationCode }, "", "", "");
