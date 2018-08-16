@@ -4,6 +4,7 @@ using RC.ADS.Data.Entity.AD_Article;
 using RC.ADS.Data.Entity.AD_Integral;
 using RC.ADS.Data.Entity.AD_Menber;
 using RC.ADS.Data.Entity.AD_Order;
+using RC.ADS.Data.Entity.AD_SMS;
 using System;
 
 namespace RC.ADS.Data
@@ -24,7 +25,11 @@ namespace RC.ADS.Data
         public DbSet<AccountInfoChangeType> AccountInfoChangeTpyes { get; set; }
         public DbSet<IntegralInfoChangeType> IntegralInfoChangeType { get; set; }
         public DbSet<OrderStatus> OrderStatus { get; set; }
-       
+
+        public DbSet<SMSApp> SMSApp { get; set; }
+        public DbSet<SMSAppTemplate> SMSAppTemplates { get; set; }
+        public DbSet<SendSMSLog> SendSMSLogs { get; set; }
+
 
 
 

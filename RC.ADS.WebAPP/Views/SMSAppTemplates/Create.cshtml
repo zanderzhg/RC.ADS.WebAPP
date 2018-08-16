@@ -1,0 +1,69 @@
+﻿@model RC.ADS.Data.Entity.AD_SMS.SMSAppTemplate
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Create</h2>
+
+<h4>SMSAppTemplate</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Appid" class="control-label"></label>
+                <input asp-for="Appid" class="form-control" />
+                <span asp-validation-for="Appid" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="AppName" class="control-label"></label>
+                <input asp-for="AppName" class="form-control" />
+                <span asp-validation-for="AppName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Appkey" class="control-label"></label>
+                <input asp-for="Appkey" class="form-control" />
+                <span asp-validation-for="Appkey" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="TemplateId" class="control-label"></label>
+                <input asp-for="TemplateId" class="form-control" />
+                <span asp-validation-for="TemplateId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="TemplateType" class="control-label"></label>
+                <select asp-for="TemplateType" class="form-control"></select>
+                <span asp-validation-for="TemplateType" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SMSAppTemplateName" class="control-label"></label>
+                <input asp-for="SMSAppTemplateName" class="form-control" />
+                <span asp-validation-for="SMSAppTemplateName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Describe" class="control-label"></label>
+                <input asp-for="Describe" class="form-control" />
+                <span asp-validation-for="Describe" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CreateTime" class="control-label"></label>
+                <input asp-for="CreateTime" class="form-control" />
+                <span asp-validation-for="CreateTime" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

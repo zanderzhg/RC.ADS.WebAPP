@@ -1,0 +1,46 @@
+﻿@model RC.ADS.Data.Entity.AD_SMS.SMSApp
+
+@{
+    ViewData["Title"] = "Delete";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>SMSApp</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.appid)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.appid)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.appkey)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.appkey)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.SMSAppName)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.SMSAppName)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Describe)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Describe)
+        </dd>
+    </dl>
+    
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="Id" />
+        <input type="submit" value="Delete" class="btn btn-default" /> |
+        <a asp-action="Index">Back to List</a>
+    </form>
+</div>

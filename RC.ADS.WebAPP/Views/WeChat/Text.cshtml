@@ -1,0 +1,27 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <title>Text</title>
+</head>
+<body>
+    <script>
+        let ls = localStorage.getItem("Hello");
+        if (ls==null) {
+            localStorage.setItem("Hello", "你好");
+            console.log("写缓存");
+        } else {
+            console.log(ls);
+
+        }
+    </script>
+</body>
+
+</html>

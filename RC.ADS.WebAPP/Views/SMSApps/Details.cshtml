@@ -1,0 +1,43 @@
+﻿@model RC.ADS.Data.Entity.AD_SMS.SMSApp
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>SMSApp</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.appid)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.appid)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.appkey)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.appkey)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.SMSAppName)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.SMSAppName)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Describe)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Describe)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

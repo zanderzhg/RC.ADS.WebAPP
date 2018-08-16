@@ -1,0 +1,67 @@
+﻿@model RC.ADS.Data.Entity.AD_SMS.SMSAppTemplate
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>SMSAppTemplate</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Appid)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Appid)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.AppName)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.AppName)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Appkey)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Appkey)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.TemplateId)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.TemplateId)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.TemplateType)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.TemplateType)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.SMSAppTemplateName)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.SMSAppTemplateName)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Describe)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Describe)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.CreateTime)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.CreateTime)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

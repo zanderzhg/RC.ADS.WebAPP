@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using qcloudsms_csharp;
 using RC.ADS.Data;
 using RC.ADS.Data.Entity.AD_Menber;
 using RC.ADS.WebAPP.Comm;
@@ -15,10 +16,16 @@ namespace RC.ADS.WebAPP.Controllers
     public class WeChatController : Controller
     {
         private readonly DataContext _context;
+        private readonly SMSHelper _ssender;
 
-        public WeChatController(DataContext context)
+        public WeChatController(DataContext context, SMSHelper ssender)
         {
             _context = context;
+            _ssender = ssender;
+        }
+        public IActionResult Text()
+        {
+            return View();
         }
         #region 验证码，登陆，注册
         /// <summary>
@@ -43,7 +50,7 @@ namespace RC.ADS.WebAPP.Controllers
             {
                 Random rd = new Random();
                 var PhoneValidateCode = rd.Next(1000, 9999).ToString();
-                var result = SMSHelper.SendVerificationCode(PhoneValidateCode, phone);
+                var result = _ssender.SendVerificationCode(PhoneValidateCode, phone);
                 if (result)
                 {
                     HttpContext.Session.SetString("PhoneValidateCode", PhoneValidateCode);

@@ -14,6 +14,7 @@ using Microsoft.Extensions.Logging;
 using NLog.Extensions.Logging;
 using NLog.Web;
 using RC.ADS.Data;
+using RC.ADS.WebAPP.Comm;
 
 namespace RC.ADS.WebAPP
 {
@@ -40,9 +41,13 @@ namespace RC.ADS.WebAPP
             services.AddDistributedMemoryCache();
             services.AddSession();
             services.AddSingleton(typeof(DbContext), typeof(DataContext));
+            //注入
+            ConfigureRCServices.ConfigureSMSServices(services);
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
      
         }
+       
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)

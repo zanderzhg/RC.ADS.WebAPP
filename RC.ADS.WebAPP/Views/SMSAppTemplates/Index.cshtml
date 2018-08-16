@@ -1,0 +1,78 @@
+﻿@model IEnumerable<RC.ADS.Data.Entity.AD_SMS.SMSAppTemplate>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Index</h2>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Appid)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AppName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Appkey)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TemplateId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TemplateType)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SMSAppTemplateName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Describe)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CreateTime)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Appid)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AppName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Appkey)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TemplateId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TemplateType)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SMSAppTemplateName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Describe)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CreateTime)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
