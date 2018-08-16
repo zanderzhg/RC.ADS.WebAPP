@@ -20,6 +20,7 @@ namespace RC.ADS.Data.Entity.AD_Menber
         /// 推荐人
         /// </summary>
         public Menber Referrer { get; set; }
+        public string LastLoginGuidCode { get; set; }
         public decimal AccountSum { get; set; }
         public int IntegralSum { get; set; }
         public DateTime RegisterTime { get; set; }

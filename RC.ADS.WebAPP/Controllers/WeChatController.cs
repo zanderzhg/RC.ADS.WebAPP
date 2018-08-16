@@ -42,15 +42,15 @@ namespace RC.ADS.WebAPP.Controllers
         }
         public IActionResult SendPhoneValidateCode()
         {
-            var phone = Request.Form["mobile"].ToString().Trim();
-            var Vcode = Request.Form["Vcode"].ToString().Trim();
+            var Username = Request.Form["Username"].ToString().Trim();
+            var ImageValidateCode = Request.Form["ImageValidateCode"].ToString().Trim();
 
-            var ImageValidateCode = HttpContext.Session.GetString("ImageValidateCode");
-            if (Vcode.ToUpper() == ImageValidateCode.ToUpper())
+            var ImageValidateCodeCash = HttpContext.Session.GetString("ImageValidateCode");
+            if (ImageValidateCode.ToUpper() == ImageValidateCodeCash.ToUpper())
             {
                 Random rd = new Random();
                 var PhoneValidateCode = rd.Next(1000, 9999).ToString();
-                var result = _ssender.SendVerificationCode(PhoneValidateCode, phone);
+                var result = _ssender.SendVerificationCode(PhoneValidateCode, Username);
                 if (result)
                 {
                     HttpContext.Session.SetString("PhoneValidateCode", PhoneValidateCode);
@@ -70,18 +70,23 @@ namespace RC.ADS.WebAPP.Controllers
         [HttpPost]
         public IActionResult CheckLogin()
         {
-            bool istrue = true;
-            if (istrue)
+            var Username = Request.Form["Username"].ToString().Trim();
+            var LastLoginGuidCode = Request.Form["LastLoginGuidCode"].ToString().Trim();
+
+            var result= _context.Menbers.FirstOrDefault(x => x.ManberName == Username && x.LastLoginGuidCode == LastLoginGuidCode);
+            
+            if (result!=null)
             {
-                return RedirectToAction(nameof(Me));
+                HttpContext.Session.SetString("LoginMenberId", result.Id);
+                return Json( new { statu = "OK", urlstr = "/wechat/me" });
             }
             else
             {
-                return RedirectToAction(nameof(Login));
+                return Json(new { statu = "OK", urlstr = "/wechat/login" });
             }
         }
 
-       [HttpGet]
+        [HttpGet]
         public IActionResult Login(string referrerId = "")
         {
             var model = new LoginVM { ReferrerId = referrerId };
@@ -90,34 +95,35 @@ namespace RC.ADS.WebAPP.Controllers
         [HttpPost]
         public IActionResult Login(LoginVM model)
         {
-            if (ModelState.IsValid)
+
+            if (model.PhoneValidateCode != HttpContext.Session.GetString("PhoneValidateCode"))
             {
-                if (model.PhoneValidateCode != HttpContext.Session.GetString("PhoneValidateCode"))
-                {
-                    ModelState.AddModelError("", "登陆码不对");
-                    return View(model);
-                }
-                var result = _context.Menbers.FirstOrDefault(x => x.ManberName == model.Username);
-                if (result == null)
-                {
-                    Menber entity = new Menber
-                    {
-                        ManberName = model.Username,
-                        PhoneNumber = model.Username,
-                        ReferrerId = model.ReferrerId
-                    };
-                    _context.Menbers.Add(entity);
-                    _context.SaveChanges();
-                    HttpContext.Session.SetString("LoginMenberId", entity.Id);
-                }
-                else
-                {
-                    HttpContext.Session.SetString("LoginMenberId", result.Id);
-                }
-                return RedirectToAction("Me", "WeChat");
+
+                return Json(new { msg = "登陆码不对" });
             }
-            ModelState.AddModelError("", "Invalid login attempt");
-            return View(model);
+            var result = _context.Menbers.FirstOrDefault(x => x.ManberName == model.Username);
+            if (result != null)
+            {
+                result.LastLoginGuidCode = Guid.NewGuid().ToString("N");
+            }
+            else
+            {
+                result = new Menber
+                {
+                    ManberName = model.Username,
+                    PhoneNumber = model.Username,
+                    ReferrerId = model.ReferrerId,
+                    LastLoginGuidCode = Guid.NewGuid().ToString("N")
+                };
+                _context.Menbers.Add(result);
+
+            }
+            _context.SaveChanges();
+            HttpContext.Session.SetString("LoginMenberId", result.Id); 
+            return Json(new { statu = "OK",msg="登陆成功！", LastLoginGuidCode = result.LastLoginGuidCode, Username = result.ManberName });
+
+
+
         }
         #endregion
 
@@ -204,10 +210,11 @@ namespace RC.ADS.WebAPP.Controllers
 
         #region 下单 完成
         public async Task<IActionResult> PlaceOrder()
-        {;
+        {
+            ;
             var vm = await _context.Articles.FirstOrDefaultAsync(m => m.Id == ArticleTypeHelper.ArticleType_PlaceOrderId);
 
-            return View("ShowArticl",vm);
+            return View(vm);
 
         }
         #endregion
@@ -356,14 +363,16 @@ namespace RC.ADS.WebAPP.Controllers
         #region 我的推广码 完成
         public IActionResult PromoCode()
         {
+            var CurrentMemberId = HttpContext.Session.GetString("LoginMenberId");
+            ViewBag.urlstr = $"http://www.circle-rect.com/wechat/login/?ReferrerId={CurrentMemberId}";
             return View();
         }
         public IActionResult ShowCode()
         {
             var CurrentMemberId = HttpContext.Session.GetString("LoginMenberId");
             string urlstr = $"www.circle-rect.com/wechat/login/?ReferrerId={CurrentMemberId}";
-            System.IO.MemoryStream ms = BarCodeHelper.CreateCodeEwm("www.baidu.com");
-             
+            System.IO.MemoryStream ms = BarCodeHelper.CreateCodeEwm(urlstr);
+
             Response.Body.Dispose();
             return File(ms.ToArray(), @"image/png");
         }

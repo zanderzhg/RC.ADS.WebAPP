@@ -7,5 +7,16 @@
 <h2>我的推广码</h2>
 
 <div class="weui_cells weui_cells_form">
-    <img src="~/wechat/ShowCode/" style="height:300px;width:300px">
+    @*<img src="~/wechat/ShowCode/" style="height:300px;width:300px">*@
+    <div id="qrcodeimg" class='tcenter'></div>
+    <label id="urlstr">@ViewBag.urlstr</label>
 </div>
+@section Scripts {
+    <script src="~/js/weui/qrcode.js"></script>
+    <script>
+        var txt = $("#urlstr").text();
+        console.log(txt);
+        $("#qrcodeimg").empty().qrcode({ render: "image", ecLevel: "L", size: 300, background: "#fff", fill: "#000", text: txt });
+       
+    </script>
+}

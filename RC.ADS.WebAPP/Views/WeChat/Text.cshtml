@@ -13,14 +13,11 @@
 </head>
 <body>
     <script>
-        let ls = localStorage.getItem("Hello");
-        if (ls==null) {
-            localStorage.setItem("Hello", "你好");
-            console.log("写缓存");
-        } else {
-            console.log(ls);
-
-        }
+        let LastLoginGuidCode = localStorage.getItem("LastLoginGuidCode");
+        let Username = localStorage.getItem("Username");
+         console.log(LastLoginGuidCode);
+        console.log(Username);
+ 
     </script>
 </body>
 

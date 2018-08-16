@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RC.ADS.Data;
 
 namespace RC.ADS.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20180816130546_addfiledlastlogincode")]
+    partial class addfiledlastlogincode
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -154,7 +156,7 @@ namespace RC.ADS.Data.Migrations
 
                     b.Property<int>("IntegralSum");
 
-                    b.Property<string>("LastLoginGuidCode");
+                    b.Property<string>("LastLoginCode");
 
                     b.Property<string>("ManberName");
 

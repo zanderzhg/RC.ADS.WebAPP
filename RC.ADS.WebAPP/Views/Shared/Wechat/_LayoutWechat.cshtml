@@ -11,7 +11,7 @@
     @RenderSection("styles", required: false)
 </head>
 <body ontouchstart style="background-color: #f8f8f8;">
-    <div class="weui-header bg-blue" >
+    <div class="weui-header bg-blue">
         <h1 class="weui-header-title">工厂联盟</h1>
     </div>
     @RenderBody()
@@ -19,7 +19,7 @@
     <section class="weui-menu">
         <div class="weui-menu-inner">
             <a asp-controller="wechat" asp-action="index" class="weui_tabbar_item">
-                <div class="weui_tabbar_icon icon icon-27"  style="font-size:28px;line-height:normal">
+                <div class="weui_tabbar_icon icon icon-27" style="font-size:28px;line-height:normal">
                     @*<span class="icon icon-27"  style="font-size:28px;line-height:normal"></span>*@
                     @*<img src="~/images/weui/icon_nav_button.png" alt="">*@
                 </div>
@@ -41,7 +41,7 @@
             </a>
         </div>
         <div class="weui-menu-inner">
-            <a asp-controller="wechat" asp-action="me" id="me" class="weui_tabbar_item">
+            <a sp-controller="wechat" asp-action="me" id="me" class="weui_tabbar_item">
                 <div class="weui_tabbar_icon icon icon-85" style="font-size:28px;line-height:normal">
                 </div>
                 <p class="weui_tabbar_label">我</p>
@@ -51,47 +51,48 @@
     <script src="~/js/weui/zepto.min.js"></script>
     <script src="~/js/weui/iscroll.js"></script>
     <script>
-        $(function () {
-            $("#me111111").click(function () {
-                let phoneNumber = localStorage.getItem("phoneNumber");//手机号码
-                let phoneValidateCode = localStorage.getItem("phoneValidateCode");//短信验证码
-                let cutofftime = localStorage.getItem("cutofftime");//有效截止时间
-                let now = new Date();
-                if (now.getDate - cutofftime < 0)
-                {
-                    localStorage.clear();
-                } else {
-                    $.ajax({
-                        url: "@Url.Action("CheckLogin","wechat")", //提交到那里
-                        type: "post", //提交类型
-                        data: { "phoneNumber": phoneNumber, "PhoneValidateCode": phoneValidateCode, "cutofftime": cutofftime }//提交的数据
-                        //success: function (data) {
-                           
-                        //}
-                    });
-                }
-                
-              
-             });
+        //$("#me").click(function () {
+        //    alert("nihao");
+        //    var Username = localStorage.getItem("Username");//手机号码
+        //    var LastLoginGuidCode = localStorage.getItem("LastLoginGuidCode");//短信验证码
+        //    $.post(
+        //        '/wechat/CheckLogin', //提交到那里
+        //        { "Username": Username, "LastLoginGuidCode": LastLoginGuidCode },//提交的数据
+        //        function (data) {
+        //            location.href = data.urlstr;
+        //            //console.log(data);
+        //            //if (data.statu == "OK") {
+        //            //    $.toast(data.msg);
+                   
+        //            //    location.href = data.urlstr;
+        //            //} else {
+        //            //    $.toast(data.msg, "forbidden");
+        //            //}
+        //        }
+        //    );
 
+
+        //});
+        $(function () {
             var urlpath = window.location.pathname;
             console.log(urlpath);
             switch (urlpath) {
-                case '/wechat/index/':
+                case '/wechat/index':
                     index = 0;
                     break;
-                case '/wechat/placeorder/':
+                case '/wechat/placeorder':
                     index = 1;
                     break;
-                case '/wechat/business/':
+                case '/wechat/business':
                     index = 2;
                     break;
-                case '/wechat/me/':
+                case '/wechat/me':
                     index = 3;
                     break;
                 default:
                     index = 0;
             }
+
 
             $('.weui-menu').tab({
                 defaultIndex: index,

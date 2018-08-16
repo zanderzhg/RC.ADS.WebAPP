@@ -101,8 +101,15 @@ namespace RC.ADS.WebAPP.Comm
                 SmsSingleSender ssender = new SmsSingleSender(appid, appkey);
                 var result = ssender.sendWithParam("86", phoneNumber,
                     templateId, new[] { VerificationCode }, "", "", "");
-                Console.WriteLine(result);
-                return true;
+                if (result.result==0)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+               
 
             }
             catch (JSONException e)
