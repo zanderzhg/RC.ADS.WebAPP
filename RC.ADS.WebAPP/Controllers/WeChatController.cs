@@ -53,7 +53,7 @@ namespace RC.ADS.WebAPP.Controllers
                 var result = _ssender.SendVerificationCode(PhoneValidateCode, Username);
                 if (result)
                 {
-                    HttpContext.Session.SetString("PhoneValidateCode", PhoneValidateCode);
+                    HttpContext.Session.SetString(Username, PhoneValidateCode);
                     return Json(new { statu = "OK", Msg = "验证码已经发送!" });
                 }
                 else
@@ -67,24 +67,7 @@ namespace RC.ADS.WebAPP.Controllers
             }
         }
         #region 登陆
-        [HttpPost]
-        public IActionResult CheckLogin()
-        {
-            var Username = Request.Form["Username"].ToString().Trim();
-            var LastLoginGuidCode = Request.Form["LastLoginGuidCode"].ToString().Trim();
-
-            var result= _context.Menbers.FirstOrDefault(x => x.Username == Username && x.LastLoginGuidCode == LastLoginGuidCode);
-            
-            if (result!=null)
-            {
-                HttpContext.Session.SetString("LoginMenberId", result.Id);
-                return Json( new { statu = "OK", urlstr = "/wechat/me" });
-            }
-            else
-            {
-                return Json(new { statu = "OK", urlstr = "/wechat/login" });
-            }
-        }
+       
 
         [HttpGet]
         public IActionResult Login(string referrerId = "")
@@ -100,7 +83,7 @@ namespace RC.ADS.WebAPP.Controllers
 
             if (ModelState.IsValid)
             {
-                if (model.PhoneValidateCode != HttpContext.Session.GetString("PhoneValidateCode"))
+                if (model.PhoneValidateCode != HttpContext.Session.GetString(model.Username))
                 {
                     ModelState.AddModelError("", "登陆码不对");
                     return View(model);
@@ -470,6 +453,9 @@ namespace RC.ADS.WebAPP.Controllers
         public IActionResult LoginOut()
         {
             HttpContext.Session.Remove("LoginMenberId");
+            HttpContext.Response.Cookies.Delete("LastLoginGuidCode");
+            HttpContext.Response.Cookies.Delete("Username");
+
             return RedirectToAction("index", "WeChat");
         }
         #endregion
