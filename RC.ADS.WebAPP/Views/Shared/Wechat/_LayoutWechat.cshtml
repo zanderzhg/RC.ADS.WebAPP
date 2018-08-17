@@ -41,7 +41,7 @@
             </a>
         </div>
         <div class="weui-menu-inner">
-            <a sp-controller="wechat" asp-action="me" id="me" class="weui_tabbar_item">
+            <a asp-controller="wechat" asp-action="me" class="weui_tabbar_item">
                 <div class="weui_tabbar_icon icon icon-85" style="font-size:28px;line-height:normal">
                 </div>
                 <p class="weui_tabbar_label">我</p>
@@ -49,30 +49,9 @@
         </div>
     </section>
     <script src="~/js/weui/zepto.min.js"></script>
-    <script src="~/js/weui/iscroll.js"></script>
+   @* <script src="~/js/weui/iscroll.js"></script>*@
     <script>
-        //$("#me").click(function () {
-        //    alert("nihao");
-        //    var Username = localStorage.getItem("Username");//手机号码
-        //    var LastLoginGuidCode = localStorage.getItem("LastLoginGuidCode");//短信验证码
-        //    $.post(
-        //        '/wechat/CheckLogin', //提交到那里
-        //        { "Username": Username, "LastLoginGuidCode": LastLoginGuidCode },//提交的数据
-        //        function (data) {
-        //            location.href = data.urlstr;
-        //            //console.log(data);
-        //            //if (data.statu == "OK") {
-        //            //    $.toast(data.msg);
-                   
-        //            //    location.href = data.urlstr;
-        //            //} else {
-        //            //    $.toast(data.msg, "forbidden");
-        //            //}
-        //        }
-        //    );
 
-
-        //});
         $(function () {
             var urlpath = window.location.pathname;
             console.log(urlpath);

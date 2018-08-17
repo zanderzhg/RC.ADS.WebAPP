@@ -7,7 +7,7 @@ namespace RC.ADS.WebAPP.Models.WeChat
 {
     public class MeVM
     {
-        public string ManberName { get; set; }
+        public string Username { get; set; }
         /// <summary>
         /// 积分
         /// </summary>

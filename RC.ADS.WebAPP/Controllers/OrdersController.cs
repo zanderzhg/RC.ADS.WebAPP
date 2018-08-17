@@ -25,7 +25,7 @@ namespace RC.ADS.WebAPP.Controllers
             {
                 //owerId = this.TempData["owerId"].ToString();
             }
-            ViewBag.OwerName = _context.Menbers.FirstOrDefault(x => x.Id == owerId).ManberName;
+            ViewBag.OwerName = _context.Menbers.FirstOrDefault(x => x.Id == owerId).Username;
             ViewBag.OwerId = owerId;
             return View(_context.Orders.Where(x => x.OwnerId == owerId).ToList());
         }

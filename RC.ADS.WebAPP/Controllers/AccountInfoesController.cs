@@ -27,7 +27,7 @@ namespace RC.ADS.WebAPP.Controllers
             {
                 //owerId = this.TempData["owerId"].ToString();
             }
-            ViewBag.OwerName = _context.Menbers.FirstOrDefault(x => x.Id == owerId).ManberName;
+            ViewBag.OwerName = _context.Menbers.FirstOrDefault(x => x.Id == owerId).Username;
             ViewBag.OwerId = owerId;
             return View(await _context.AccountInfos.Where(x => x.OwnerId == owerId).ToListAsync());
          
@@ -56,7 +56,7 @@ namespace RC.ADS.WebAPP.Controllers
         // GET: AccountInfoes/Create
         public IActionResult Create(string owerId)
         {
-            ViewBag.OwerName = _context.Menbers.FirstOrDefault(x => x.Id == owerId).ManberName;
+            ViewBag.OwerName = _context.Menbers.FirstOrDefault(x => x.Id == owerId).Username;
             AccountInfo accountInfo = new AccountInfo() { OwnerId = owerId };
             var selectListEnum = _context.AccountInfoChangeTpyes.Select(x => new { Value = x.Id, Text = x.Name });
             SelectList list = new SelectList(selectListEnum, "Value", "Text");

@@ -73,7 +73,7 @@ namespace RC.ADS.WebAPP.Controllers
             var Username = Request.Form["Username"].ToString().Trim();
             var LastLoginGuidCode = Request.Form["LastLoginGuidCode"].ToString().Trim();
 
-            var result= _context.Menbers.FirstOrDefault(x => x.ManberName == Username && x.LastLoginGuidCode == LastLoginGuidCode);
+            var result= _context.Menbers.FirstOrDefault(x => x.Username == Username && x.LastLoginGuidCode == LastLoginGuidCode);
             
             if (result!=null)
             {
@@ -89,6 +89,8 @@ namespace RC.ADS.WebAPP.Controllers
         [HttpGet]
         public IActionResult Login(string referrerId = "")
         {
+          
+           
             var model = new LoginVM { ReferrerId = referrerId };
             return View(model);
         }
@@ -96,33 +98,46 @@ namespace RC.ADS.WebAPP.Controllers
         public IActionResult Login(LoginVM model)
         {
 
-            if (model.PhoneValidateCode != HttpContext.Session.GetString("PhoneValidateCode"))
+            if (ModelState.IsValid)
             {
-
-                return Json(new { msg = "登陆码不对" });
-            }
-            var result = _context.Menbers.FirstOrDefault(x => x.ManberName == model.Username);
-            if (result != null)
-            {
-                result.LastLoginGuidCode = Guid.NewGuid().ToString("N");
-            }
-            else
-            {
-                result = new Menber
+                if (model.PhoneValidateCode != HttpContext.Session.GetString("PhoneValidateCode"))
                 {
-                    ManberName = model.Username,
-                    PhoneNumber = model.Username,
-                    ReferrerId = model.ReferrerId,
-                    LastLoginGuidCode = Guid.NewGuid().ToString("N")
-                };
-                _context.Menbers.Add(result);
+                    ModelState.AddModelError("", "登陆码不对");
+                    return View(model);
+                }
+                var result = _context.Menbers.FirstOrDefault(x => x.Username == model.Username);
+                if (result != null)
+                {
+                    result.LastLoginGuidCode = Guid.NewGuid().ToString("N");
+                }
+                else
+                {
+                    result = new Menber
+                    {
+                        Username = model.Username,
+                        PhoneNumber = model.Username,
+                        ReferrerId = model.ReferrerId,
+                        LastLoginGuidCode = Guid.NewGuid().ToString("N"),
+                        RegisterTime = DateTime.Now
+                    };
+                    _context.Menbers.Add(result);
 
+                }
+                _context.SaveChanges();
+                HttpContext.Session.SetString("LoginMenberId", result.Id);
+                HttpContext.Response.Cookies.Append("LastLoginGuidCode", result.LastLoginGuidCode, new CookieOptions
+                {
+                    Expires = DateTime.Now.AddMonths(1)
+                });
+                HttpContext.Response.Cookies.Append("Username", result.Username, new CookieOptions
+                {
+                    Expires = DateTime.Now.AddMonths(1)
+                });
+                return RedirectToAction("Me", "WeChat");
+               
             }
-            _context.SaveChanges();
-            HttpContext.Session.SetString("LoginMenberId", result.Id); 
-            return Json(new { statu = "OK",msg="登陆成功！", LastLoginGuidCode = result.LastLoginGuidCode, Username = result.ManberName });
-
-
+            ModelState.AddModelError("", "Invalid login attempt");
+            return View(model);
 
         }
         #endregion
@@ -222,21 +237,40 @@ namespace RC.ADS.WebAPP.Controllers
         #region 个人中心
         public async Task<IActionResult> Me()
         {
-            var CurrentMemberId = HttpContext.Session.GetString("LoginMenberId");
-            if (string.IsNullOrEmpty(CurrentMemberId))
+            Menber menber = null;
+            HttpContext.Request.Cookies.TryGetValue("Username", out string Username);
+            HttpContext.Request.Cookies.TryGetValue("LastLoginGuidCode", out string LastLoginGuidCode);
+            if (!string.IsNullOrEmpty(Username) && !string.IsNullOrEmpty(LastLoginGuidCode))
+                 menber = _context.Menbers.FirstOrDefault(x => x.Username == Username && x.LastLoginGuidCode == LastLoginGuidCode);
+            if (menber == null)
             {
                 return RedirectToAction("Login", "WeChat");
             }
             else
             {
                 MeVM vm = new MeVM();
-                var member = await _context.Menbers.FirstOrDefaultAsync(x => x.Id == CurrentMemberId);
-                vm.Balance = member.AccountSum;
-                vm.IntegralSum = member.IntegralSum;
-                vm.ManberName = member.ManberName;
-                vm.OrderSum = await _context.Orders.Where(x => x.OwnerId == member.Id).CountAsync();
+                vm.Balance = menber.AccountSum;
+                vm.IntegralSum = menber.IntegralSum;
+                vm.Username = menber.Username;
+                vm.OrderSum = await _context.Orders.Where(x => x.OwnerId == menber.Id).CountAsync();
                 return View(vm);
             }
+            //var CurrentMemberId = HttpContext.Session.GetString("LoginMenberId");
+            //if (string.IsNullOrEmpty(CurrentMemberId))
+            //{
+            //    return RedirectToAction("Login", "WeChat");
+            //}
+            //else
+            //{
+            //    MeVM vm = new MeVM();
+            //    var member = await _context.Menbers.FirstOrDefaultAsync(x => x.Id == CurrentMemberId);
+            //    vm.Balance = member.AccountSum;
+            //    vm.IntegralSum = member.IntegralSum;
+            //    vm.ManberName = member.Username;
+            //    vm.OrderSum = await _context.Orders.Where(x => x.OwnerId == member.Id).CountAsync();
+            //    return View(vm);
+            //}
+
         }
         #region 子功能
         #region 余额 完成

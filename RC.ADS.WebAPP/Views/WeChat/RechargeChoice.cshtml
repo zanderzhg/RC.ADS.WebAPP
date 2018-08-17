@@ -1,5 +1,4 @@
-﻿
-@{
+﻿@{
     ViewData["Title"] = "充值";
     Layout = "~/Views/Shared/Wechat/_LayoutWechatComeBack.cshtml";
 }
@@ -31,3 +30,15 @@
 
 </div>
 
+@section Scripts{
+<script>
+    $(function () {
+        $(".weui-payselect-li").on('click', function () {
+            $(this).children().addClass("weui-payselect-on");
+            $(this).siblings().children().removeClass("weui-payselect-on");
+            return false;
+        })
+
+    });
+</script>
+}

@@ -34,37 +34,7 @@
             $.toast("手机号格式错误", "forbidden");
         }
     });
-    //登陆
-    $("#formSubmitBtn").click(function () {
-        //获取手机号
-        var Username = $("#Username").val();
-        var ImageValidateCode = $("#ImageValidateCode").val();
-        var PhoneValidateCode = $("#PhoneValidateCode").val();
-
-        // 手机号正则
-        var reg = /^[1][3,4,5,7,8][0-9]{9}$/;
-
-        if (reg.test(Username)) {
-  
-            $.post(
-                '/wechat/Login', //提交到那里
-                {"Username": Username, "ImageValidateCode": ImageValidateCode, "PhoneValidateCode": PhoneValidateCode },//提交的数据
-                function (data) {
-                    console.log(data);
-                    if (data.statu == "OK") {
-                        $.toast(data.msg);
-                        localStorage.setItem("Username", data.Username);//手机号码2
-                        localStorage.setItem("LastLoginGuidCode", data.LastLoginGuidCode);//短信验证码
-                        location.href = '/wechat/me';
-                    } else {
-                        $.toast(data.msg, "forbidden");
-                    }
-                }
-            );
-        } else {
-            $.toast("手机号格式错误", "forbidden");
-        }
-    });
+   
 
     function reserveCode() {
         //显示60s倒计时，隐藏‘获取验证码’

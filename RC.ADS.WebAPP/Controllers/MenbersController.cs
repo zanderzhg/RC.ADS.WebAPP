@@ -54,7 +54,7 @@ namespace RC.ADS.WebAPP.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,ManberName,PhoneNumber,Password,AccountSum,IntegralSum")] Menber menber)
+        public async Task<IActionResult> Create( Menber menber)
         {
             if (ModelState.IsValid)
             {
@@ -86,7 +86,7 @@ namespace RC.ADS.WebAPP.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("Id,ManberName,PhoneNumber,Password,AccountSum,IntegralSum")] Menber menber)
+        public async Task<IActionResult> Edit(string id, Menber menber)
         {
             if (id != menber.Id)
             {

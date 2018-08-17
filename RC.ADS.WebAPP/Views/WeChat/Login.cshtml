@@ -23,8 +23,7 @@
     <div class="tcenter" style="overflow:hidden; ">
         <div class="f-green icon icon-84" style="font-size:100px;line-height:normal"></div>
     </div>
-    <form>
-        @*id="form" method="post" asp-controller="wechat" asp-action="Login">*@
+    <form id="form" method="post" asp-controller="wechat" asp-action="Login">
         <input class="weui_input" style="display:none" value="@Model.ReferrerId">
         <div class="weui_cells weui_cells_form">
             <div class="weui_cell">
@@ -61,7 +60,7 @@
             </div>
         </div>
         <div class="weui_btn_area">
-            <a class="weui_btn weui_btn_primary" type="submit" id="formSubmitBtn">登陆</a>
+            <button class="weui_btn weui_btn_primary" type="submit" id="formSubmitBtn">登陆</button>
 
         </div>
     </form>
