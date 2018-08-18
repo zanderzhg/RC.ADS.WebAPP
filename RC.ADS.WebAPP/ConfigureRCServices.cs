@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using RC.ADS.WebAPP.Comm;
+using Senparc.CO2NET.RegisterServices;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +13,8 @@ namespace RC.ADS.WebAPP
         public static void ConfigureSMSServices(IServiceCollection services)
         {
             services.AddTransient(typeof(SMSHelper), typeof(SMSHelper));
+           
+
         }
     }
 }

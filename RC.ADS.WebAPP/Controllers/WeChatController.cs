@@ -220,40 +220,35 @@ namespace RC.ADS.WebAPP.Controllers
         #region 个人中心
         public async Task<IActionResult> Me()
         {
+            MeVM vm = new MeVM();
             Menber menber = null;
-            HttpContext.Request.Cookies.TryGetValue("Username", out string Username);
-            HttpContext.Request.Cookies.TryGetValue("LastLoginGuidCode", out string LastLoginGuidCode);
-            if (!string.IsNullOrEmpty(Username) && !string.IsNullOrEmpty(LastLoginGuidCode))
-                 menber = _context.Menbers.FirstOrDefault(x => x.Username == Username && x.LastLoginGuidCode == LastLoginGuidCode);
-            if (menber == null)
+            try
             {
-                return RedirectToAction("Login", "WeChat");
-            }
-            else
-            {
-                MeVM vm = new MeVM();
-                vm.Balance = menber.AccountSum;
-                vm.IntegralSum = menber.IntegralSum;
-                vm.Username = menber.Username;
-                vm.OrderSum = await _context.Orders.Where(x => x.OwnerId == menber.Id).CountAsync();
-                return View(vm);
-            }
-            //var CurrentMemberId = HttpContext.Session.GetString("LoginMenberId");
-            //if (string.IsNullOrEmpty(CurrentMemberId))
-            //{
-            //    return RedirectToAction("Login", "WeChat");
-            //}
-            //else
-            //{
-            //    MeVM vm = new MeVM();
-            //    var member = await _context.Menbers.FirstOrDefaultAsync(x => x.Id == CurrentMemberId);
-            //    vm.Balance = member.AccountSum;
-            //    vm.IntegralSum = member.IntegralSum;
-            //    vm.ManberName = member.Username;
-            //    vm.OrderSum = await _context.Orders.Where(x => x.OwnerId == member.Id).CountAsync();
-            //    return View(vm);
-            //}
+                var CurrentMemberId = HttpContext.Session.GetString("LoginMenberId");
+                menber = await _context.Menbers.FirstOrDefaultAsync(x => x.Id == CurrentMemberId);
+                if (menber == null)
+                {
+                    if (HttpContext.Request.Cookies.TryGetValue("Username", out string Username) && HttpContext.Request.Cookies.TryGetValue("LastLoginGuidCode", out string LastLoginGuidCode))
+                        menber = _context.Menbers.FirstOrDefault(x => x.Username == Username && x.LastLoginGuidCode == LastLoginGuidCode);
+                }
 
+                if (menber != null)
+                {
+                    vm.Balance = menber.AccountSum;
+                    vm.IntegralSum = menber.IntegralSum;
+                    vm.Username = menber.Username;
+                    vm.OrderSum = await _context.Orders.Where(x => x.OwnerId == menber.Id).CountAsync();
+                }
+                else
+                {
+                    return RedirectToAction("Login", "WeChat");
+                }
+            }
+            catch (Exception ex)
+            {
+                RCLog.Error(this, ex.ToString());
+            }
+            return View(vm);
         }
         #region 子功能
         #region 余额 完成
