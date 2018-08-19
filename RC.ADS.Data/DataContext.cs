@@ -9,11 +9,11 @@ using System;
 
 namespace RC.ADS.Data
 {
-    public class DataContext: DbContext
+    public class DataContext : DbContext
     {
         public DataContext(DbContextOptions<DataContext> options) : base(options)
         {
-             
+
         }
         public DbSet<AccountInfo> AccountInfos { get; set; }
         public DbSet<Article> Articles { get; set; }
@@ -29,6 +29,10 @@ namespace RC.ADS.Data
         public DbSet<SMSApp> SMSApp { get; set; }
         public DbSet<SMSAppTemplate> SMSAppTemplates { get; set; }
         public DbSet<SendSMSLog> SendSMSLogs { get; set; }
+        public DbSet<TopupItem> TopupItems { get; set; }
+
+
+
 
 
 

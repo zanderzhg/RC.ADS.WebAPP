@@ -5,9 +5,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="WeChatOAuth\**" />
     <Compile Remove="wwwroot\userfile\**" />
+    <Content Remove="WeChatOAuth\**" />
     <Content Remove="wwwroot\userfile\**" />
+    <EmbeddedResource Remove="WeChatOAuth\**" />
     <EmbeddedResource Remove="wwwroot\userfile\**" />
+    <None Remove="WeChatOAuth\**" />
     <None Remove="wwwroot\userfile\**" />
   </ItemGroup>
 
@@ -30,7 +34,6 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\images\weui\" />
-    <Folder Include="WeChatOAuth\" />
   </ItemGroup>
 
   <ItemGroup>
