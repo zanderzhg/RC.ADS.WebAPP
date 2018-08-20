@@ -11,7 +11,11 @@
             <a href="javascript:;" class="weui-payselect-a weui-payselect-on">100元<span class="weui-pay-12">110次</span></a>
         </li>
         <li class="weui-payselect-li">
+<<<<<<< HEAD
             <a href="javascript:;" title="10" class="weui-payselect-a">10元</a>
+=======
+            <a href="javascript:;" class="weui-payselect-a">1元</a>
+>>>>>>> 6a8af5d82f51c49c1a5887a6ede2059de7b3d281
         </li>
         <li class="weui-payselect-li">
             <a href="javascript:;" class="weui-payselect-a">100元<span class="weui-pay-12">99.9元</span></a>
@@ -37,7 +41,11 @@
             $(this).children().addClass("weui-payselect-on");
             $(this).siblings().children().removeClass("weui-payselect-on");
             return false;
-        })
+        });
+        document.addeventlistener('weixinjsbridgeready', function onbridgeready() {
+            weixinjsbridge.call('hidetoolbar');
+            weixinjsbridge.call('hideoptionmenu');
+        });
         $("#pay").click(function () {
             let price = $(".weui-payselect-on").attr("title");
             console.log(price);
@@ -63,8 +71,8 @@
 
             //    }
             //});
-         });
-
+        });
+  
     });
 </script>
 }
