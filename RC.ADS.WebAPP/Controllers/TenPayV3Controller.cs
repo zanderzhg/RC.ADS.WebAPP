@@ -22,33 +22,11 @@ namespace RC.ADS.WebAPP.Controllers
     {
    
 
-        /// <summary>
-        /// 获取用户的OpenId
-        /// </summary>
-        /// <returns></returns>
-        public ActionResult Index(int productId = 0, int hc = 0)
-        {
-            if (productId == 0 && hc == 0)
-            {
-                return RedirectToAction("ProductList");
-            }
-
-            var returnUrl = string.Format("https://www.circle-rect.com/TenPayV3/JsApi");
-            var state = string.Format("{0}|{1}", productId, hc);
-            var url = OAuthApi.GetAuthorizeUrl(WeiXinConfig.appId, returnUrl, state, OAuthScope.snsapi_userinfo);
-
-            return Redirect(url);
-        }
-
-        public ActionResult BankCode()
-        {
-            return View();
-        }
-
         #region JsApi支付
 
         public ActionResult OAuthCallback(string code, string state, string returnUrl)
         {
+            RCLog.Info(this, "OAuthCallback");
             if (string.IsNullOrEmpty(code))
             {
                 return Content("您拒绝了授权！");
@@ -67,57 +45,41 @@ namespace RC.ADS.WebAPP.Controllers
             {
                 return Content("错误：" + openIdResult.errmsg);
             }
-
+            RCLog.Info(this, "OAuthCallback="+ openIdResult.openid);
             HttpContext.Session.SetString("OpenId", openIdResult.openid);//进行登录
 
             //也可以使用FormsAuthentication等其他方法记录登录信息，如：
             //FormsAuthentication.SetAuthCookie(openIdResult.openid,false);
-
+            RCLog.Info(this, " 结束OAuthCallback");
             return Redirect(returnUrl);
         }
 
         //需要OAuth登录
         [CustomOAuth(null, "/TenpayV3/OAuthCallback")]
-        public ActionResult JsApi(int productId, int hc)
+        
+        public ActionResult JsApi()
         {
             try
             {
-                //获取产品信息
-                var products = ProductModel.GetFakeProductList();
-                var product = products.FirstOrDefault(z => z.Id == productId);
-                if (product == null || product.GetHashCode() != hc)
-                {
-                    return Content("商品信息不存在，或非法进入！1002");
-                }
+                RCLog.Info(this, "进入JsApi");
 
                 //var openId = User.Identity.Name;
                 var openId = HttpContext.Session.GetString("OpenId");
 
-                string sp_billno = Request.Query["order_no"];
-                if (string.IsNullOrEmpty(sp_billno))
-                {
-                    //生成订单10位序列号，此处用时间和随机数生成，商户根据自己调整，保证唯一
-                    sp_billno = string.Format("{0}{1}{2}", WeiXinConfig.MchId/*10位*/, DateTime.Now.ToString("yyyyMMddHHmmss"),
-                        TenPayV3Util.BuildRandomStr(6));
-                }
-                else
-                {
-                    sp_billno = Request.Query["order_no"];
-                }
-
+                string sp_billno = DateTime.Now.Ticks.ToString();
+                
                 var timeStamp = TenPayV3Util.GetTimestamp();
                 var nonceStr = TenPayV3Util.GetNoncestr();
 
-                var body = product == null ? "test" : product.Name;
-                var price = product == null ? 100 : (int)(product.Price * 100);//单位：分
+                var body = "网上支付" ;
+                var price = 100;//单位：分
                 var xmlDataInfo = new TenPayV3UnifiedorderRequestData(WeiXinConfig.appId, WeiXinConfig.MchId, body, sp_billno, price, HttpContext.UserHostAddress()?.ToString(), WeiXinConfig.TenPayV3Notify, TenPayV3Type.JSAPI, openId, WeiXinConfig.Key, nonceStr);
 
                 var result = TenPayV3.Unifiedorder(xmlDataInfo);//调用统一订单接口
-                                                                //JsSdkUiPackage jsPackage = new JsSdkUiPackage(WeiXinConfig.appId, timeStamp, nonceStr,);
+                RCLog.Info(this,"订单号："+result.prepay_id);                                     //JsSdkUiPackage jsPackage = new JsSdkUiPackage(WeiXinConfig.appId, timeStamp, nonceStr,);
                 var package = string.Format("prepay_id={0}", result.prepay_id);
 
-                ViewData["product"] = product;
-
+                
                 ViewData["appId"] = WeiXinConfig.appId;
                 ViewData["timeStamp"] = timeStamp;
                 ViewData["nonceStr"] = nonceStr;
@@ -127,7 +89,7 @@ namespace RC.ADS.WebAPP.Controllers
                 //临时记录订单信息，留给退款申请接口测试使用
                 HttpContext.Session.SetString("BillNo", sp_billno);
                 HttpContext.Session.SetString("BillFee", price.ToString());
-
+                RCLog.Info(this, "成果返回Json");
                 return View();
             }
             catch (Exception ex)
