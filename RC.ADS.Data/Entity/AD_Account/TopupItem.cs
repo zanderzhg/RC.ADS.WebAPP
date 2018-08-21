@@ -11,9 +11,9 @@ namespace RC.ADS.Data.Entity.AD_Account
         public string Id { get; set; }
         public string TopupItemName { get; set; }
         /// <summary>
-        /// 价钱
+        /// 价钱 分
         /// </summary>
-        public decimal Price { get; set; }
+        public int Price { get; set; }
         public string Describe { get; set; }
         public bool IsDalete { get; set; }
     }

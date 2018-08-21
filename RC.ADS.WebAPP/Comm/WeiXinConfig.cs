@@ -12,6 +12,6 @@ namespace RC.ADS.WebAPP.Comm
         public static readonly string AppSecret = "40fd8d4365ccc4c044fce1e46444c09f";
         public static readonly string MchId= "1318211001";
         public static readonly string  Key= "Devinchen199012271118wadadfasdwe";
-        public static readonly string TenPayV3Notify = "http://www.circle-rect.com/TenpayV3/TenPayV3Notify";
+        public static readonly string TenPayV3Notify = "http://www.circle-rect.com/TenpayV3/PayNotifyUrl";
     }
 }

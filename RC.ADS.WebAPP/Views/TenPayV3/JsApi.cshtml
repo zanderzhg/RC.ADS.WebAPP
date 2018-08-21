@@ -1,19 +1,24 @@
-﻿@{
+﻿@using RC.ADS.Data.Entity.AD_Account
+@{
     ViewData["Title"] = "充值";
     Layout = "~/Views/Shared/Wechat/_LayoutWechatComeBack.cshtml";
 }
 
 <div class="WCPay">
-    <a id="getBrandWCPayRequest" href="javascript:void(0);">
+   @* <a id="getBrandWCPayRequest" href="javascript:void(0);">*@
+        @if (ViewData["topupItem"] is TopupItem)
+        {
+            var topupItem = (TopupItem)ViewData["topupItem"];
+            <div class="product">
+                您已选中：@topupItem.TopupItemName<br />
+                价格：@topupItem.Price.ToString("c")
+            </div>
+        }
 
 
-        <div class="product">
-            您已选中产品： <br />
-            单价：
-        </div>
-
-        <h1 class="title">点击提交可体验微信支付</h1>
-    </a>
+        <a id="getBrandWCPayRequest" href="javascript:;" class="weui_btn weui_btn_primary">确认支付 </a>
+        @*<h1 class="title">点击提交可体验微信支付</h1>*@
+    @*</a>*@
 </div>
 
 @section Scripts{

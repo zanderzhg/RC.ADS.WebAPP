@@ -351,7 +351,8 @@ namespace RC.ADS.WebAPP.Controllers
         /// <returns></returns>
         public IActionResult RechargeChoice()
         {
-            return View();
+            
+            return View(_context.TopupItems.Where(x => x.IsDalete == false));
         }
         /// <summary>
         /// 充值
