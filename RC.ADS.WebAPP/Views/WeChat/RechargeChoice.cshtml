@@ -16,32 +16,7 @@
                 <a href="javascript:;" title="@item.Id" class="weui-payselect-a">@item.TopupItemName</a>
             </li>
         }
-        @*<li class="weui-payselect-li">
-                <a href="javascript:;" title="100" class="weui-payselect-a weui-payselect-on">100元</a>
-            </li>
-
-            <li class="weui-payselect-li">
-                <a href="javascript:;" title="200" class="weui-payselect-a">200元</a>
-            </li>
-            <li class="weui-payselect-li">
-                <a href="javascript:;" title="500" class="weui-payselect-a">500元</a>
-            </li>
-            <li class="weui-payselect-li">
-                <a href="javascript:;" title="1000" class="weui-payselect-a">1000元</a>
-            </li>
-            <li class="weui-payselect-li">
-                <a href="javascript:;" title="2000" class="weui-payselect-a">2000元</a>
-            </li>
-            <li class="weui-payselect-li">
-                <a href="javascript:;" title="5000" class="weui-payselect-a">5000元</a>
-            </li>*@
-
-        @*<li class="weui-payselect-li">
-                <a href="javascript:;" title="500" class="weui-payselect-a">vip会员1年<span class="weui-pay-12">500元</span></a>
-            </li>
-            <li class="weui-payselect-li">
-                <a href="javascript:;" title="1000" class="weui-payselect-a">白金会员1年<span class="weui-pay-12">1000元</span></a>
-            </li>*@
+        
     </ul>
     <button id="getBrandWCPayRequest" class="weui_btn weui_btn_primary">立即支付1 </button>
 
@@ -60,7 +35,7 @@
             $("#getBrandWCPayRequest").click(function () {
                 let topupItemId = $(".weui-payselect-on").attr("title");
                 $.get(
-                    '/TenPayV3/JsApi', //提交到那里
+                    '/wechat/JsApi', //提交到那里
                     { topupItemId: topupItemId, bodytext: "微信充值" },//提交的数据
                     function (data) {
                         console.log("进入json回调");
@@ -75,7 +50,7 @@
                         }, function (res) {
 
                             alert(JSON.stringify(res));
-
+                            window.location.href = 'http://www.circle-rect.com/wechat/me';
 
 
                             // 使用以上方式判断前端返回,微信团队郑重提示：res.err_msg将在用户支付成功后返回ok，但并不保证它绝对可靠。

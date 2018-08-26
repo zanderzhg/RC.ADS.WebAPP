@@ -72,15 +72,18 @@ namespace RC.ADS.WebAPP.Comm
             }
             catch (JSONException e)
             {
-                Console.WriteLine(e);
+                RCLog.Error(this, e.ToString());
+
             }
             catch (HTTPException e)
             {
-                Console.WriteLine(e);
+                RCLog.Error(this, e.ToString());
+
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                RCLog.Error(this, e.ToString());
+
             }
             return false;
         }
@@ -114,15 +117,17 @@ namespace RC.ADS.WebAPP.Comm
             }
             catch (JSONException e)
             {
-                Console.WriteLine(e);
+                RCLog.Error(this,e.ToString());
             }
             catch (HTTPException e)
             {
-                Console.WriteLine(e);
+                RCLog.Error(this, e.ToString());
+
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                RCLog.Error(this, e.ToString());
+
             }
             return false;
         }

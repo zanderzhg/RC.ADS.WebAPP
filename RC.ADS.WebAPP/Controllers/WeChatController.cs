@@ -11,6 +11,11 @@ using RC.ADS.Data.Entity.AD_Menber;
 using RC.ADS.WebAPP.Comm;
 using RC.ADS.WebAPP.Filters;
 using RC.ADS.WebAPP.Models.WeChat;
+using Senparc.Weixin;
+using Senparc.Weixin.MP;
+using Senparc.Weixin.MP.AdvancedAPIs;
+using Senparc.Weixin.MP.AdvancedAPIs.OAuth;
+using Senparc.Weixin.MP.TenPayLibV3;
 
 namespace RC.ADS.WebAPP.Controllers
 {
@@ -28,105 +33,7 @@ namespace RC.ADS.WebAPP.Controllers
         {
             return View();
         }
-        #region 验证码，登陆，注册
-        /// <summary>
-        /// 图形验证码
-        /// </summary>
-        /// <returns></returns>
-        public IActionResult ValidateCode()
-        {
-            string code = "";
-            System.IO.MemoryStream ms = VierificationCodeHelper.Create(out code);
-            HttpContext.Session.SetString("ImageValidateCode", code);
-            Response.Body.Dispose();
-            return File(ms.ToArray(), @"image/png");
-        }
-        public IActionResult SendPhoneValidateCode()
-        {
-            var Username = Request.Form["Username"].ToString().Trim();
-            var ImageValidateCode = Request.Form["ImageValidateCode"].ToString().Trim();
 
-            var ImageValidateCodeCash = HttpContext.Session.GetString("ImageValidateCode");
-            if (ImageValidateCode.ToUpper() == ImageValidateCodeCash.ToUpper())
-            {
-                Random rd = new Random();
-                var PhoneValidateCode = rd.Next(1000, 9999).ToString();
-                var result = _ssender.SendVerificationCode(PhoneValidateCode, Username);
-                if (result)
-                {
-                    HttpContext.Session.SetString(Username, PhoneValidateCode);
-                    return Json(new { statu = "OK", Msg = "验证码已经发送!" });
-                }
-                else
-                {
-                    return Json(new { statu = "Error", Msg = "验证码发送失败!" });
-                }
-            }
-            else
-            {
-                return Json(new { statu = "Error", Msg = "图片验证码不对!" });
-            }
-        }
-        #region 登陆
-
-
-        [HttpGet]
-        public IActionResult Login(string referrerId = "")
-        {
-
-
-            var model = new LoginVM { ReferrerId = referrerId };
-            return View(model);
-        }
-        [HttpPost]
-        public IActionResult Login(LoginVM model)
-        {
-
-            if (ModelState.IsValid)
-            {
-                if (model.PhoneValidateCode != HttpContext.Session.GetString(model.Username))
-                {
-                    ModelState.AddModelError("", "登陆码不对");
-                    return View(model);
-                }
-                var result = _context.Menbers.FirstOrDefault(x => x.Username == model.Username);
-                if (result != null)
-                {
-                    result.LastLoginGuidCode = Guid.NewGuid().ToString("N");
-                }
-                else
-                {
-                    result = new Menber
-                    {
-                        Username = model.Username,
-                        PhoneNumber = model.Username,
-                        ReferrerId = model.ReferrerId,
-                        LastLoginGuidCode = Guid.NewGuid().ToString("N"),
-                        RegisterTime = DateTime.Now
-                    };
-                    _context.Menbers.Add(result);
-
-                }
-                _context.SaveChanges();
-                HttpContext.Session.SetString("LoginMenberId", result.Id);
-                HttpContext.Response.Cookies.Append("LastLoginGuidCode", result.LastLoginGuidCode, new CookieOptions
-                {
-                    Expires = DateTime.Now.AddMonths(1)
-                });
-                HttpContext.Response.Cookies.Append("Username", result.Username, new CookieOptions
-                {
-                    Expires = DateTime.Now.AddMonths(1)
-                });
-                return RedirectToAction("Me", "WeChat");
-
-            }
-            ModelState.AddModelError("", "Invalid login attempt");
-            return View(model);
-
-        }
-        #endregion
-
-        #endregion
         #region 文章展示 完成
         public async Task<IActionResult> ShowArticle(string id)
         {
@@ -148,7 +55,6 @@ namespace RC.ADS.WebAPP.Controllers
         #region 首页 完成
         public IActionResult Index()
         {
-            RCLog.Info(this, "test");
             IndexVM vm = new IndexVM();
             vm.About = _context.Articles.FirstOrDefault(x => x.ArticleTypeId == ArticleTypeHelper.ArticleType_AboutUsId);
             vm.Notice = _context.Articles.FirstOrDefault(x => x.ArticleTypeId == ArticleTypeHelper.ArticleType_NoticeId);
@@ -254,30 +160,25 @@ namespace RC.ADS.WebAPP.Controllers
         #region 余额 完成
         public IActionResult AccountInfoList()
         {
-            var CurrentMemberId = HttpContext.Session.GetString("LoginMenberId");
-            if (string.IsNullOrEmpty(CurrentMemberId))
-            {
-                return RedirectToAction("Login", "WeChat");
-            }
-            else
-            {
+            var openId = HttpContext.Session.GetString("OpenId");
 
-                var vm = from A in _context.AccountInfos
-                         join T in _context.AccountInfoChangeTpyes on A.AccountInfoChangeTpyeId equals T.Id
-                         where A.OwnerId == CurrentMemberId
-                         select new AccountInfoDto
-                         {
-                             Id = A.Id,
-                             AccountInfoChangeTpyeName = T.Name,
-                             CreateTime = A.CreateTime,
-                             AfterMoney = A.AfterMoney,
-                             BeforeMoney = A.BeforeMoney,
-                             Money = A.Money,
-                             PlusOrMinus = T.PlusOrMinus,
-                             Describe = A.Describe
-                         };
-                return View(vm);
-            }
+            var vm = from A in _context.AccountInfos
+                     join T in _context.AccountInfoChangeTpyes on A.AccountInfoChangeTpyeId equals T.Id
+                     join M in _context.Menbers on A.OwnerId equals M.Id
+                     where M.WeChatOpenId == openId
+                     select new AccountInfoDto
+                     {
+                         Id = A.Id,
+                         AccountInfoChangeTpyeName = T.Name,
+                         CreateTime = A.CreateTime,
+                         AfterMoney = A.AfterMoney,
+                         BeforeMoney = A.BeforeMoney,
+                         Money = A.Money,
+                         PlusOrMinus = T.PlusOrMinus,
+                         Describe = A.Describe
+                     };
+            return View(vm);
+
 
         }
 
@@ -285,66 +186,54 @@ namespace RC.ADS.WebAPP.Controllers
         #region 积分 完成
         public IActionResult IntegralInfoList()
         {
-            var CurrentMemberId = HttpContext.Session.GetString("LoginMenberId");
-            if (string.IsNullOrEmpty(CurrentMemberId))
-            {
-                return RedirectToAction("Login", "WeChat");
-            }
-            else
-            {
+            var openId = HttpContext.Session.GetString("OpenId");
+            var vm = from I in _context.IntegralInfos
+                     join T in _context.IntegralInfoChangeType on I.IntegralInfoChangeTypeId equals T.Id
+                     join M in _context.Menbers on I.OwnerId equals M.Id
+                     where M.WeChatOpenId == openId
+                     select new IntegralInfoDto
+                     {
+                         Id = I.Id,
+                         IntegralInfoChangeTypeName = T.Name,
+                         CreateTime = I.CreateTime,
+                         AfterScore = I.AfterScore,
+                         BeforeScore = I.BeforeScore,
+                         Score = I.Score,
+                         PlusOrMinus = T.PlusOrMinus,
+                         Describe = I.Describe
+                     };
+            return View(vm);
 
-                var vm = from I in _context.IntegralInfos
-                         join T in _context.IntegralInfoChangeType on I.IntegralInfoChangeTypeId equals T.Id
-                         where I.OwnerId == CurrentMemberId
-                         select new IntegralInfoDto
-                         {
-
-                             Id = I.Id,
-                             IntegralInfoChangeTypeName = T.Name,
-                             CreateTime = I.CreateTime,
-                             AfterScore = I.AfterScore,
-                             BeforeScore = I.BeforeScore,
-                             Score = I.Score,
-                             PlusOrMinus = T.PlusOrMinus,
-                             Describe = I.Describe
-                         };
-                return View(vm);
-            }
         }
 
         #endregion
         #region 订单 完成
         public IActionResult OrderInfoList()
         {
-            var CurrentMemberId = HttpContext.Session.GetString("LoginMenberId");
-            if (string.IsNullOrEmpty(CurrentMemberId))
-            {
-                return RedirectToAction("Login", "WeChat");
-            }
-            else
-            {
-                var vm = from O in _context.Orders
-                         join T in _context.OrderStatus on O.OrderStatusId equals T.Id
-                         where O.OwnerId == CurrentMemberId
-                         select new OrderInfoDto
-                         {
-                             Id = O.Id,
+            var openId = HttpContext.Session.GetString("OpenId");
+            var vm = from O in _context.Orders
+                     join T in _context.OrderStatus on O.OrderStatusId equals T.Id
+                     join M in _context.Menbers on O.OwnerId equals M.Id
+                     where M.WeChatOpenId == openId
+                     select new OrderInfoDto
+                     {
+                         Id = O.Id,
 
-                             OrderName = O.OrderName,
-                             Price = O.Price,
-                             OrderStatuName = T.ChineseName,
+                         OrderName = O.OrderName,
+                         Price = O.Price,
+                         OrderStatuName = T.ChineseName,
 
-                             Description = O.Description,
-                             CreateTime = O.CreateTime,
-                             LastUpdateTime = O.LastUpdateTime
-                         };
-                return View(vm);
-            }
+                         Description = O.Description,
+                         CreateTime = O.CreateTime,
+                         LastUpdateTime = O.LastUpdateTime
+                     };
+            return View(vm);
+
         }
 
         #endregion
 
-        #region 充值 TODO
+        #region 充值 完成
         /// <summary>
         /// 充值选择 
         /// </summary>
@@ -354,23 +243,7 @@ namespace RC.ADS.WebAPP.Controllers
 
             return View(_context.TopupItems.Where(x => x.IsDalete == false));
         }
-        /// <summary>
-        /// 充值
-        /// </summary>
-        /// <returns></returns>
-        public IActionResult Recharge()
-        {
-            var CurrentMemberId = HttpContext.Session.GetString("LoginMenberId");
-            if (string.IsNullOrEmpty(CurrentMemberId))
-            {
-                return RedirectToAction("Login", "WeChat");
-            }
-            else
-            {
-                //TODO 调用支付接口
-                return View();
-            }
-        }
+
         #endregion
 
         #region 我的推广码 完成
@@ -380,10 +253,8 @@ namespace RC.ADS.WebAPP.Controllers
             try
             {
                 var openId = HttpContext.Session.GetString("OpenId");
-                var result = Senparc.Weixin.MP.AdvancedAPIs.QrCodeApi.Create(WeiXinConfig.appId, 2592000,1222, Senparc.Weixin.MP.QrCode_ActionName.QR_STR_SCENE, openId);
+                var result = Senparc.Weixin.MP.AdvancedAPIs.QrCodeApi.Create(WeiXinConfig.appId, 2592000, 1222, Senparc.Weixin.MP.QrCode_ActionName.QR_STR_SCENE, openId);
 
-
-                // var CurrentMemberId = HttpContext.Session.GetString("LoginMenberId");
                 ViewBag.urlstr = result.url;// $"http://www.circle-rect.com/wechat/login/?ReferrerId={CurrentMemberId}";
             }
             catch (Exception ex)
@@ -392,76 +263,236 @@ namespace RC.ADS.WebAPP.Controllers
             }
             return View();
         }
-      
+
         #endregion
         #region 我推广的用户 完成
         public async Task<IActionResult> SuggestedUsers()
         {
-            var CurrentMemberId = HttpContext.Session.GetString("LoginMenberId");
-            if (string.IsNullOrEmpty(CurrentMemberId))
-            {
-                return RedirectToAction("Login", "WeChat");
-            }
-            else
-            {
-                return View(await _context.Menbers.Where(x => x.ReferrerId == CurrentMemberId).ToListAsync());
-            }
+            var openId = HttpContext.Session.GetString("OpenId");
+            var menber = _context.Menbers.FirstOrDefault(x => x.WeChatOpenId == openId);
+            return View(await _context.Menbers.Where(x => x.ReferrerId == menber.Id).ToListAsync());
+
         }
 
         #endregion
-        #region 修改密码 完成
-        [HttpGet]
-        public IActionResult ModifPassword()
+
+        #region 验证码，修改手机
+        /// <summary>
+        /// 图形验证码
+        /// </summary>
+        /// <returns></returns>
+        public IActionResult ValidateCode()
         {
-            ModifPasswordDto dto = new ModifPasswordDto();
-            return View(dto);
+            string code = "";
+            System.IO.MemoryStream ms = VierificationCodeHelper.Create(out code);
+            HttpContext.Session.SetString("ImageValidateCode", code);
+            Response.Body.Dispose();
+            return File(ms.ToArray(), @"image/png");
+        }
+        public IActionResult SendPhoneValidateCode()
+        {
+            var PhoneNumber = Request.Form["PhoneNumber"].ToString().Trim();
+            var openId = HttpContext.Session.GetString("OpenId");
+            if (!string.IsNullOrEmpty(openId))
+            {
+                Random rd = new Random();
+                var PhoneValidateCode = rd.Next(1000, 9999).ToString();
+                var result = _ssender.SendVerificationCode(PhoneValidateCode, PhoneNumber);
+                if (result)
+                {
+                    HttpContext.Session.SetString(PhoneNumber, PhoneValidateCode);
+                    return Json(new { statu = "OK", Msg = "验证码已经发送!" });
+                }
+            }
+            return Json(new { statu = "Error", Msg = "验证码发送失败!" });
+
+        }
+        #region 修改手机
+
+
+        [HttpGet]
+        public IActionResult ModifPhoneNumber()
+        {
+            var model = new ModifPhoneNumberVM();
+            return View(model);
         }
         [HttpPost]
-        public async Task<IActionResult> ModifPassword(ModifPasswordDto dto)
+        public IActionResult ModifPhoneNumber(ModifPhoneNumberVM model)
         {
-            var CurrentMemberId = HttpContext.Session.GetString("LoginMenberId");
-            if (string.IsNullOrEmpty(CurrentMemberId))
+            if (ModelState.IsValid)
             {
-                return RedirectToAction("Login", "WeChat");
-            }
-            else
-            {
-                var member = await _context.Menbers.FirstOrDefaultAsync(x => x.Id == CurrentMemberId);
-                if (member.Password == dto.OldPassword)
+                var PhoneValidateCode = HttpContext.Session.GetString(model.PhoneNumber);
+                var PhoneNumber = Request.Form["PhoneNumber"].ToString().Trim();
+                var openId = HttpContext.Session.GetString("OpenId");
+                var member = _context.Menbers.FirstOrDefault(x => x.WeChatOpenId == openId);
+
+                if (model.PhoneNumber == PhoneNumber && model.PhoneValidateCode == PhoneValidateCode)
                 {
-                    if (dto.NewPassword == dto.ConfirmPassword)
-                    {
-                        member.Password = dto.NewPassword;
-                        _context.Update(member);
-                        await _context.SaveChangesAsync();
-                        return RedirectToAction("Me", "WeChat");
-                    }
-                    else
-                    {
-                        dto.Msg = "新密码与确认新密码不一致！";
-                    }
+                    member.PhoneNumber = model.PhoneNumber;
+                    _context.Update(member);
+                    _context.SaveChanges();
                 }
-                else
-                {
-                    dto.Msg = "旧密码不对！";
-                }
+                return RedirectToAction("Me", "WeChat");
             }
-            return View(dto);
+
+            return View(model);
+
         }
+        #endregion
+
         #endregion
         #region 安全退出 完成
         public IActionResult LoginOut()
         {
-            HttpContext.Session.Remove("LoginMenberId");
-            HttpContext.Response.Cookies.Delete("LastLoginGuidCode");
-            HttpContext.Response.Cookies.Delete("Username");
-
+            HttpContext.Session.Remove("OpenId");
             return RedirectToAction("index", "WeChat");
         }
         #endregion
 
 
         #endregion
+        #endregion
+
+        #region JsApi支付
+
+        public ActionResult OAuthCallback(string code, string state, string returnUrl)
+        {
+            RCLog.Info(this, "OAuthCallback");
+            if (string.IsNullOrEmpty(code))
+            {
+                return Content("您拒绝了授权！");
+            }
+
+            if (!state.Contains("|"))
+            {
+                //这里的state其实是会暴露给客户端的，验证能力很弱，这里只是演示一下
+                //实际上可以存任何想传递的数据，比如用户ID
+                return Content("验证失败！请从正规途径进入！1001");
+            }
+
+            //通过，用code换取access_token
+            var openIdResult = OAuthApi.GetAccessToken(WeiXinConfig.appId, WeiXinConfig.AppSecret, code);
+            if (openIdResult.errcode != ReturnCode.请求成功)
+            {
+                return Content("错误：" + openIdResult.errmsg);
+            }
+            RCLog.Info(this, "OAuthCallback=" + openIdResult.openid);
+            HttpContext.Session.SetString("OpenId", openIdResult.openid);//进行登录
+            OAuthUserInfo userInfo = OAuthApi.GetUserInfo(openIdResult.access_token, openIdResult.openid);
+            HttpContext.Session.SetString("nickname", userInfo.nickname);
+            HttpContext.Session.SetString("headimgurl", userInfo.headimgurl);
+
+
+            //也可以使用FormsAuthentication等其他方法记录登录信息，如：
+            //FormsAuthentication.SetAuthCookie(openIdResult.openid,false);
+            RCLog.Info(this, " 结束OAuthCallback");
+            return Redirect(returnUrl);
+        }
+
+
+        public ActionResult JsApi(string topupItemId = "2", string bodytext = "微信充值")
+        {
+            try
+            {
+                RCLog.Info(this, "进入JsApi");
+                var topupItem = _context.TopupItems.FirstOrDefault(z => z.Id == topupItemId);
+                if (topupItem == null)
+                {
+                    return Content("商品信息不存在，或非法进入！1002");
+                }
+
+
+                //var openId = User.Identity.Name;
+                var openId = HttpContext.Session.GetString("OpenId");
+
+                string sp_billno = DateTime.Now.Ticks.ToString();
+
+                var timeStamp = TenPayV3Util.GetTimestamp();
+                var nonceStr = TenPayV3Util.GetNoncestr();
+
+                var body = bodytext;
+                var price = topupItem.Price;//单位：分
+                var xmlDataInfo = new TenPayV3UnifiedorderRequestData(WeiXinConfig.appId, WeiXinConfig.MchId, body, sp_billno, price, HttpContext.UserHostAddress()?.ToString(), WeiXinConfig.TenPayV3Notify, TenPayV3Type.JSAPI, openId, WeiXinConfig.Key, nonceStr);
+
+                var result = TenPayV3.Unifiedorder(xmlDataInfo);//调用统一订单接口
+                RCLog.Info(this, "订单号：" + result.prepay_id);                                     //JsSdkUiPackage jsPackage = new JsSdkUiPackage(WeiXinConfig.appId, timeStamp, nonceStr,);
+                var package = string.Format("prepay_id={0}", result.prepay_id);
+
+                //临时记录订单信息，留给退款申请接口测试使用
+                //HttpContext.Session.SetString("BillNo", sp_billno);
+                //HttpContext.Session.SetString("BillFee", price.ToString());
+
+                return Json(new
+                {
+                    appId = WeiXinConfig.appId,
+                    timeStamp = timeStamp,
+                    nonceStr = nonceStr,
+                    package = package,
+                    paySign = TenPayV3.GetJsPaySign(WeiXinConfig.appId, timeStamp, nonceStr, package, WeiXinConfig.Key)
+                });
+            }
+            catch (Exception ex)
+            {
+                var msg = ex.Message;
+                msg += "<br>" + ex.StackTrace;
+                msg += "<br>==Source==<br>" + ex.Source;
+
+                if (ex.InnerException != null)
+                {
+                    msg += "<br>===InnerException===<br>" + ex.InnerException.Message;
+                }
+                return Content(msg);
+            }
+        }
+
+
+        /// <summary>
+        /// JS-SDK支付回调地址（在统一下单接口中设置notify_url）
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult PayNotifyUrl()
+        {
+            try
+            {
+                RCLog.Info(this, "支付返回");
+                ResponseHandler resHandler = new ResponseHandler(HttpContext);
+
+                string return_code = resHandler.GetParameter("return_code");
+                string return_msg = resHandler.GetParameter("return_msg");
+
+                string res = null;
+
+                resHandler.SetKey(WeiXinConfig.Key);
+                //验证请求是否从微信发过来（安全）
+                if (resHandler.IsTenpaySign() && return_code.ToUpper() == "SUCCESS")
+                {
+                    res = "success";//正确的订单处理
+                                    //直到这里，才能认为交易真正成功了，可以进行数据库操作，但是别忘了返回规定格式的消息！
+                    RCLog.Info(this, "支付成功");
+
+                }
+                else
+                {
+                    res = "wrong";//错误的订单处理
+                }
+
+                /* 这里可以进行订单处理的逻辑 */
+
+                //发送支付成功的模板消息
+
+                string xml = string.Format(@"<xml>
+<return_code><![CDATA[{0}]]></return_code>
+<return_msg><![CDATA[{1}]]></return_msg>
+</xml>", return_code, return_msg);
+                return Content(xml, "text/xml");
+            }
+            catch (Exception ex)
+            {
+                RCLog.Error(this, "发生错误");
+                throw;
+            }
+        }
+
         #endregion
     }
 }

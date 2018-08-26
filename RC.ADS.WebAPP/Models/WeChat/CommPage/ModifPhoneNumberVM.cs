@@ -5,11 +5,9 @@ using System.Threading.Tasks;
 
 namespace RC.ADS.WebAPP.Models.WeChat
 {
-    public class LoginVM
+    public class ModifPhoneNumberVM
     {
-        public string Username { get; set; }
-        public string ImageValidateCode { get; set; }
+        public string PhoneNumber { get; set; }
         public string PhoneValidateCode { get; set; }
-        public string ReferrerId { get; set; }
     }
 }

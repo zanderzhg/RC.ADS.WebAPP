@@ -54,8 +54,8 @@
 
         $(function () {
             var urlpath = window.location.pathname;
-            console.log(urlpath);
-            switch (urlpath) {
+            console.log(urlpath.toLowerCase());
+            switch (urlpath.toLowerCase()) {
                 case '/wechat/index':
                     index = 0;
                     break;

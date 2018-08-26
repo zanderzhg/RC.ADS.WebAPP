@@ -42,68 +42,6 @@ namespace RC.ADS.WebAPP.Controllers
                 return Content("failed:" + signature + "," + CheckSignature.GetSignature(timestamp, nonce, Token) + "。如果您在浏览器中看到这条信息，表明此Url可以填入微信后台。");
             }
         }
-        /// <summary>
-        /// 用户发送消息后，微信平台自动Post一个请求到这里，并等待响应XML。
-        /// PS：此方法为简化方法，效果与OldPost一致。
-        /// v0.8之后的版本可以结合Senparc.Weixin.MP.MvcExtension扩展包，使用WeixinResult，见MiniPost方法。
-        /// </summary>
-        [HttpPost]
-        [ActionName("Index")]
-        public ActionResult Post(PostModel postModel)
-        {
-            if (!CheckSignature.Check(postModel.Signature, postModel.Timestamp, postModel.Nonce, Token))
-            {
-                return Content("参数错误！");
-            }
-
-              
-
-             
-
-            try
-            {
-
-                 
-
-                
-
-                 
-
-                //return Content(messageHandler.ResponseDocument.ToString());//v0.7-
-                //return new WeixinResult(messageHandler);//v0.8+
-                return new FixWeixinBugWeixinResult(messageHandler);//为了解决官方微信5.0软件换行bug暂时添加的方法，平时用下面一个方法即可
-            }
-            catch (Exception ex)
-            {
-                #region 异常处理
-                WeixinTrace.Log("MessageHandler错误：{0}", ex.Message);
-
-                using (TextWriter tw = new StreamWriter(Server.GetMapPath("~/App_Data/Error_" + _getRandomFileName() + ".txt")))
-                {
-                    tw.WriteLine("ExecptionMessage:" + ex.Message);
-                    tw.WriteLine(ex.Source);
-                    tw.WriteLine(ex.StackTrace);
-                    //tw.WriteLine("InnerExecptionMessage:" + ex.InnerException.Message);
-
-                    if (messageHandler.ResponseDocument != null)
-                    {
-                        tw.WriteLine(messageHandler.ResponseDocument.ToString());
-                    }
-
-                    if (ex.InnerException != null)
-                    {
-                        tw.WriteLine("========= InnerException =========");
-                        tw.WriteLine(ex.InnerException.Message);
-                        tw.WriteLine(ex.InnerException.Source);
-                        tw.WriteLine(ex.InnerException.StackTrace);
-                    }
-
-                    tw.Flush();
-                    tw.Close();
-                }
-                return Content("");
-                #endregion
-            }
-        }
+       
     }
 }
