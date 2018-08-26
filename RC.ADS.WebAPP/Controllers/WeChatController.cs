@@ -338,7 +338,7 @@ namespace RC.ADS.WebAPP.Controllers
                     _context.SaveChanges();
                     return RedirectToAction("Me", "WeChat");
                 }
-               
+
             }
             ViewBag.headerUrl = HttpContext.Session.GetString("headimgurl");
 
@@ -364,7 +364,7 @@ namespace RC.ADS.WebAPP.Controllers
 
         public ActionResult OAuthCallback(string code, string state, string returnUrl)
         {
-            RCLog.Info(this, "OAuthCallback");
+            //RCLog.Info(this, "OAuthCallback");
             if (string.IsNullOrEmpty(code))
             {
                 return Content("您拒绝了授权！");
@@ -392,7 +392,7 @@ namespace RC.ADS.WebAPP.Controllers
 
             //也可以使用FormsAuthentication等其他方法记录登录信息，如：
             //FormsAuthentication.SetAuthCookie(openIdResult.openid,false);
-            RCLog.Info(this, " 结束OAuthCallback");
+            //RCLog.Info(this, " 结束OAuthCallback");
             return Redirect(returnUrl);
         }
 
@@ -401,7 +401,7 @@ namespace RC.ADS.WebAPP.Controllers
         {
             try
             {
-                RCLog.Info(this, "进入JsApi");
+                //RCLog.Info(this, "进入JsApi");
                 var topupItem = _context.TopupItems.FirstOrDefault(z => z.Id == topupItemId);
                 if (topupItem == null)
                 {
@@ -426,8 +426,8 @@ namespace RC.ADS.WebAPP.Controllers
                 var package = string.Format("prepay_id={0}", result.prepay_id);
 
                 //临时记录订单信息，留给退款申请接口测试使用
-                //HttpContext.Session.SetString("BillNo", sp_billno);
-                //HttpContext.Session.SetString("BillFee", price.ToString());
+                HttpContext.Session.SetString("BillNo", sp_billno);
+                HttpContext.Session.SetString("BillFee", price.ToString());
 
                 return Json(new
                 {
@@ -475,6 +475,15 @@ namespace RC.ADS.WebAPP.Controllers
                 {
                     res = "success";//正确的订单处理
                                     //直到这里，才能认为交易真正成功了，可以进行数据库操作，但是别忘了返回规定格式的消息！
+                    string total_fee = resHandler.GetParameter("total_fee");
+                    string out_trade_no = resHandler.GetParameter("out_trade_no");
+
+
+
+                    var BillNo = HttpContext.Session.GetString("BillNo");
+                    var BillFee = HttpContext.Session.GetString("BillFee");
+
+                    RCLog.Info(this, $"total_fee={total_fee};out_trade_no={out_trade_no};BillNo={BillNo};BillFee={BillFee}");
                     RCLog.Info(this, "支付成功");
 
                 }
@@ -491,6 +500,7 @@ namespace RC.ADS.WebAPP.Controllers
 <return_code><![CDATA[{0}]]></return_code>
 <return_msg><![CDATA[{1}]]></return_msg>
 </xml>", return_code, return_msg);
+                RCLog.Info(this, xml);
                 return Content(xml, "text/xml");
             }
             catch (Exception ex)
