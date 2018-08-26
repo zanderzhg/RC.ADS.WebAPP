@@ -9,6 +9,7 @@ using qcloudsms_csharp;
 using RC.ADS.Data;
 using RC.ADS.Data.Entity.AD_Menber;
 using RC.ADS.WebAPP.Comm;
+using RC.ADS.WebAPP.Filters;
 using RC.ADS.WebAPP.Models.WeChat;
 
 namespace RC.ADS.WebAPP.Controllers
@@ -67,13 +68,13 @@ namespace RC.ADS.WebAPP.Controllers
             }
         }
         #region 登陆
-       
+
 
         [HttpGet]
         public IActionResult Login(string referrerId = "")
         {
-          
-           
+
+
             var model = new LoginVM { ReferrerId = referrerId };
             return View(model);
         }
@@ -117,7 +118,7 @@ namespace RC.ADS.WebAPP.Controllers
                     Expires = DateTime.Now.AddMonths(1)
                 });
                 return RedirectToAction("Me", "WeChat");
-               
+
             }
             ModelState.AddModelError("", "Invalid login attempt");
             return View(model);
@@ -218,31 +219,30 @@ namespace RC.ADS.WebAPP.Controllers
         #endregion
 
         #region 个人中心
+        //需要OAuth登录
+        [CustomOAuth(null, "/TenpayV3/OAuthCallback")]
         public async Task<IActionResult> Me()
         {
             MeVM vm = new MeVM();
             Menber menber = null;
             try
             {
-                var CurrentMemberId = HttpContext.Session.GetString("LoginMenberId");
-                menber = await _context.Menbers.FirstOrDefaultAsync(x => x.Id == CurrentMemberId);
+                var weChatOpenId = HttpContext.Session.GetString("WeChatOpenId");
+                menber = await _context.Menbers.FirstOrDefaultAsync(x => x.WeChatOpenId == weChatOpenId);
                 if (menber == null)
                 {
-                    if (HttpContext.Request.Cookies.TryGetValue("Username", out string Username) && HttpContext.Request.Cookies.TryGetValue("LastLoginGuidCode", out string LastLoginGuidCode))
-                        menber = _context.Menbers.FirstOrDefault(x => x.Username == Username && x.LastLoginGuidCode == LastLoginGuidCode);
-                }
+                    menber = new Menber();
 
-                if (menber != null)
-                {
-                    vm.Balance = menber.AccountSum;
-                    vm.IntegralSum = menber.IntegralSum;
-                    vm.Username = menber.Username;
-                    vm.OrderSum = await _context.Orders.Where(x => x.OwnerId == menber.Id).CountAsync();
+                    menber.Username = HttpContext.Session.GetString("nickname");
+                    menber.WeChatOpenId = HttpContext.Session.GetString("WeChatOpenId");
+                    _context.Add(menber);
+                    _context.SaveChanges();
                 }
-                else
-                {
-                    return RedirectToAction("Login", "WeChat");
-                }
+                vm.Balance = menber.AccountSum;
+                vm.IntegralSum = menber.IntegralSum;
+                vm.Username = menber.Username;
+                vm.OrderSum = await _context.Orders.Where(x => x.OwnerId == menber.Id).CountAsync();
+
             }
             catch (Exception ex)
             {
@@ -351,7 +351,7 @@ namespace RC.ADS.WebAPP.Controllers
         /// <returns></returns>
         public IActionResult RechargeChoice()
         {
-            
+
             return View(_context.TopupItems.Where(x => x.IsDalete == false));
         }
         /// <summary>
@@ -376,19 +376,23 @@ namespace RC.ADS.WebAPP.Controllers
         #region 我的推广码 完成
         public IActionResult PromoCode()
         {
-            var CurrentMemberId = HttpContext.Session.GetString("LoginMenberId");
-            ViewBag.urlstr = $"http://www.circle-rect.com/wechat/login/?ReferrerId={CurrentMemberId}";
+
+            try
+            {
+                var openId = HttpContext.Session.GetString("OpenId");
+                var result = Senparc.Weixin.MP.AdvancedAPIs.QrCodeApi.Create(WeiXinConfig.appId, 2592000,1222, Senparc.Weixin.MP.QrCode_ActionName.QR_STR_SCENE, openId);
+
+
+                // var CurrentMemberId = HttpContext.Session.GetString("LoginMenberId");
+                ViewBag.urlstr = result.url;// $"http://www.circle-rect.com/wechat/login/?ReferrerId={CurrentMemberId}";
+            }
+            catch (Exception ex)
+            {
+                RCLog.Error(this, ex.ToString());
+            }
             return View();
         }
-        public IActionResult ShowCode()
-        {
-            var CurrentMemberId = HttpContext.Session.GetString("LoginMenberId");
-            string urlstr = $"www.circle-rect.com/wechat/login/?ReferrerId={CurrentMemberId}";
-            System.IO.MemoryStream ms = BarCodeHelper.CreateCodeEwm(urlstr);
-
-            Response.Body.Dispose();
-            return File(ms.ToArray(), @"image/png");
-        }
+      
         #endregion
         #region 我推广的用户 完成
         public async Task<IActionResult> SuggestedUsers()

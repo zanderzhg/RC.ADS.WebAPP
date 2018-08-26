@@ -97,7 +97,9 @@ namespace RC.ADS.WebAPP.Controllers
                 }
 
                 OAuthUserInfo userInfo = OAuthApi.GetUserInfo(result.access_token, result.openid);
-                return View(userInfo);
+                HttpContext.Session.SetString("OpenId", userInfo.openid);
+                return RedirectToAction("me", "wechat");
+               // return View(userInfo);
             }
             catch (ErrorJsonResultException ex)
             {

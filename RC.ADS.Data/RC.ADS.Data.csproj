@@ -7,6 +7,7 @@
   <ItemGroup>
     <Compile Remove="Migrations\20180803034746_addTableDifine.cs" />
     <Compile Remove="Migrations\20180803035550_addTableDifine1.cs" />
+    <Compile Remove="Migrations\20180826033123_ss.cs" />
   </ItemGroup>
 
   <ItemGroup>

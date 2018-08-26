@@ -11,10 +11,17 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using NLog.Extensions.Logging;
 using NLog.Web;
 using RC.ADS.Data;
 using RC.ADS.WebAPP.Comm;
+using Senparc.CO2NET;
+using Senparc.CO2NET.RegisterServices;
+using Senparc.Weixin;
+using Senparc.Weixin.Entities;
+using Senparc.Weixin.MP.Containers;
+using Senparc.Weixin.RegisterServices;
 
 namespace RC.ADS.WebAPP
 {
@@ -41,6 +48,9 @@ namespace RC.ADS.WebAPP
             services.AddDistributedMemoryCache();
             services.AddSession();
             services.AddSingleton(typeof(DbContext), typeof(DataContext));
+
+            services.AddSenparcGlobalServices(Configuration)//Senparc.CO2NET 全局注册
+                   .AddSenparcWeixinServices(Configuration);//Senparc.Weixin 注册
             //注入
             ConfigureRCServices.ConfigureSMSServices(services);
 
@@ -50,7 +60,7 @@ namespace RC.ADS.WebAPP
        
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IOptions<SenparcSetting> senparcSetting, IOptions<SenparcWeixinSetting> senparcWeixinSetting)
         {
             loggerFactory.AddNLog();
             env.ConfigureNLog("nlog.config");
@@ -73,7 +83,16 @@ namespace RC.ADS.WebAPP
                     name: "default",
                     template: "{controller=WeChat}/{action=Index}/{id?}");
             });
-            
+            // 启动 CO2NET 全局注册，必须！
+            IRegisterService register = RegisterService.Start(env, senparcSetting.Value)
+                                                        .UseSenparcGlobal(false, null);
+
+            //开始注册微信信息，必须！
+            register.UseSenparcWeixin(senparcWeixinSetting.Value, senparcSetting.Value);
+            //除此以外，仍然可以在程序任意地方注册公众号或小程序：
+            AccessTokenContainer.Register(WeiXinConfig.appId, WeiXinConfig.AppSecret,"工厂联盟");//命名空间：Senparc.Weixin.MP.Containers
+
+
         }
     }
 }

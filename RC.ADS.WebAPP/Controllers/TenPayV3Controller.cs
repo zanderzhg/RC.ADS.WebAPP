@@ -12,6 +12,7 @@ using Senparc.CO2NET.Extensions;
 using Senparc.Weixin;
 using Senparc.Weixin.MP;
 using Senparc.Weixin.MP.AdvancedAPIs;
+using Senparc.Weixin.MP.AdvancedAPIs.OAuth;
 using Senparc.Weixin.MP.CoreMvcExtension.BrowserUtility;
 using Senparc.Weixin.MP.TenPayLibV3;
 using ZXing;
@@ -22,7 +23,7 @@ namespace RC.ADS.WebAPP.Controllers
     public class TenPayV3Controller : Controller
     {
         private readonly DataContext _context;
-       
+
         public TenPayV3Controller(DataContext context)
         {
             _context = context;
@@ -51,8 +52,12 @@ namespace RC.ADS.WebAPP.Controllers
             {
                 return Content("错误：" + openIdResult.errmsg);
             }
-            RCLog.Info(this, "OAuthCallback="+ openIdResult.openid);
+            RCLog.Info(this, "OAuthCallback=" + openIdResult.openid);
             HttpContext.Session.SetString("OpenId", openIdResult.openid);//进行登录
+            OAuthUserInfo userInfo = OAuthApi.GetUserInfo(openIdResult.access_token, openIdResult.openid);
+            HttpContext.Session.SetString("nickname", userInfo.nickname);
+            HttpContext.Session.SetString("headimgurl", userInfo.headimgurl);
+
 
             //也可以使用FormsAuthentication等其他方法记录登录信息，如：
             //FormsAuthentication.SetAuthCookie(openIdResult.openid,false);
@@ -60,9 +65,8 @@ namespace RC.ADS.WebAPP.Controllers
             return Redirect(returnUrl);
         }
 
-        //需要OAuth登录
-        [CustomOAuth(null, "/TenpayV3/OAuthCallback")]
-        public ActionResult JsApi(string topupItemId="2",string bodytext="微信充值")
+       
+        public ActionResult JsApi(string topupItemId = "2", string bodytext = "微信充值")
         {
             try
             {
@@ -72,13 +76,13 @@ namespace RC.ADS.WebAPP.Controllers
                 {
                     return Content("商品信息不存在，或非法进入！1002");
                 }
-               
+
 
                 //var openId = User.Identity.Name;
                 var openId = HttpContext.Session.GetString("OpenId");
 
                 string sp_billno = DateTime.Now.Ticks.ToString();
-                
+
                 var timeStamp = TenPayV3Util.GetTimestamp();
                 var nonceStr = TenPayV3Util.GetNoncestr();
 
@@ -87,21 +91,21 @@ namespace RC.ADS.WebAPP.Controllers
                 var xmlDataInfo = new TenPayV3UnifiedorderRequestData(WeiXinConfig.appId, WeiXinConfig.MchId, body, sp_billno, price, HttpContext.UserHostAddress()?.ToString(), WeiXinConfig.TenPayV3Notify, TenPayV3Type.JSAPI, openId, WeiXinConfig.Key, nonceStr);
 
                 var result = TenPayV3.Unifiedorder(xmlDataInfo);//调用统一订单接口
-                RCLog.Info(this,"订单号："+result.prepay_id);                                     //JsSdkUiPackage jsPackage = new JsSdkUiPackage(WeiXinConfig.appId, timeStamp, nonceStr,);
+                RCLog.Info(this, "订单号：" + result.prepay_id);                                     //JsSdkUiPackage jsPackage = new JsSdkUiPackage(WeiXinConfig.appId, timeStamp, nonceStr,);
                 var package = string.Format("prepay_id={0}", result.prepay_id);
-
-                ViewData["topupItem"] = topupItem;
-                ViewData["appId"] = WeiXinConfig.appId;
-                ViewData["timeStamp"] = timeStamp;
-                ViewData["nonceStr"] = nonceStr;
-                ViewData["package"] = package;
-                ViewData["paySign"] = TenPayV3.GetJsPaySign(WeiXinConfig.appId, timeStamp, nonceStr, package, WeiXinConfig.Key);
 
                 //临时记录订单信息，留给退款申请接口测试使用
                 //HttpContext.Session.SetString("BillNo", sp_billno);
                 //HttpContext.Session.SetString("BillFee", price.ToString());
-                
-                return View();
+
+                return Json(new
+                {
+                    appId = WeiXinConfig.appId,
+                    timeStamp = timeStamp,
+                    nonceStr = nonceStr,
+                    package = package,
+                    paySign = TenPayV3.GetJsPaySign(WeiXinConfig.appId, timeStamp, nonceStr, package, WeiXinConfig.Key)
+                });
             }
             catch (Exception ex)
             {
@@ -116,57 +120,7 @@ namespace RC.ADS.WebAPP.Controllers
                 return Content(msg);
             }
         }
-        //需要OAuth登录
-        [CustomOAuth(null, "/TenpayV3/OAuthCallback")]
-
-        public ActionResult JsApi2()
-        {
-            try
-            {
-                RCLog.Info(this, "进入JsApi2");
-
-                //var openId = User.Identity.Name;
-                var openId = HttpContext.Session.GetString("OpenId");
-
-                string sp_billno = DateTime.Now.Ticks.ToString();
-
-                var timeStamp = TenPayV3Util.GetTimestamp();
-                var nonceStr = TenPayV3Util.GetNoncestr();
-
-                var body = "网上支付";
-                var price = 100;//单位：分
-                var xmlDataInfo = new TenPayV3UnifiedorderRequestData(WeiXinConfig.appId, WeiXinConfig.MchId, body, sp_billno, price, HttpContext.UserHostAddress()?.ToString(), WeiXinConfig.TenPayV3Notify, TenPayV3Type.JSAPI, openId, WeiXinConfig.Key, nonceStr);
-
-                var result = TenPayV3.Unifiedorder(xmlDataInfo);//调用统一订单接口
-                RCLog.Info(this, "订单号：" + result.prepay_id);                                     //JsSdkUiPackage jsPackage = new JsSdkUiPackage(WeiXinConfig.appId, timeStamp, nonceStr,);
-                var package = string.Format("prepay_id={0}", result.prepay_id);
-
-
-                ViewData["appId"] = WeiXinConfig.appId;
-                ViewData["timeStamp"] = timeStamp;
-                ViewData["nonceStr"] = nonceStr;
-                ViewData["package"] = package;
-                ViewData["paySign"] = TenPayV3.GetJsPaySign(WeiXinConfig.appId, timeStamp, nonceStr, package, WeiXinConfig.Key);
-
-                //临时记录订单信息，留给退款申请接口测试使用
-                HttpContext.Session.SetString("BillNo", sp_billno);
-                HttpContext.Session.SetString("BillFee", price.ToString());
-                RCLog.Info(this, "成果返回Json");
-                return Json(new { WeiXinConfig.appId, timeStamp, nonceStr, package , paySign = TenPayV3.GetJsPaySign(WeiXinConfig.appId, timeStamp, nonceStr, package, WeiXinConfig.Key)});
-                }
-            catch (Exception ex)
-            {
-                var msg = ex.Message;
-                msg += "<br>" + ex.StackTrace;
-                msg += "<br>==Source==<br>" + ex.Source;
-
-                if (ex.InnerException != null)
-                {
-                    msg += "<br>===InnerException===<br>" + ex.InnerException.Message;
-                }
-                return Content(msg);
-            }
-        }
+      
 
         /// <summary>
         /// JS-SDK支付回调地址（在统一下单接口中设置notify_url）
@@ -176,7 +130,7 @@ namespace RC.ADS.WebAPP.Controllers
         {
             try
             {
-                RCLog.Info(this,"支付返回");
+                RCLog.Info(this, "支付返回");
                 ResponseHandler resHandler = new ResponseHandler(HttpContext);
 
                 string return_code = resHandler.GetParameter("return_code");
@@ -201,10 +155,6 @@ namespace RC.ADS.WebAPP.Controllers
                 /* 这里可以进行订单处理的逻辑 */
 
                 //发送支付成功的模板消息
-              
-
-                 
-
 
                 string xml = string.Format(@"<xml>
 <return_code><![CDATA[{0}]]></return_code>
@@ -214,49 +164,16 @@ namespace RC.ADS.WebAPP.Controllers
             }
             catch (Exception ex)
             {
-                RCLog.Error(this,"发生错误");
+                RCLog.Error(this, "发生错误");
                 throw;
             }
         }
 
         #endregion
- 
-
-        #region 产品展示
-
-        public ActionResult ProductList()
-        {
-            var products = ProductModel.GetFakeProductList();
-            return View(products);
-        }
 
 
-        public ActionResult ProductItem(int productId, int hc)
-        {
-            var products = ProductModel.GetFakeProductList();
-            var product = products.FirstOrDefault(z => z.Id == productId);
-            if (product == null || product.GetHashCode() != hc)
-            {
-                return Content("商品信息不存在，或非法进入！2003");
-            }
+        
 
-            //判断是否正在微信端
-            if (BrowserUtility.SideInWeixinBrowser(HttpContext))
-            {
-                //正在微信端，直接跳转到微信支付页面
-                return RedirectToAction("JsApi", new { productId = productId, hc = hc });
-            }
-            else
-            {
-                //在PC端打开，提供二维码扫描进行支付
-                return View(product);
-            }
-        }
 
-    
-
-        #endregion
-
-         
     }
 }
