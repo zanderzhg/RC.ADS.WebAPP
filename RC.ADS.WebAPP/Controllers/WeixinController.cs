@@ -15,20 +15,7 @@ namespace RC.ADS.WebAPP.Controllers
 {
     public class WeixinController : Controller
     {
-        public static readonly string Token = Config.SenparcWeixinSetting.Token;//与微信公众账号后台的Token设置保持一致，区分大小写。
-        public static readonly string EncodingAESKey = Config.SenparcWeixinSetting.EncodingAESKey;//与微信公众账号后台的EncodingAESKey设置保持一致，区分大小写。
-        public static readonly string AppId = Config.SenparcWeixinSetting.WeixinAppId;//与微信公众账号后台的AppId设置保持一致，区分大小写。
-
-        readonly Func<string> _getRandomFileName = () => DateTime.Now.ToString("yyyyMMdd-HHmmss") + Guid.NewGuid().ToString("n").Substring(0, 6);
-
-        SenparcWeixinSetting _senparcWeixinSetting;
-
-
-        // public readonly string Token = "mytoken2018";
-        public WeixinController(IOptions<SenparcWeixinSetting> senparcWeixinSetting)
-        {
-            _senparcWeixinSetting = senparcWeixinSetting.Value;
-        }
+        public readonly string Token = "mytoken2018";
         [HttpGet]
         [ActionName("Index")]
         public ActionResult Get(string signature, string timestamp, string nonce, string echostr)
@@ -42,6 +29,5 @@ namespace RC.ADS.WebAPP.Controllers
                 return Content("failed:" + signature + "," + CheckSignature.GetSignature(timestamp, nonce, Token) + "。如果您在浏览器中看到这条信息，表明此Url可以填入微信后台。");
             }
         }
-       
     }
 }

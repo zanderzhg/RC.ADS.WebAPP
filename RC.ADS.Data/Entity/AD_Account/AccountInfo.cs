@@ -17,15 +17,15 @@ namespace RC.ADS.Data.Entity.AD_Account
         /// <summary>
         /// 结算前金额
         /// </summary>
-        public decimal BeforeMoney { get; set; }
+        public int BeforeMoney { get; set; }
         /// <summary>
         /// 结算金额
         /// </summary>
-        public decimal Money { get; set; }
+        public int Money { get; set; }
         /// <summary>
         /// 结算后金额
         /// </summary>
-        public decimal AfterMoney { get; set; }
+        public int AfterMoney { get; set; }
 
         public string AccountInfoChangeTpyeId { get; set; }
         [ForeignKey("AccountInfoChangeTpyeId")]

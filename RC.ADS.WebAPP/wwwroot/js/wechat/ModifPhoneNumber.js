@@ -1,25 +1,16 @@
 ﻿$(function () {
-    var url = $("#yzm").attr('src');
-    // 添加点击事件 鼠标浮动时变成小手
-    $('#yzm').css('cursor', 'pointer').click(function () {
-        // 获取到图片的src路径  换一个新的路径   此代码相当与在原来的基础上增加数据
-        var code = "?time=" + Date.parse(new Date());
-        $('#yzm').attr('src', url + code)
-    })
-
     $("#timeCode").hide();
     //点击获取验证码
     $("#getCode").click(function () {
         //获取手机号
-        var Username = $("#Username").val();
-        var ImageValidateCode = $("#ImageValidateCode").val();
+        var PhoneNumber = $("#PhoneNumber").val();
         // 手机号正则
         var reg = /^[1][3,4,5,7,8][0-9]{9}$/;
-        if (reg.test(Username)) {
+        if (reg.test(PhoneNumber)) {
             console.log("IN");
             $.post(
                 '/wechat/SendPhoneValidateCode', //提交到那里
-                { "Username": Username, "ImageValidateCode": ImageValidateCode },//提交的数据
+                { "PhoneNumber": PhoneNumber},//提交的数据
                 function (data) {
                     console.log(data);
                     if (data.statu == "OK") {

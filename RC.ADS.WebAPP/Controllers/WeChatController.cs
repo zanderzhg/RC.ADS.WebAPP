@@ -126,23 +126,26 @@ namespace RC.ADS.WebAPP.Controllers
 
         #region 个人中心
         //需要OAuth登录
-        [CustomOAuth(null, "/TenpayV3/OAuthCallback")]
+        [CustomOAuth(null, "/wechat/OAuthCallback")]
         public async Task<IActionResult> Me()
         {
             MeVM vm = new MeVM();
             Menber menber = null;
+            ViewBag.headerUrl = HttpContext.Session.GetString("headimgurl");
             try
             {
-                var weChatOpenId = HttpContext.Session.GetString("WeChatOpenId");
+                var weChatOpenId = HttpContext.Session.GetString("OpenId");
                 menber = await _context.Menbers.FirstOrDefaultAsync(x => x.WeChatOpenId == weChatOpenId);
                 if (menber == null)
                 {
                     menber = new Menber();
 
                     menber.Username = HttpContext.Session.GetString("nickname");
-                    menber.WeChatOpenId = HttpContext.Session.GetString("WeChatOpenId");
+                    menber.WeChatOpenId = weChatOpenId;
                     _context.Add(menber);
                     _context.SaveChanges();
+                    ViewBag.headerUrl = HttpContext.Session.GetString("headimgurl");
+                    return RedirectToAction("ModifPhoneNumber", "wechat");
                 }
                 vm.Balance = menber.AccountSum;
                 vm.IntegralSum = menber.IntegralSum;
@@ -313,7 +316,9 @@ namespace RC.ADS.WebAPP.Controllers
         [HttpGet]
         public IActionResult ModifPhoneNumber()
         {
-            var model = new ModifPhoneNumberVM();
+            ModifPhoneNumberVM model = new ModifPhoneNumberVM();
+            ViewBag.headerUrl = HttpContext.Session.GetString("headimgurl");
+
             return View(model);
         }
         [HttpPost]
@@ -322,18 +327,20 @@ namespace RC.ADS.WebAPP.Controllers
             if (ModelState.IsValid)
             {
                 var PhoneValidateCode = HttpContext.Session.GetString(model.PhoneNumber);
-                var PhoneNumber = Request.Form["PhoneNumber"].ToString().Trim();
                 var openId = HttpContext.Session.GetString("OpenId");
                 var member = _context.Menbers.FirstOrDefault(x => x.WeChatOpenId == openId);
 
-                if (model.PhoneNumber == PhoneNumber && model.PhoneValidateCode == PhoneValidateCode)
+                if (model.PhoneValidateCode == PhoneValidateCode)
                 {
                     member.PhoneNumber = model.PhoneNumber;
+                    RCLog.Info(this, $"新手机号码为{ model.PhoneNumber}");
                     _context.Update(member);
                     _context.SaveChanges();
+                    return RedirectToAction("Me", "WeChat");
                 }
-                return RedirectToAction("Me", "WeChat");
+               
             }
+            ViewBag.headerUrl = HttpContext.Session.GetString("headimgurl");
 
             return View(model);
 
