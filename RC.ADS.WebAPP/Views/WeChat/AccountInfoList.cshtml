@@ -1,4 +1,4 @@
-﻿@model IEnumerable<RC.ADS.Data.Entity.AD_Account.AccountInfo>
+﻿@model RC.ADS.WebAPP.Models.WeChat.AccountInfoDto
 
 @{
     ViewData["Title"] = "账户明细";
@@ -6,8 +6,9 @@
 }
 <div class="weui_cells_title">账户明细列表</div>
 <div class="weui_cells" style="color:#999;font-size:15px;">
-    @foreach (var item in Model.OrderByDescending(x => x.CreateTime))
+    @foreach (var item in Model.AccountInfos)
     {
+
         var NewMoney = item.Money * 0.01;
         var afterMoney = item.AfterMoney * 0.01;
         <div class="weui_cell">
@@ -33,13 +34,15 @@
 </div>
 <div class="pager weui_cells_access">
     <div class="pager-left">
-        <div class="pager-first"><a class="pager-nav">首页</a></div>
-        <div class="pager-pre"><a class="pager-nav">上一页</a></div>
+        <div class="pager-first"><a asp-action="pageIndex" asp-controller="wechat" class="pager-nav">首页</a></div>
+        <div class="pager-pre"><a asp-action="pageIndex" asp-controller="wechat" asp-route-pageIndex="@Model.PageIndex-1" class="pager-nav">上一页</a></div>
     </div>
-    <div class="pager-cen">1/120</div>
+    @{ var pageStr = $"{ Model.PageIndex}/{ Model.PageCount}";
+        <div class="pager-cen">@pageStr</div>
+    }
     <div class="pager-right">
-        <div class="pager-next"><a class="pager-nav">下一页</a></div>
-        <div class="pager-end"><a class="pager-nav">尾页</a></div>
+        <div class="pager-next"><a asp-action="pageIndex" asp-controller="wechat" asp-route-pageIndex="@Model.PageIndex+1" class="pager-nav">下一页</a></div>
+        <div class="pager-end"><a asp-action="pageIndex" asp-controller="wechat" asp-route-pageIndex="@Model.PageCount" class="pager-nav">尾页</a></div>
     </div>
 </div>
 

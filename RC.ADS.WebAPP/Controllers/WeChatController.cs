@@ -164,12 +164,19 @@ namespace RC.ADS.WebAPP.Controllers
         }
         #region 子功能
         #region 余额 完成
-        public IActionResult AccountInfoList()
+        public IActionResult AccountInfoList(int pageIndex=1)
         {
+            int pageSize = 30;
             var openId = HttpContext.Session.GetString("OpenId");
             var owner = _context.Menbers.FirstOrDefault(x=>x.WeChatOpenId==openId);
-            var vm = _context.AccountInfos.Where(x => x.OwnerId == owner.Id);
-                    
+            var tempData = _context.AccountInfos.Where(x => x.OwnerId == owner.Id).OrderByDescending(x=>x.CreateTime);
+
+            AccountInfoDto vm = new AccountInfoDto();
+            vm.AccountInfos= tempData.Skip(pageIndex-1).Take(pageSize).ToList();
+            vm.PageCount =(int)Math.Ceiling((double)tempData.Count()/pageSize);
+            vm.PageIndex = pageIndex;
+
+
             return View(vm);
 
 
