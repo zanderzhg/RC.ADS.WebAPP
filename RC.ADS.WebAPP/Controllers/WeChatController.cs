@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using qcloudsms_csharp;
 using RC.ADS.Data;
+using RC.ADS.Data.Entity.AD_Account;
 using RC.ADS.Data.Entity.AD_Menber;
 using RC.ADS.WebAPP.Comm;
 using RC.ADS.WebAPP.Filters;
@@ -424,6 +425,8 @@ namespace RC.ADS.WebAPP.Controllers
                 var result = TenPayV3.Unifiedorder(xmlDataInfo);//调用统一订单接口
                 RCLog.Info(this, "订单号：" + result.prepay_id);                                     //JsSdkUiPackage jsPackage = new JsSdkUiPackage(WeiXinConfig.appId, timeStamp, nonceStr,);
                 var package = string.Format("prepay_id={0}", result.prepay_id);
+                RCLog.Info(this, $"sp_billno={sp_billno}");
+                RCLog.Info(this, $"price={price}");
 
                 //临时记录订单信息，留给退款申请接口测试使用
                 HttpContext.Session.SetString("BillNo", sp_billno);
@@ -477,15 +480,24 @@ namespace RC.ADS.WebAPP.Controllers
                                     //直到这里，才能认为交易真正成功了，可以进行数据库操作，但是别忘了返回规定格式的消息！
                     string total_fee = resHandler.GetParameter("total_fee");
                     string out_trade_no = resHandler.GetParameter("out_trade_no");
+                    string openid = resHandler.GetParameter("openid");
+                    string package = resHandler.GetParameter("attach");
 
+                    
 
+                   Menber owner= _context.Menbers.FirstOrDefault(x => x.WeChatOpenId == openid);
+                    AccountInfo accountinfo = new AccountInfo();
+                    accountinfo.BeforeMoney = owner.AccountSum;
+                    accountinfo.AfterMoney = owner.AccountSum + int.Parse(total_fee);
+                    accountinfo.OwnerId = owner.Id;
+                    accountinfo.Money = int.Parse(total_fee);
+                    accountinfo.CreateTime = DateTime.Now;
+                    accountinfo.TradeNo = out_trade_no;
+                    accountinfo.TradeName = package;
 
-                    var BillNo = HttpContext.Session.GetString("BillNo");
-                    var BillFee = HttpContext.Session.GetString("BillFee");
-
-                    RCLog.Info(this, $"total_fee={total_fee};out_trade_no={out_trade_no};BillNo={BillNo};BillFee={BillFee}");
-                    RCLog.Info(this, "支付成功");
-
+                    owner.AccountSum = accountinfo.AfterMoney;
+                    _context.Add (accountinfo);
+                    _context.SaveChanges();
                 }
                 else
                 {
@@ -505,7 +517,7 @@ namespace RC.ADS.WebAPP.Controllers
             }
             catch (Exception ex)
             {
-                RCLog.Error(this, "发生错误");
+                RCLog.Error(this, $"发生错误{ex.ToString()}");
                 throw;
             }
         }

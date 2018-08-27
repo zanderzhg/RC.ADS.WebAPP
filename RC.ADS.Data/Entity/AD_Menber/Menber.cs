@@ -23,7 +23,10 @@ namespace RC.ADS.Data.Entity.AD_Menber
         /// </summary>
         public Menber Referrer { get; set; }
         public string LastLoginGuidCode { get; set; }
-        public decimal AccountSum { get; set; }
+        /// <summary>
+        /// 单位： 分
+        /// </summary>
+        public int AccountSum { get; set; }
         public int IntegralSum { get; set; }
         public DateTime RegisterTime { get; set; }
     }

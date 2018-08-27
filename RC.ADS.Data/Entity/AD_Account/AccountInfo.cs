@@ -11,6 +11,14 @@ namespace RC.ADS.Data.Entity.AD_Account
     {
         public AccountInfo() { Id = Guid.NewGuid().ToString("N"); }
         public string Id { get; set; }
+        /// <summary>
+        /// 交易号
+        /// </summary>
+        public string TradeNo { get; set; }
+        /// <summary>
+        /// 交易名称
+        /// </summary>
+        public string TradeName { get; set; }
         public string OwnerId { get; set; }
         [ForeignKey("OwnerId")]
         public Menber Owner { get; set; }
