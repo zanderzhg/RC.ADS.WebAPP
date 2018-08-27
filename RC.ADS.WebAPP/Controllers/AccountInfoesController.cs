@@ -8,6 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using RC.ADS.Data;
 using RC.ADS.Data.Entity.AD_Account;
 using RC.ADS.Data.Entity.AD_Menber;
+using RC.ADS.Data.Enum;
+using RC.ADS.WebAPP.Comm;
 
 namespace RC.ADS.WebAPP.Controllers
 {
@@ -58,9 +60,9 @@ namespace RC.ADS.WebAPP.Controllers
         {
             ViewBag.OwerName = _context.Menbers.FirstOrDefault(x => x.Id == owerId).Username;
             AccountInfo accountInfo = new AccountInfo() { OwnerId = owerId };
-            var selectListEnum = _context.AccountInfoChangeTpyes.Select(x => new { Value = x.Id, Text = x.Name });
-            SelectList list = new SelectList(selectListEnum, "Value", "Text");
-            ViewBag.SelectListEnum = list;
+           // var selectListEnum = _context.AccountInfoChangeTpyes.Select(x => new { Value = x.Id, Text = x.Name });
+            //SelectList list = new SelectList(selectListEnum, "Value", "Text");
+            //ViewBag.SelectListEnum = list;
             return View(accountInfo);
         }
 
@@ -96,9 +98,10 @@ namespace RC.ADS.WebAPP.Controllers
             {
                 return NotFound();
             }
-            var selectListEnum = _context.AccountInfoChangeTpyes.Select(x => new { Value = x.Id, Text = x.Name });
-            SelectList list = new SelectList(selectListEnum, "Value", "Text", accountInfo.AccountInfoChangeTpyeId);
-            ViewBag.SelectListEnum = list;
+
+            //var selectListEnum = EnumHelper.GetSelectListByEnum<AccountInfoChangeTypeEnum>();
+            //SelectList list = new SelectList(selectListEnum, "Value", "Text", accountInfo.AccountInfoChangeTpyeId);
+            //ViewBag.SelectListEnum = list;
             return View(accountInfo);
         }
 

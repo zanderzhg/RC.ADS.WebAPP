@@ -1,5 +1,5 @@
 ﻿using RC.ADS.Data.Entity.AD_Menber;
-
+using RC.ADS.Data.Enum;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -34,10 +34,7 @@ namespace RC.ADS.Data.Entity.AD_Account
         /// 结算后金额
         /// </summary>
         public int AfterMoney { get; set; }
-
-        public string AccountInfoChangeTpyeId { get; set; }
-        [ForeignKey("AccountInfoChangeTpyeId")]
-        public AccountInfoChangeType AccountInfoChangeTpye { get; set; }
+        public AccountInfoChangeTypeEnum AccountInfoChangeTpye { get; set; }
         public string Describe { get; set; }
         public DateTime CreateTime { get; set; }
     }

@@ -142,15 +142,17 @@ namespace RC.ADS.WebAPP.Controllers
                     menber = new Menber();
 
                     menber.Username = HttpContext.Session.GetString("nickname");
+
                     menber.WeChatOpenId = weChatOpenId;
                     _context.Add(menber);
                     _context.SaveChanges();
                     ViewBag.headerUrl = HttpContext.Session.GetString("headimgurl");
                     return RedirectToAction("ModifPhoneNumber", "wechat");
                 }
-                vm.Balance = menber.AccountSum;
+                vm.Balance = (decimal)(menber.AccountSum*0.01);//转化为元
                 vm.IntegralSum = menber.IntegralSum;
                 vm.Username = menber.Username;
+                vm.PhoneNo = string.IsNullOrEmpty(menber.PhoneNumber) ? "无" : menber.PhoneNumber;
                 vm.OrderSum = await _context.Orders.Where(x => x.OwnerId == menber.Id).CountAsync();
 
             }
@@ -165,22 +167,9 @@ namespace RC.ADS.WebAPP.Controllers
         public IActionResult AccountInfoList()
         {
             var openId = HttpContext.Session.GetString("OpenId");
-
-            var vm = from A in _context.AccountInfos
-                     join T in _context.AccountInfoChangeTpyes on A.AccountInfoChangeTpyeId equals T.Id
-                     join M in _context.Menbers on A.OwnerId equals M.Id
-                     where M.WeChatOpenId == openId
-                     select new AccountInfoDto
-                     {
-                         Id = A.Id,
-                         AccountInfoChangeTpyeName = T.Name,
-                         CreateTime = A.CreateTime,
-                         AfterMoney = A.AfterMoney,
-                         BeforeMoney = A.BeforeMoney,
-                         Money = A.Money,
-                         PlusOrMinus = T.PlusOrMinus,
-                         Describe = A.Describe
-                     };
+            var owner = _context.Menbers.FirstOrDefault(x=>x.WeChatOpenId==openId);
+            var vm = _context.AccountInfos.Where(x => x.OwnerId == owner.Id);
+                    
             return View(vm);
 
 
@@ -483,9 +472,9 @@ namespace RC.ADS.WebAPP.Controllers
                     string openid = resHandler.GetParameter("openid");
                     string package = resHandler.GetParameter("attach");
 
-                    
 
-                   Menber owner= _context.Menbers.FirstOrDefault(x => x.WeChatOpenId == openid);
+
+                    Menber owner = _context.Menbers.FirstOrDefault(x => x.WeChatOpenId == openid);
                     AccountInfo accountinfo = new AccountInfo();
                     accountinfo.BeforeMoney = owner.AccountSum;
                     accountinfo.AfterMoney = owner.AccountSum + int.Parse(total_fee);
@@ -496,7 +485,7 @@ namespace RC.ADS.WebAPP.Controllers
                     accountinfo.TradeName = package;
 
                     owner.AccountSum = accountinfo.AfterMoney;
-                    _context.Add (accountinfo);
+                    _context.Add(accountinfo);
                     _context.SaveChanges();
                 }
                 else

@@ -20,5 +20,6 @@ namespace RC.ADS.WebAPP.Models.WeChat
         /// 订单总数
         /// </summary>
         public int OrderSum { get; set; }
+        public string PhoneNo { get; set; }
     }
 }

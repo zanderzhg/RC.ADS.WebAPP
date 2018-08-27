@@ -1,5 +1,5 @@
 ﻿@model RC.ADS.Data.Entity.AD_Account.AccountInfo
-
+@using RC.ADS.Data.Enum
 @{
     ViewData["Title"] = "充值";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -21,10 +21,11 @@
                 <span asp-validation-for="Money" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="AccountInfoChangeTpyeId" class="control-label"></label>
-                <select asp-for="AccountInfoChangeTpyeId" class="form-control" asp-items="ViewBag.SelectListEnum"></select>
-                <span asp-validation-for="AccountInfoChangeTpyeId" class="text-danger"></span>
-                
+                <label asp-for="AccountInfoChangeTpye" class="control-label"></label>
+                <select name="AccountInfoChangeTpye" asp-items="@Html.GetEnumSelectList(typeof(AccountInfoChangeTypeEnum))"></select>
+                 
+                <span asp-validation-for="AccountInfoChangeTpye" class="text-danger"></span>
+
             </div>
             <div class="form-group">
                 <label asp-for="Describe" class="control-label"></label>

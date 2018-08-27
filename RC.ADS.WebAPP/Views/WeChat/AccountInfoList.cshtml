@@ -1,21 +1,60 @@
-﻿@model IEnumerable<RC.ADS.WebAPP.Models.WeChat.AccountInfoDto>
+﻿@model IEnumerable<RC.ADS.Data.Entity.AD_Account.AccountInfo>
 
 @{
     ViewData["Title"] = "账户明细";
     Layout = "~/Views/Shared/Wechat/_LayoutWechatComeBack.cshtml";
 }
 <div class="weui_cells_title">账户明细列表</div>
-<div class="weui_cells">
-    @foreach (var item in Model)
+<div class="weui_cells" style="color:#999;font-size:15px;">
+    @foreach (var item in Model.OrderByDescending(x => x.CreateTime))
     {
-        var NewMoney = item.Money * item.PlusOrMinus;
-
+        var NewMoney = item.Money * 0.01;
+        var afterMoney = item.AfterMoney * 0.01;
         <div class="weui_cell">
             <div class="weui_cell_bd weui_cell_primary">
-                <p>@item.AccountInfoChangeTpyeName</p>
+                <p>余额：<span>@afterMoney</span>元</p>
             </div>
-            <div class="weui_cell_ft weui_media_desc" style="color:red">@NewMoney</div>
+            <div class="weui_cell_ft weui_media_desc">
+                @if ((int)item.AccountInfoChangeTpye > 0)
+                {
+                    <span style="color:green">+@NewMoney 元</span>
+
+                }
+                else
+                {
+                    <span style="color:red">-@NewMoney 元</span>
+
+                }
+                <p>@item.CreateTime.ToString()</p>
+            </div>
         </div>
 
     }
+</div>
+<div class="pager weui_cells_access">
+    <div class="pager-left">
+        <div class="pager-first"><a class="pager-nav">首页</a></div>
+        <div class="pager-pre"><a class="pager-nav">上一页</a></div>
+    </div>
+    <div class="pager-cen">1/120</div>
+    <div class="pager-right">
+        <div class="pager-next"><a class="pager-nav">下一页</a></div>
+        <div class="pager-end"><a class="pager-nav">尾页</a></div>
+    </div>
+</div>
+
+<div class="weui_cells weui_cells_access"  >
+
+    <div class="pager">
+        <div class="pager-left">
+            <div class="pager-first"><a class="pager-nav">首页</a></div>
+            <div class="pager-pre"><a class="pager-nav">上一页</a></div>
+        </div>
+        <div class="pager-cen">1/120</div>
+        <div class="pager-right">
+            <div class="pager-next"><a class="pager-nav">下一页</a></div>
+            <div class="pager-end"><a class="pager-nav">尾页</a></div>
+        </div>
+    </div>
+
 </div>
