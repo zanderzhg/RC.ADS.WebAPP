@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RC.ADS.Data.Entity.AD_Integral;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -7,22 +8,9 @@ namespace RC.ADS.WebAPP.Models.WeChat
 {
     public class IntegralInfoDto
     {
-        public string Id { get; set; }
-        /// <summary>
-        /// 结算前积分
-        /// </summary>
-        public int BeforeScore { get; set; }
-        /// <summary>
-        /// 结算积分
-        /// </summary>
-        public int Score { get; set; }
-        /// <summary>
-        /// 结算后积分
-        /// </summary>
-        public int AfterScore { get; set; }
-        public string IntegralInfoChangeTypeName { get; set; }
-        public string Describe { get; set; }
-        public DateTime CreateTime { get; set; }
-        public int PlusOrMinus { get;  set; }
+        public IntegralInfoDto() { IntegralInfos = new List<IntegralInfo>(); }
+        public int PageIndex { get; set; }
+        public int PageCount { get; set; }
+        public List<IntegralInfo> IntegralInfos { get; set; }
     }
 }

@@ -1,4 +1,4 @@
-﻿@model IEnumerable<RC.ADS.WebAPP.Models.WeChat.OrderInfoDto>
+﻿@model  RC.ADS.WebAPP.Models.WeChat.OrderInfoDto
 
 @{
     ViewData["Title"] = "订单列表";
@@ -7,7 +7,7 @@
 <div class="weui_panel weui_panel_access">
     <div class="weui_panel_hd">订单列表</div>
     <div class="weui_panel_bd">
-        @foreach (var item in Model)
+        @foreach (var item in Model.Orders)
         {
             <div class="weui_media_box weui_media_appmsg">
                 <div class="weui_media_hd">
@@ -18,7 +18,7 @@
                     <p class="weui_media_desc">@item.Description</p>
                 </div>
                 <div class="weui-cell__ft">
-                    <span class="weui_media_desc" style="color:green">@item.OrderStatuName</span>
+                    <span class="weui_media_desc" style="color:green">@item.OrderStatu</span>
 
                 </div>
             </div>

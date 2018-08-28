@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RC.ADS.Data.Entity.AD_Order;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -7,12 +8,9 @@ namespace RC.ADS.WebAPP.Models.WeChat
 {
     public class OrderInfoDto
     {
-        public string Id { get; set; }
-        public string OrderName { get; set; }
-        public decimal Price { get; set; }
-        public string OrderStatuName { get; set; }
-        public string Description { get; set; }
-        public DateTime CreateTime { get; set; }
-        public DateTime LastUpdateTime { get; set; }
+        public OrderInfoDto(){ Orders = new List<Order>(); }
+        public int PageIndex { get; set; }
+        public int PageCount { get; set; }
+        public List<Order> Orders { get; set; }
     }
 }

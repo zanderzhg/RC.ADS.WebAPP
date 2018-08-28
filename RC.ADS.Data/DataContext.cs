@@ -23,8 +23,6 @@ namespace RC.ADS.Data
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderStatusChange> OrderStatusChanges { get; set; }
         public DbSet<IntegralInfoChangeType> IntegralInfoChangeType { get; set; }
-        public DbSet<OrderStatus> OrderStatus { get; set; }
-
         public DbSet<SMSApp> SMSApp { get; set; }
         public DbSet<SMSAppTemplate> SMSAppTemplates { get; set; }
         public DbSet<SendSMSLog> SendSMSLogs { get; set; }

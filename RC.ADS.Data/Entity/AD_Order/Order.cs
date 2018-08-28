@@ -1,4 +1,5 @@
 ﻿using RC.ADS.Data.Entity.AD_Menber;
+using RC.ADS.Data.Enum;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -15,9 +16,7 @@ namespace RC.ADS.Data.Entity.AD_Order
         [ForeignKey("OwnerId")]
         public Menber  Owner { get; set; }
         public decimal Price { get; set; }
-        public string OrderStatusId { get; set; }
-        [ForeignKey("OrderStatusId")]
-        public OrderStatus orderStatu { get; set; }
+         public OrderStatusEnum OrderStatu { get; set; }
         public string Description { get; set; }
         public DateTime CreateTime { get; set; }
         /// <summary>

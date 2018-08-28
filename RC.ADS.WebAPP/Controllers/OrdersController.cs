@@ -58,9 +58,9 @@ namespace RC.ADS.WebAPP.Controllers
         public IActionResult Create(string owerId)
         {
             Order vm = new Order() { OwnerId = owerId };
-            var selectListEnum = _context.OrderStatus.Select(x => new { Value = x.Id, Text = x.ChineseName });
-            SelectList list = new SelectList(selectListEnum, "Value", "Text");
-            ViewBag.SelectListEnum = list;
+            //var selectListEnum = _context.OrderStatus.Select(x => new { Value = x.Id, Text = x.ChineseName });
+            //SelectList list = new SelectList(selectListEnum, "Value", "Text");
+            //ViewBag.SelectListEnum = list;
 
             return View(vm);
         }
@@ -98,9 +98,9 @@ namespace RC.ADS.WebAPP.Controllers
             {
                 return NotFound();
             }
-            var selectListEnum = _context.OrderStatus.Select(x => new { Value = x.Id, Text = x.ChineseName });
-            SelectList list = new SelectList(selectListEnum, "Value", "Text", order.OrderStatusId);
-            ViewBag.SelectListEnum = list;
+            //var selectListEnum = _context.OrderStatus.Select(x => new { Value = x.Id, Text = x.ChineseName });
+            //SelectList list = new SelectList(selectListEnum, "Value", "Text", order.OrderStatusId);
+            //ViewBag.SelectListEnum = list;
             return View(order);
         }
 
@@ -124,7 +124,7 @@ namespace RC.ADS.WebAPP.Controllers
                     OrderStatusChange orderStatusChange = new OrderStatusChange()
                     {
                         OrderId = order.Id,
-                        OrderStatusId = order.OrderStatusId,
+                        OrderStatu = order.OrderStatu,
                         Price = order.Price,
                         Description = order.Description,
                         CreateTime = order.LastUpdateTime,

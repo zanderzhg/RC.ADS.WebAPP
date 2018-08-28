@@ -149,7 +149,7 @@ namespace RC.ADS.WebAPP.Controllers
                     ViewBag.headerUrl = HttpContext.Session.GetString("headimgurl");
                     return RedirectToAction("ModifPhoneNumber", "wechat");
                 }
-                vm.Balance = (decimal)(menber.AccountSum*0.01);//转化为元
+                vm.Balance = (decimal)(menber.AccountSum * 0.01);//转化为元
                 vm.IntegralSum = menber.IntegralSum;
                 vm.Username = menber.Username;
                 vm.PhoneNo = string.IsNullOrEmpty(menber.PhoneNumber) ? "无" : menber.PhoneNumber;
@@ -164,16 +164,16 @@ namespace RC.ADS.WebAPP.Controllers
         }
         #region 子功能
         #region 余额 完成
-        public IActionResult AccountInfoList(int pageIndex=1)
+        public IActionResult AccountInfoList(int pageIndex = 1)
         {
             int pageSize = 30;
             var openId = HttpContext.Session.GetString("OpenId");
-            var owner = _context.Menbers.FirstOrDefault(x=>x.WeChatOpenId==openId);
-            var tempData = _context.AccountInfos.Where(x => x.OwnerId == owner.Id).OrderByDescending(x=>x.CreateTime);
+            var owner = _context.Menbers.FirstOrDefault(x => x.WeChatOpenId == openId);
+            var tempData = _context.AccountInfos.Where(x => x.OwnerId == owner.Id).OrderByDescending(x => x.CreateTime);
 
             AccountInfoDto vm = new AccountInfoDto();
-            vm.AccountInfos= tempData.Skip(pageIndex-1).Take(pageSize).ToList();
-            vm.PageCount =(int)Math.Ceiling((double)tempData.Count()/pageSize);
+            vm.AccountInfos = tempData.Skip(pageIndex - 1).Take(pageSize).ToList();
+            vm.PageCount = (tempData.Count() % pageSize > 0) ? ((tempData.Count() / pageSize) + 1) : (tempData.Count() / pageSize);
             vm.PageIndex = pageIndex;
 
 
@@ -184,49 +184,34 @@ namespace RC.ADS.WebAPP.Controllers
 
         #endregion
         #region 积分 完成
-        public IActionResult IntegralInfoList()
+        public IActionResult IntegralInfoList(int pageIndex = 1)
         {
+            int pageSize = 30;
             var openId = HttpContext.Session.GetString("OpenId");
-            var vm = from I in _context.IntegralInfos
-                     join T in _context.IntegralInfoChangeType on I.IntegralInfoChangeTypeId equals T.Id
-                     join M in _context.Menbers on I.OwnerId equals M.Id
-                     where M.WeChatOpenId == openId
-                     select new IntegralInfoDto
-                     {
-                         Id = I.Id,
-                         IntegralInfoChangeTypeName = T.Name,
-                         CreateTime = I.CreateTime,
-                         AfterScore = I.AfterScore,
-                         BeforeScore = I.BeforeScore,
-                         Score = I.Score,
-                         PlusOrMinus = T.PlusOrMinus,
-                         Describe = I.Describe
-                     };
-            return View(vm);
+            var owner = _context.Menbers.FirstOrDefault(x => x.WeChatOpenId == openId);
+            var tempData = _context.IntegralInfos.Where(x => x.OwnerId == owner.Id).OrderByDescending(x => x.CreateTime);
 
+            IntegralInfoDto vm = new IntegralInfoDto();
+            vm.IntegralInfos = tempData.Skip(pageIndex - 1).Take(pageSize).ToList();
+            vm.PageCount = (tempData.Count() % pageSize > 0) ? ((tempData.Count() / pageSize) + 1) : (tempData.Count() / pageSize);
+            vm.PageIndex = pageIndex;
+            return View(vm);
         }
 
         #endregion
         #region 订单 完成
-        public IActionResult OrderInfoList()
+        public IActionResult OrderInfoList(int pageIndex = 1)
         {
+          
+            int pageSize = 30;
             var openId = HttpContext.Session.GetString("OpenId");
-            var vm = from O in _context.Orders
-                     join T in _context.OrderStatus on O.OrderStatusId equals T.Id
-                     join M in _context.Menbers on O.OwnerId equals M.Id
-                     where M.WeChatOpenId == openId
-                     select new OrderInfoDto
-                     {
-                         Id = O.Id,
+            var owner = _context.Menbers.FirstOrDefault(x => x.WeChatOpenId == openId);
+            var tempData = _context.Orders.Where(x => x.OwnerId == owner.Id).OrderByDescending(x => x.CreateTime);
 
-                         OrderName = O.OrderName,
-                         Price = O.Price,
-                         OrderStatuName = T.ChineseName,
-
-                         Description = O.Description,
-                         CreateTime = O.CreateTime,
-                         LastUpdateTime = O.LastUpdateTime
-                     };
+            OrderInfoDto vm = new OrderInfoDto();
+            vm.Orders = tempData.Skip(pageIndex - 1).Take(pageSize).ToList();
+            vm.PageCount = (tempData.Count() % pageSize > 0) ? ((tempData.Count() / pageSize) + 1) : (tempData.Count() / pageSize);
+            vm.PageIndex = pageIndex;
             return View(vm);
 
         }
@@ -238,6 +223,7 @@ namespace RC.ADS.WebAPP.Controllers
         /// 充值选择 
         /// </summary>
         /// <returns></returns>
+        [CustomOAuth(null, "/wechat/OAuthCallback")]
         public IActionResult RechargeChoice()
         {
 

@@ -1,4 +1,4 @@
-﻿@model IEnumerable<RC.ADS.WebAPP.Models.WeChat.IntegralInfoDto>
+﻿@model RC.ADS.WebAPP.Models.WeChat.IntegralInfoDto
 
 @{
     ViewData["Title"] = "积分明细列表";
@@ -7,16 +7,16 @@
 
     <div class="weui_cells_title">积分明细列表</div>
     <div class="weui_cells">
-        @foreach (var item in Model)
+        @foreach (var item in Model.IntegralInfos)
         {
-            var NewScore = item.Score * item.PlusOrMinus;
+            @*var NewScore = item.Score * item.PlusOrMinus;
 
             <div class="weui_cell">
                 <div class="weui_cell_bd weui_cell_primary">
-                    <p>@item.IntegralInfoChangeTypeName</p>
+                    <p>@item.</p>
                 </div>
                 <div class="weui_cell_ft weui_media_desc" style="color:red">@NewScore</div>
-            </div>
+            </div>*@
 
         }
     </div>

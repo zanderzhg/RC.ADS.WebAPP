@@ -8,6 +8,8 @@ namespace RC.ADS.WebAPP.Models.WeChat
 {
     public class AccountInfoDto
     {
+        public AccountInfoDto() { AccountInfos = new List<AccountInfo>(); }
+
         public int PageIndex { get; set; }
         public int PageCount { get; set; }
         public List<AccountInfo> AccountInfos { get; set; }
