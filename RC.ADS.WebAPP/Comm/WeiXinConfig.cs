@@ -13,5 +13,7 @@ namespace RC.ADS.WebAPP.Comm
         public static readonly string MchId= "1318211001";
         public static readonly string  Key= "Devinchen199012271118wadadfasdwe";
         public static readonly string TenPayV3Notify = "http://www.circle-rect.com/WeChat/PayNotifyUrl";
+        public static readonly string EncodingAESKey = "e10E7zYR2s5KQMEx3oEHa9QSCZ1HOQkr1wLfqSiCfGH";
+
     }
 }

@@ -242,7 +242,7 @@ namespace RC.ADS.WebAPP.Controllers
                 var openId = HttpContext.Session.GetString("OpenId");
                 var result = Senparc.Weixin.MP.AdvancedAPIs.QrCodeApi.Create(WeiXinConfig.appId, 2592000, 1222, Senparc.Weixin.MP.QrCode_ActionName.QR_STR_SCENE, openId);
 
-                ViewBag.urlstr = result.url;// $"http://www.circle-rect.com/wechat/login/?ReferrerId={CurrentMemberId}";
+                ViewBag.urlstr = result.url; 
             }
             catch (Exception ex)
             {
