@@ -81,7 +81,7 @@ namespace RC.ADS.WebAPP
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=WeChat}/{action=Index}/{id?}");
+                    template: "{controller=home}/{action=Index}/{id?}");
             });
             // 启动 CO2NET 全局注册，必须！
             IRegisterService register = RegisterService.Start(env, senparcSetting.Value)

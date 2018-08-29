@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RC.ADS.Data;
 
 namespace RC.ADS.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20180829015344_ada")]
+    partial class ada
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -82,11 +84,27 @@ namespace RC.ADS.Data.Migrations
 
                     b.Property<string>("ArticleName");
 
-                    b.Property<int>("ArticleType");
+                    b.Property<string>("ArticleTypeId");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ArticleTypeId");
+
                     b.ToTable("Articles");
+                });
+
+            modelBuilder.Entity("RC.ADS.Data.Entity.AD_Article.ArticleType", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Describe");
+
+                    b.Property<string>("Name");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ArticleTypes");
                 });
 
             modelBuilder.Entity("RC.ADS.Data.Entity.AD_Integral.IntegralInfo", b =>
@@ -102,7 +120,7 @@ namespace RC.ADS.Data.Migrations
 
                     b.Property<string>("Describe");
 
-                    b.Property<int>("IntegralInfoChangeType");
+                    b.Property<string>("IntegralInfoChangeTypeId");
 
                     b.Property<string>("OwnerId");
 
@@ -110,9 +128,27 @@ namespace RC.ADS.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("IntegralInfoChangeTypeId");
+
                     b.HasIndex("OwnerId");
 
                     b.ToTable("IntegralInfos");
+                });
+
+            modelBuilder.Entity("RC.ADS.Data.Entity.AD_Integral.IntegralInfoChangeType", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Describe");
+
+                    b.Property<string>("Name");
+
+                    b.Property<int>("PlusOrMinus");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("IntegralInfoChangeType");
                 });
 
             modelBuilder.Entity("RC.ADS.Data.Entity.AD_Menber.Menber", b =>
@@ -274,8 +310,19 @@ namespace RC.ADS.Data.Migrations
                         .HasForeignKey("OwnerId");
                 });
 
+            modelBuilder.Entity("RC.ADS.Data.Entity.AD_Article.Article", b =>
+                {
+                    b.HasOne("RC.ADS.Data.Entity.AD_Article.ArticleType", "ArticleTypeEntity")
+                        .WithMany()
+                        .HasForeignKey("ArticleTypeId");
+                });
+
             modelBuilder.Entity("RC.ADS.Data.Entity.AD_Integral.IntegralInfo", b =>
                 {
+                    b.HasOne("RC.ADS.Data.Entity.AD_Integral.IntegralInfoChangeType", "IntegralInfoChangeType")
+                        .WithMany()
+                        .HasForeignKey("IntegralInfoChangeTypeId");
+
                     b.HasOne("RC.ADS.Data.Entity.AD_Menber.Menber", "Owner")
                         .WithMany()
                         .HasForeignKey("OwnerId");

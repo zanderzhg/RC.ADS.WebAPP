@@ -1,38 +1,53 @@
-﻿@model IEnumerable<RC.ADS.Data.Entity.AD_Menber.Menber>
+﻿@model RC.ADS.WebAPP.Models.Menbers.Menbers_Index_VD
 
 @{
     ViewData["Title"] = "会员列表";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>@ViewData["Title"]</h2>
+<hr />
+<form asp-controller="Menbers" asp-action="index" method="get" class="form-inline">
+    <div class="form-group">
+        <label class="control-label">用户名</label>
+        <input asp-for="MenberName" class="form-control" />
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
+    </div>
+    <div class="form-group">
+        <label class="control-label">手机号码</label>
+        <input asp-for="MenberPhone" class="form-control" />
+    </div>
+    <div class="form-group">
+        <input type="submit" value="查找" class="btn btn-default" />
+    </div>
+    <a asp-action="Create" class="btn btn-primary">新增</a>
+</form>
+ 
+<hr />
+<h3>@ViewData["Title"]</h3>
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Username)
+                用户名
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.PhoneNumber)
+                手机号码
+            </th>
+
+            <th>
+                账户余额
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Password)
+                积分
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.AccountSum)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IntegralSum)
+                注册时间
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
+@foreach (var item in Model.Menbers) {
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.Username)
@@ -40,14 +55,15 @@
             <td>
                 @Html.DisplayFor(modelItem => item.PhoneNumber)
             </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Password)
-            </td>
+
             <td>
                 @Html.DisplayFor(modelItem => item.AccountSum)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.IntegralSum)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RegisterTime)
             </td>
             <td>
                 <div class="btn-group">
@@ -57,9 +73,9 @@
                     </button>
                     <ul class="dropdown-menu" role="menu">
 
-                        <li><a asp-action="Edit" asp-route-id="@item.Id">编辑</a> </li>
-                        <li><a asp-action="Details" asp-route-id="@item.Id">查看</a> </li>
-                        <li><a asp-action="Delete" asp-route-id="@item.Id">删除</a></li>
+                        <li><a asp-action="Edit" asp-route-id="@item.Id">编辑用户信息</a> </li>
+                        <li><a asp-action="Details" asp-route-id="@item.Id">查看用户信息</a> </li>
+                        <li><a asp-action="Delete" asp-route-id="@item.Id">删除用户</a></li>
                         <li><a asp-controller="Orders" asp-action="Create" asp-route-owerId="@item.Id">添加订单</a></li>
                         <li><a asp-controller="Orders" asp-action="index" asp-route-owerId="@item.Id">查看该用户订单列表</a></li>
                         <li><a asp-controller="AccountInfoes" asp-action="Create" asp-route-owerId="@item.Id">充值</a></li>
@@ -68,7 +84,7 @@
                         <li><a asp-controller="IntegralInfoes" asp-action="Index" asp-route-owerId="@item.Id">查看积分记录</a></li>
                     </ul>
                 </div>
-                
+
             </td>
         </tr>
 }

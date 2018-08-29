@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using RC.ADS.Data;
 using RC.ADS.Data.Entity.AD_Menber;
+using RC.ADS.WebAPP.Models.Menbers;
 
 namespace RC.ADS.WebAPP.Controllers
 {
@@ -20,9 +21,22 @@ namespace RC.ADS.WebAPP.Controllers
         }
 
         // GET: Menbers
-        public async Task<IActionResult> Index()
+        public IActionResult Index(string MenberName = "", string MenberPhone = "")
         {
-            return View(await _context.Menbers.ToListAsync());
+            Menbers_Index_VD vm = new Menbers_Index_VD();
+            vm.MenberName = MenberName;
+            vm.MenberName = MenberPhone;
+            var list = _context.Menbers.Where(x => x.IsDelete == false);
+            if (!string.IsNullOrEmpty(MenberName))
+            {
+                list = list.Where(x => x.Username.Contains(MenberName));
+            }
+            if (!string.IsNullOrEmpty(MenberPhone))
+            {
+                list = list.Where(x => x.PhoneNumber.Contains(MenberPhone));
+            }
+            vm.Menbers = list.ToList();
+            return View(vm);
         }
 
         // GET: Menbers/Details/5
@@ -54,7 +68,7 @@ namespace RC.ADS.WebAPP.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create( Menber menber)
+        public async Task<IActionResult> Create(Menber menber)
         {
             if (ModelState.IsValid)
             {

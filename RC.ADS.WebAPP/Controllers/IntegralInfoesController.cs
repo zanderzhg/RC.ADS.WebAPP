@@ -57,9 +57,6 @@ namespace RC.ADS.WebAPP.Controllers
         {
             ViewBag.OwerName = _context.Menbers.FirstOrDefault(x => x.Id == owerId).Username;
             IntegralInfo integralInfo = new IntegralInfo() { OwnerId = owerId };
-            var selectListEnum = _context.IntegralInfoChangeType.Select(x => new { Value = x.Id, Text = x.Name });
-            SelectList list = new SelectList(selectListEnum, "Value", "Text");
-            ViewBag.SelectListEnum = list;
             return View(integralInfo);
         }
 

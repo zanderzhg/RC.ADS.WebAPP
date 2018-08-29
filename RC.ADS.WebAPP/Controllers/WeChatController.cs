@@ -9,6 +9,7 @@ using qcloudsms_csharp;
 using RC.ADS.Data;
 using RC.ADS.Data.Entity.AD_Account;
 using RC.ADS.Data.Entity.AD_Menber;
+using RC.ADS.Data.Enum;
 using RC.ADS.WebAPP.Comm;
 using RC.ADS.WebAPP.Filters;
 using RC.ADS.WebAPP.Models.WeChat;
@@ -57,9 +58,9 @@ namespace RC.ADS.WebAPP.Controllers
         public IActionResult Index()
         {
             IndexVM vm = new IndexVM();
-            vm.About = _context.Articles.FirstOrDefault(x => x.ArticleTypeId == ArticleTypeHelper.ArticleType_AboutUsId);
-            vm.Notice = _context.Articles.FirstOrDefault(x => x.ArticleTypeId == ArticleTypeHelper.ArticleType_NoticeId);
-            vm.Slideshows = _context.Articles.Where(x => x.ArticleTypeId == ArticleTypeHelper.ArticleType_SlideshowsId).ToList();
+            vm.About = _context.Articles.FirstOrDefault(x => x.ArticleType == ArticleTypeEnum.AboutUS_1);
+            vm.Notice = _context.Articles.FirstOrDefault(x => x.ArticleType == ArticleTypeEnum.Notice_4);
+            vm.Slideshows = _context.Articles.Where(x => x.ArticleType == ArticleTypeEnum.Slideshows_7).ToList();
             return View(vm);
         }
         #region 子功能
@@ -68,7 +69,7 @@ namespace RC.ADS.WebAPP.Controllers
         public IActionResult CustomerService()
         {
             RCLog.Info(this, "test");
-            var vm = _context.Articles.FirstOrDefault(x => x.ArticleTypeId == ArticleTypeHelper.ArticleType_AboutUsId);
+            var vm = _context.Articles.FirstOrDefault(x => x.ArticleType  == ArticleTypeEnum.CustomerService_6);
             return View(nameof(ShowArticle), vm);
         }
         #endregion
@@ -76,7 +77,7 @@ namespace RC.ADS.WebAPP.Controllers
         public IActionResult NoticeList()
         {
             RCLog.Info(this, "test");
-            var vm = _context.Articles.Where(x => x.ArticleTypeId == ArticleTypeHelper.ArticleType_NoticeId);
+            var vm = _context.Articles.Where(x => x.ArticleType == ArticleTypeEnum.Notice_4);
 
             return View(vm);
         }
@@ -85,7 +86,7 @@ namespace RC.ADS.WebAPP.Controllers
         public IActionResult SpecialOffersList()
         {
             RCLog.Info(this, "test");
-            var vm = _context.Articles.Where(x => x.ArticleTypeId == ArticleTypeHelper.ArticleType_SpecialOffersId);
+            var vm = _context.Articles.Where(x => x.ArticleType == ArticleTypeEnum.Slideshows_7);
             return View(vm);
         }
         #endregion
@@ -96,7 +97,7 @@ namespace RC.ADS.WebAPP.Controllers
         #region 业务范围 完成
         public async Task<IActionResult> Business()
         {
-            var vm = await _context.Articles.Where(x => x.ArticleTypeId == ArticleTypeHelper.ArticleType_BusinessId).ToListAsync();
+            var vm = await _context.Articles.Where(x => x.ArticleType == ArticleTypeEnum.Business_2).ToListAsync();
             return View(vm);
         }
         #region 子功能

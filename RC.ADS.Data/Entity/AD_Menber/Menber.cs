@@ -9,7 +9,7 @@ namespace RC.ADS.Data.Entity.AD_Menber
 {
    public class Menber
     {
-        public Menber() { Id = Guid.NewGuid().ToString("N"); AccountSum = 0; IntegralSum = 0; RegisterTime = DateTime.Now; }
+        public Menber() { Id = Guid.NewGuid().ToString("N"); AccountSum = 0; IntegralSum = 0; RegisterTime = DateTime.Now; IsDelete = false; }
         public string Id { get; set; }
         public string Username { get; set; }
         public string PhoneNumber { get; set; }
@@ -29,5 +29,6 @@ namespace RC.ADS.Data.Entity.AD_Menber
         public int AccountSum { get; set; }
         public int IntegralSum { get; set; }
         public DateTime RegisterTime { get; set; }
+        public bool IsDelete { get; set; }
     }
 }

@@ -54,9 +54,9 @@ namespace RC.ADS.WebAPP.Controllers
         public IActionResult Create()
         {
             Article article = new Article();
-            var selectListEnum = _context.ArticleTypes.Select(x => new { Value = x.Id, Text = x.Name });
-            SelectList list = new SelectList(selectListEnum, "Value", "Text");
-            ViewBag.SelectListEnum = list;
+            //var selectListEnum = _context.ArticleTypes.Select(x => new { Value = x.Id, Text = x.Name });
+            //SelectList list = new SelectList(selectListEnum, "Value", "Text");
+            //ViewBag.SelectListEnum = list;
             return View(article);
         }
 
@@ -66,21 +66,20 @@ namespace RC.ADS.WebAPP.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         //[HttpPost]
         //[ValidateAntiForgeryToken]
-        public IActionResult Create([Bind("Id,ArticleName,ArticleContent,ArticleIco,ArticleImage,ArticleIndex,ArticleTypeId")]Article article)
+        public IActionResult Create(Article article)
         {
 
             if (ModelState.IsValid)
             {
                 var ArticleContent = Request.Form["ArticleContent"];
-                var ArticleTypeId = Request.Form["ArticleTypeId"];
-                //TODO 添加文章类别ID
+              
                 var articleIco_File = Request.Form.Files["ArticleIco"];
                 article.ArticleIco = FileHelper.UploadImage(articleIco_File, _env);
 
                 var articleImage_File = Request.Form.Files["ArticleImage"];
                 article.ArticleImage = FileHelper.UploadImage(articleImage_File, _env);
 
-                article.ArticleTypeEntity = _context.ArticleTypes.FirstOrDefault(x => x.Id == ArticleTypeId);
+                article.ArticleType = article.ArticleType;
 
                 _context.Add(article);
                 _context.SaveChangesAsync();
@@ -102,10 +101,10 @@ namespace RC.ADS.WebAPP.Controllers
             {
                 return NotFound();
             }
-            var selectListEnum = _context.ArticleTypes.Select(x => new { Value = x.Id, Text = x.Name });
-            var value = article.ArticleTypeId;
-            SelectList list = new SelectList(selectListEnum, "Value", "Text", value);
-            ViewBag.SelectListEnum = list;
+            //var selectListEnum = _context.ArticleTypes.Select(x => new { Value = x.Id, Text = x.Name });
+            //var value = article.ArticleTypeId;
+            //SelectList list = new SelectList(selectListEnum, "Value", "Text", value);
+            //ViewBag.SelectListEnum = list;
             return View(article);
         }
 

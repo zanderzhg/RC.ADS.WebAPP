@@ -1,4 +1,5 @@
 ﻿using RC.ADS.Data.Entity.AD_Menber;
+using RC.ADS.Data.Enum;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -26,10 +27,8 @@ namespace RC.ADS.Data.Entity.AD_Integral
         /// </summary>
         public int AfterScore { get; set; }
       
-      
-        public string IntegralInfoChangeTypeId { get; set; }
-        [ForeignKey("IntegralInfoChangeTypeId")]
-        public IntegralInfoChangeType IntegralInfoChangeType { get; set; }
+ 
+        public IntegralInfoChangeTypeEnum IntegralInfoChangeType { get; set; }
         public string Describe { get; set; }
         public DateTime CreateTime { get; set; }
     }
