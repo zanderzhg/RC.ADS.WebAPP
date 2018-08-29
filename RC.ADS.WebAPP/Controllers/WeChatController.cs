@@ -239,13 +239,15 @@ namespace RC.ADS.WebAPP.Controllers
         #endregion
 
         #region 我的推广码 完成
+        [CustomOAuth(null, "/wechat/OAuthCallback")]
         public IActionResult PromoCode()
         {
 
             try
             {
                 var openId = HttpContext.Session.GetString("OpenId");
-                var result = Senparc.Weixin.MP.AdvancedAPIs.QrCodeApi.Create(WeiXinConfig.appId, 2592000, 1222, Senparc.Weixin.MP.QrCode_ActionName.QR_STR_SCENE, openId);
+                Menber menber= _context.Menbers.FirstOrDefault(x=>x.WeChatOpenId==openId);
+                var result = Senparc.Weixin.MP.AdvancedAPIs.QrCodeApi.Create(WeiXinConfig.appId, 2592000, 1222, Senparc.Weixin.MP.QrCode_ActionName.QR_STR_SCENE, menber.Id);
 
                 ViewBag.urlstr = result.url; 
             }

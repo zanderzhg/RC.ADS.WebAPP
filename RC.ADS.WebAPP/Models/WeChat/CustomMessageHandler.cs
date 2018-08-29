@@ -52,10 +52,10 @@ namespace RC.ADS.WebAPP.Models.WeChat
                    var result= _context.Menbers.FirstOrDefault(x=>x.WeChatOpenId== requestMessagenew.FromUserName);
                     if (result==null)
                     {
-                        var ReferrerOpenId= requestMessagenew.EventKey.Replace("qrscene_", "");
+                        var ReferrerId= requestMessagenew.EventKey.Replace("qrscene_", "");
                         Menber menber = new Menber();
                         menber.WeChatOpenId = requestMessagenew.FromUserName;
-                        menber.ReferrerId = requestMessagenew.FromUserName==ReferrerOpenId ?"": ReferrerOpenId;
+                        menber.ReferrerId = requestMessagenew.FromUserName==ReferrerId ?"": ReferrerId;
                         _context.Add(menber);
                         _context.SaveChanges();
                     }
