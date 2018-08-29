@@ -141,14 +141,18 @@ namespace RC.ADS.WebAPP.Controllers
                 if (menber == null)
                 {
                     menber = new Menber();
-
                     menber.Username = HttpContext.Session.GetString("nickname");
-
                     menber.WeChatOpenId = weChatOpenId;
                     _context.Add(menber);
                     _context.SaveChanges();
                     ViewBag.headerUrl = HttpContext.Session.GetString("headimgurl");
                     return RedirectToAction("ModifPhoneNumber", "wechat");
+                }
+                else
+                {
+                    menber.Username = HttpContext.Session.GetString("nickname");
+                    _context.Update(menber);
+                    _context.SaveChanges();
                 }
                 vm.Balance = (decimal)(menber.AccountSum * 0.01);//转化为元
                 vm.IntegralSum = menber.IntegralSum;
@@ -163,6 +167,7 @@ namespace RC.ADS.WebAPP.Controllers
             }
             return View(vm);
         }
+
         #region 子功能
         #region 余额 完成
         public IActionResult AccountInfoList(int pageIndex = 1)
@@ -342,6 +347,7 @@ namespace RC.ADS.WebAPP.Controllers
 
 
         #endregion
+
         #endregion
 
         #region JsApi支付
