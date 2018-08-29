@@ -9,7 +9,7 @@ namespace RC.ADS.Data.Entity.AD_Order
 {
     public class Order
     {
-        public Order() { Id = Guid.NewGuid().ToString("N"); }
+        public Order() { Id = Guid.NewGuid().ToString("N"); Price = 0; }
         public string Id { get; set; }
         public string OrderName { get; set; }
         public string OwnerId { get; set; }

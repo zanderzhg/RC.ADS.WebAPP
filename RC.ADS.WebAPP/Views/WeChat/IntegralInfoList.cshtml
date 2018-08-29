@@ -5,18 +5,45 @@
     Layout = "~/Views/Shared/Wechat/_LayoutWechatComeBack.cshtml";
 }
 
-    <div class="weui_cells_title">积分明细列表</div>
-    <div class="weui_cells">
-        @foreach (var item in Model.IntegralInfos)
-        {
-            @*var NewScore = item.Score * item.PlusOrMinus;
+<div class="weui_cells_title">积分明细列表</div>
+<div class="weui_cells" style="color:#999;font-size:15px;">
+    @foreach (var item in Model.IntegralInfos)
+    {
+        var score = item.Score;
+        var afterScore = item.AfterScore;
+        <div class="weui_cell">
+            <div class="weui_cell_bd weui_cell_primary">
+                <p>一共有：<span>@afterScore</span>积分 </p>
+            </div>
+            <div class="weui_cell_ft weui_media_desc">
+                @if ((int)item.IntegralInfoChangeType > 0)
+                {
+                    <span style="color:green">+@score 积分</span>
 
-            <div class="weui_cell">
-                <div class="weui_cell_bd weui_cell_primary">
-                    <p>@item.</p>
-                </div>
-                <div class="weui_cell_ft weui_media_desc" style="color:red">@NewScore</div>
-            </div>*@
+                }
+                else
+                {
+                    <span style="color:red">-@score 积分</span>
 
-        }
+                }
+                <p>@item.CreateTime.ToString()</p>
+            </div>
+        </div>
+
+
+    }
+</div>
+<p></p>
+<div class="pager">
+    <div class="pager-left">
+        <div class="pager-first"><a asp-action="pageIndex" asp-controller="wechat" class="pager-nav">首页</a></div>
+        <div class="pager-pre"><a asp-action="pageIndex" asp-controller="wechat" asp-route-pageIndex="@Model.PageIndex-1" class="pager-nav">上一页</a></div>
     </div>
+    @{ var pageStr = $"{ Model.PageIndex}/{ Model.PageCount}";
+        <div class="pager-cen">@pageStr</div>
+    }
+    <div class="pager-right">
+        <div class="pager-next"><a asp-action="pageIndex" asp-controller="wechat" asp-route-pageIndex="@Model.PageIndex+1" class="pager-nav">下一页</a></div>
+        <div class="pager-end"><a asp-action="pageIndex" asp-controller="wechat" asp-route-pageIndex="@Model.PageCount" class="pager-nav">尾页</a></div>
+    </div>
+</div>
