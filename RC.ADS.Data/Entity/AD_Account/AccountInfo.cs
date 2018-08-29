@@ -9,7 +9,7 @@ namespace RC.ADS.Data.Entity.AD_Account
 {
     public class AccountInfo
     {
-        public AccountInfo() { Id = Guid.NewGuid().ToString("N"); }
+        public AccountInfo() { Id = Guid.NewGuid().ToString("N"); BeforeMoney = 0; Money = 0;AfterMoney = 0; }
         public string Id { get; set; }
         /// <summary>
         /// 交易号

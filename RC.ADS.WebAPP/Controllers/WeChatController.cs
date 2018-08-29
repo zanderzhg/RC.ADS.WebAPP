@@ -420,8 +420,17 @@ namespace RC.ADS.WebAPP.Controllers
                 RCLog.Info(this, $"price={price}");
 
                 //临时记录订单信息，留给退款申请接口测试使用
-                HttpContext.Session.SetString("BillNo", sp_billno);
-                HttpContext.Session.SetString("BillFee", price.ToString());
+                //HttpContext.Session.SetString("BillNo", sp_billno);
+                //HttpContext.Session.SetString("BillFee", price.ToString());
+
+                AccountInfo accountinfo = new AccountInfo();
+               
+                accountinfo.CreateTime = DateTime.Now;
+                accountinfo.TradeNo = sp_billno;
+                accountinfo.TradeName = package;
+                _context.Add(accountinfo);
+                _context.SaveChanges();
+
 
                 return Json(new
                 {
@@ -477,7 +486,8 @@ namespace RC.ADS.WebAPP.Controllers
 
 
                     Menber owner = _context.Menbers.FirstOrDefault(x => x.WeChatOpenId == openid);
-                    AccountInfo accountinfo = new AccountInfo();
+                    AccountInfo accountinfo = _context.AccountInfos.FirstOrDefault(x => x.TradeNo == out_trade_no);
+                    
                     accountinfo.BeforeMoney = owner.AccountSum;
                     accountinfo.AfterMoney = owner.AccountSum + int.Parse(total_fee);
                     accountinfo.OwnerId = owner.Id;
@@ -485,9 +495,8 @@ namespace RC.ADS.WebAPP.Controllers
                     accountinfo.CreateTime = DateTime.Now;
                     accountinfo.TradeNo = out_trade_no;
                     accountinfo.TradeName = package;
-
                     owner.AccountSum = accountinfo.AfterMoney;
-                    _context.Add(accountinfo);
+                    //_context.Add(accountinfo);
                     _context.SaveChanges();
                 }
                 else
@@ -508,7 +517,7 @@ namespace RC.ADS.WebAPP.Controllers
             }
             catch (Exception ex)
             {
-                RCLog.Error(this, $"发生错误{ex.ToString()}");
+                RCLog.Error(this, $"发生错误{ex.ToString()}");  
                 throw;
             }
         }
