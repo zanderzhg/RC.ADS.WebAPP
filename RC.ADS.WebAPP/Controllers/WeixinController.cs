@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using RC.ADS.Data;
 using RC.ADS.WebAPP.Comm;
 using RC.ADS.WebAPP.Models.WeChat;
 using Senparc.CO2NET.HttpUtility;
@@ -19,8 +20,13 @@ namespace RC.ADS.WebAPP.Controllers
 {
     public class WeixinController : Controller
     {
+        private readonly DataContext _context;
         readonly Func<string> _getRandomFileName = () => DateTime.Now.ToString("yyyyMMdd-HHmmss") + Guid.NewGuid().ToString("n").Substring(0, 6);
 
+        public WeixinController(DataContext context) {
+             _context=   context;
+        }
+       
         [HttpGet]
         [ActionName("Index")]
         public ActionResult Get(string signature, string timestamp, string nonce, string echostr)
@@ -61,7 +67,7 @@ namespace RC.ADS.WebAPP.Controllers
             var maxRecordCount = 10;
 
             //自定义MessageHandler，对微信请求的详细判断操作都在这里面。
-            var messageHandler = new CustomMessageHandler(Request.GetRequestMemoryStream(), postModel, maxRecordCount);
+            var messageHandler = new CustomMessageHandler(Request.GetRequestMemoryStream(), postModel, _context, maxRecordCount);
 
             #region 设置消息去重
 

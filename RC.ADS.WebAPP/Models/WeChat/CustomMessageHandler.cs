@@ -1,4 +1,6 @@
-﻿using RC.ADS.WebAPP.Comm;
+﻿using RC.ADS.Data;
+using RC.ADS.Data.Entity.AD_Menber;
+using RC.ADS.WebAPP.Comm;
 using Senparc.Weixin.Context;
 using Senparc.Weixin.MP;
 using Senparc.Weixin.MP.Entities;
@@ -15,13 +17,12 @@ using System.Threading.Tasks;
 namespace RC.ADS.WebAPP.Models.WeChat
 {
     public partial class CustomMessageHandler : MessageHandler<MessageContext<IRequestMessageBase, IResponseMessageBase>>
-
     {
-
-        public CustomMessageHandler(Stream inputStream, PostModel postModel, int maxRecordCount = 0) : base(inputStream, postModel)
+        private readonly DataContext _context;
+        public CustomMessageHandler(Stream inputStream, PostModel postModel, DataContext context, int maxRecordCount = 0) : base(inputStream, postModel)
 
         {
-
+            _context= context;
         }
 
 
@@ -44,9 +45,20 @@ namespace RC.ADS.WebAPP.Models.WeChat
                     break;
                 case Event.subscribe:
                     var requestMessagenew = (RequestMessageEvent_Subscribe)requestMessage;
-                    RCLog.Info(this, "EventKey：" + requestMessagenew.EventKey);///推荐人openId
-                    RCLog.Info(this, "FromUserName：" + requestMessagenew.FromUserName);///订阅人Id
-                    RCLog.Info(this, "ToUserName：" + requestMessagenew.ToUserName);///服务号Id
+                    //RCLog.Info(this, "EventKey：" + requestMessagenew.EventKey);///推荐人openId
+                    //RCLog.Info(this, "FromUserName：" + requestMessagenew.FromUserName);///订阅人Id
+                    //RCLog.Info(this, "ToUserName：" + requestMessagenew.ToUserName);///服务号Id
+
+                   var result= _context.Menbers.FirstOrDefault(x=>x.WeChatOpenId== requestMessagenew.FromUserName);
+                    if (result==null)
+                    {
+                        var ReferrerOpenId= requestMessagenew.EventKey.Replace("qrscene_", "");
+                        Menber menber = new Menber();
+                        menber.WeChatOpenId = requestMessagenew.FromUserName;
+                        menber.ReferrerId = requestMessagenew.FromUserName==ReferrerOpenId ?"": ReferrerOpenId;
+                        _context.Add(menber);
+                        _context.SaveChanges();
+                    }
                     break;
                 case Event.unsubscribe:
                     break;
